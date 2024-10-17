@@ -57,8 +57,8 @@ class CommandLineIntegrator(CacheIntegrator):
             variables = sorted(integrand.variables.union(polytope.variables))
 
             # Write integrand and polytope to file
-            self._write_integrand_file(integrand, variables, integrand_file)
             self._write_polytope_file(polytope, variables, polytope_file)
+            self._write_integrand_file(integrand, variables, integrand_file)
 
             # Integrate and dump the result on file
             self._call_integrator(integrand_file, polytope_file, output_file)
