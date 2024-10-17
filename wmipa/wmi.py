@@ -46,7 +46,7 @@ class WMI:
         normalizer (TermNormalizer): The class that normalizes LRA atoms.
 
     """
-
+    
     # WMI methods
     MODE_BC = "BC"
     MODE_ALLSMT = "AllSMT"
