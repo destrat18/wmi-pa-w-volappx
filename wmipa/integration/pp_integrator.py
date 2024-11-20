@@ -112,8 +112,9 @@ class PPIntegrator(CommandLineIntegrator):
             )
             monomials_repr_list.append(monomials_repr)
                 
-        integrand_repr = "+ " + " ".join([f"({m})" for m in monomials_repr_list])
+        integrand_repr = "+ 0 " + " ".join([f"({m})" for m in monomials_repr_list])
 
+        # TODO find chi
 
         pp_str = """
         
@@ -123,10 +124,10 @@ class PPIntegrator(CommandLineIntegrator):
         (declare-const c_4 Real)
 
         (assert (forall ({variables}) (=> (
-                and {chi}
+                {chi}
             ) 
             (
-                and (>= {newVar} 0) (>= {integrand} {newVar}) ({phi})  
+                and (>= {newVar} 0) (>= ({integrand}) {newVar}) ({phi})  
             )
         )))
 
@@ -134,7 +135,7 @@ class PPIntegrator(CommandLineIntegrator):
         (get-model)    
         """.format(
             variables=variables_repr,
-            chi = 0,
+            chi = phi_repr,
             newVar = new_variable,
             integrand=integrand_repr,
             phi = phi_repr
@@ -142,7 +143,7 @@ class PPIntegrator(CommandLineIntegrator):
         
         # Write the string on the file
         with open(path, "w") as f:
-            f.write(phi_repr)
+            f.write(pp_str)
             
         
     def _write_polytope_file(self, polytope, variables, path):
@@ -169,6 +170,7 @@ class PPIntegrator(CommandLineIntegrator):
             output_file (str): The file where to write the result of the computation.
 
         """
+        raise NotImplementedError()
         if not _LATTE_INSTALLED:
             raise WMIIntegrationException(WMIIntegrationException.INTEGRATOR_NOT_INSTALLED, "LattE")
 

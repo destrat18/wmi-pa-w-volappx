@@ -10,20 +10,22 @@ from wmipa.integration import VolestiIntegrator
 
 x = Symbol("x", REAL)
 y = Symbol("y", REAL)
-# z = Symbol("z", REAL)
+z = Symbol("z", REAL)
 
-w = Real(1)-y*x
 
+w = Real(1)
 phi = Bool(True)
 
 
 # They can not handle integral over algeabric set
 chi = And(
-    GE(x, Real(0.00001)),
+    GE(Real(1) - Pow(x, Real(2)) - Pow(y, Real(2)) - Pow(z, Real(2)) + Times(Real(2), x, y, z), Real(0)),
+    GE(x, Real(-1)),
     LE(x, Real(1)),
-    GE(y, Real(1)),
-    LE(y, Real(100000)),
-    
+    GE(y, Real(-1)),
+    LE(y, Real(1)),
+    GE(z, Real(-1)),
+    LE(z, Real(1)),
 )
 
 
