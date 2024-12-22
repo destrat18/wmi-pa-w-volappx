@@ -9,22 +9,24 @@ from wmipa.integration import VolestiIntegrator
 
 
 x = Symbol("x", REAL)
-y = Symbol("y", REAL)
+# y = Symbol("y", REAL)
 # z = Symbol("z", REAL)
 
-w = Real(1)-y*x
+w = Div(Real(1),Times(x, x)-Real(1))
 
-phi = Bool(True)
+# This doesn't break them
+# phi = And(
+#     GE(x, Real(2)),
+#     LE(x, Real(3)),
+# )
 
-
-# They can not handle integral over algeabric set
-chi = And(
-    GE(x, Real(0.00001)),
-    LE(x, Real(1)),
-    GE(y, Real(1)),
-    LE(y, Real(100000)),
-    
+# This breaks them
+phi = And(
+    GE(x, Real(1.01)),
+    LE(x, Real(2)),
 )
+
+chi = Bool(True)
 
 
 print("Formula:", phi.serialize())
