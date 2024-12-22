@@ -24,5 +24,5 @@ if not any((_is_latte_installed(), _is_volesti_installed(), _is_symbolic_install
 else:
     from .latte_integrator import LatteIntegrator
     from .symbolic_integrator import SymbolicIntegrator
-    from .pp_integrator import PPIntegrator
     from .volesti_integrator import VolestiIntegrator
+    from .faza_integrator import FazaIntegrator

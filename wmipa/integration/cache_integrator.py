@@ -4,6 +4,7 @@ import time
 from abc import abstractmethod
 from fractions import Fraction
 from multiprocessing import Manager, Pool
+import multiprocessing.pool
 from subprocess import call
 from tempfile import NamedTemporaryFile
 
@@ -12,8 +13,7 @@ from pysmt.shortcuts import LE, LT
 from wmipa.integration.integrator import Integrator
 from wmipa.integration.polytope import Polynomial
 from wmipa.wmiexception import WMIRuntimeException
-
-
+    
 class CacheIntegrator(Integrator):
     """This class handles the integration of polynomial functions over (convex) polytopes, using caching and parallel
     computation.
@@ -176,10 +176,14 @@ class CacheIntegrator(Integrator):
         problems_to_integrate = problems_to_integrate.values()
         assert len(problem_id) == len(problems)
         # Handle multithreading
-        pool = Pool(self.n_threads)
-        results = pool.map(self._integrate_wrapper, problems_to_integrate)
-        pool.close()
-        pool.join()
+        # TODO Fix their pool problem
+        results = []
+        for problem in problems_to_integrate:
+            results.append(self._integrate_wrapper(problem))
+        # pool = Pool(self.n_threads)
+        # results = pool.map(self._integrate_wrapper, problems_to_integrate)
+        # pool.close()
+        # pool.join()
         values = [0.0 if pid == EMPTY else results[pid][0] for pid in problem_id]
         cached += sum([(pid == EMPTY) or results[pid][1] for pid in problem_id])
 
