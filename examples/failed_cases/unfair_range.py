@@ -19,7 +19,7 @@ phi = Bool(True)
 
 # This breaks
 chi = And(
-    GE(x, Real(0.00001)),
+    GE(x, Real(0.01)),
     LE(x, Real(1)),
 )
 

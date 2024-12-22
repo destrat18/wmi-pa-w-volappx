@@ -9,22 +9,19 @@ from wmipa.integration import VolestiIntegrator
 x = Symbol("x", REAL)
 
 
-w = x
-w = Times(x, x)
-
 w = Div(Real(1),Times(x, x)-Real(1))
 
 # This doesn't break them
-phi = And(
-    GE(x, Real(2)),
-    LE(x, Real(3)),
-)
+# phi = And(
+#     GE(x, Real(2)),
+#     LE(x, Real(3)),
+# )
 
 # This breaks them
-# phi = And(
-#     GE(x, Real(1.00001)),
-#     LE(x, Real(2)),
-# )
+phi = And(
+    GE(x, Real(1.01)),
+    LE(x, Real(2)),
+)
 
 chi = Bool(True)
 
