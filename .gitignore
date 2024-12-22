@@ -385,3 +385,5 @@ experiments/**/table.tex
 .devcontainer
 .vscode
 tmp*/
+
+gurobi.lic

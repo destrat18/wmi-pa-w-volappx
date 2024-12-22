@@ -317,10 +317,10 @@ def calculate_approximate_volume(
     checker_list = []
     for _ in range(max_workers):
         checker = Checker(
-            inside_equations=copy.deepcopy(inside_equations),
-            outside_equations=copy.deepcopy(outside_equations),
-            temp_vars=copy.deepcopy(temp_vars),
-            vars=copy.deepcopy(vars),
+            inside_equations=inside_equations,
+            outside_equations=outside_equations,
+            temp_vars=temp_vars,
+            vars=vars,
             to_check_queue=to_check_queue,
             checked_queue=checked_queue
         )
