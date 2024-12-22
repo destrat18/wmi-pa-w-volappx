@@ -58,11 +58,16 @@ class FazaIntegrator(CommandLineIntegrator):
         var_bounds = []
         
         for var in variables:
-            b = []
+            lower = -float('inf')
+            upper = float('inf')
             for _, bound in enumerate(polytope.bounds):
                 if var in bound.coefficients:
-                        b.append(bound.constant/bound.coefficients[var]+0)
-            var_bounds.append(sorted(b))
+                    if bound.coefficients[var] < 0:
+                        lower = max(bound.constant/bound.coefficients[var], lower)
+                    elif bound.coefficients[var] > 0:
+                        upper = min(upper, bound.constant/bound.coefficients[var])
+                        
+            var_bounds.append([lower, upper])
                     
         
             

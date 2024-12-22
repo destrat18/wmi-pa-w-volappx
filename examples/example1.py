@@ -3,8 +3,10 @@ from pysmt.typing import BOOL, REAL
 
 from wmipa import WMI
 from wmipa.integration import LatteIntegrator
-from wmipa.integration import SymbolicIntegrator
+# from wmipa.integration import SymbolicIntegrator
 from wmipa.integration import VolestiIntegrator
+from wmipa.integration import FazaIntegrator
+
 
 # from wmipa.integration.symbolic_integrator import SymbolicIntegrator
 
@@ -32,7 +34,7 @@ print("Support:", chi.serialize())
 
 print()
 for mode in [WMI.MODE_ALLSMT, WMI.MODE_PA, WMI.MODE_SA_PA, WMI.MODE_SAE4WMI]:
-    for integrator in (LatteIntegrator(), VolestiIntegrator(), SymbolicIntegrator()):
+    for integrator in (LatteIntegrator(), VolestiIntegrator(), FazaIntegrator(degree=1)):
         wmi = WMI(chi, w, integrator=integrator)
         result, n_integrations = wmi.computeWMI(phi, mode=mode)
         print(
