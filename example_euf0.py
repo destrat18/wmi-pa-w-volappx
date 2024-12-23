@@ -1,47 +1,41 @@
-from pysmt.shortcuts import Iff, Implies, Ite, Symbol
-from pysmt.typing import BOOL, REAL
-# from wmipa.integration import VolestiIntegrator, LatteIntegrator
+from pysmt.shortcuts import GE, LE, And, Bool, Ite, Real, Symbol
+from pysmt.typing import REAL
 from wmipa.integration import FazaIntegrator
-import argparse
-
 from wmipa import WMI
-import time
 
 # variables definition
-a = Symbol("A", BOOL)
-b = Symbol("B", BOOL)
-c = Symbol("C", BOOL)
 x = Symbol("x", REAL)
 y = Symbol("y", REAL)
 
-# formula definition
 # fmt: off
-phi = Implies(a | b, x >= 1) & Implies(
-    a | c, x <= 2) & Ite(b, Iff(a & c, y <= 2), y <= 1)
+phi = Bool(True)
 
-print("Formula:", phi.serialize())
+chi = And(
+    GE(x, Real(0)),
+    LE(x, Real(2)),
+    GE(y, Real(0)),
+    LE(y, Real(3)),
+)
 
-# weight function definition
-w = Ite(b,
-        Ite(x >= 0.5,
+w = Ite(x >= 1,
+        Ite(y >= 1,
             x * y,
-            Ite((x >= 1),
-                x + 2 * y,
-                2 * x + y
-                )
+            2 * (x * y)
             ),
-        Ite(a | c,
-            x * x * y,
-            2 * x + y
-            )
+        Ite(y >= 2,
+            3 * (x * y),
+            4 * (x * y)
+            ),
         )
 # fmt: on
 
-chi = (x >= 0) & (x <= 3) & (y >= 0) & (y <= 4)
+print("Formula:", phi.serialize())
+
 print("Weight function:", w.serialize())
 print("Support:", chi.serialize())
 
 
+import time, argparse
 if __name__ == "__main__":
     
     

@@ -11,11 +11,13 @@ RUN apt-get update \
  && apt-get install -y sudo
 
 # Create user with specific UID
-RUN adduser --disabled-password --gecos '' des
+RUN useradd -u 31772 -m des
 RUN adduser des sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-RUN chmod -R 777 /home/des 
+RUN mkdir -p /home/des/app
+RUN chown -R des:des /home/des/app 
+RUN chmod -R 775 /home/des
 
 # Create and activate virtual environment with Python 3.10
 # Switch to des
