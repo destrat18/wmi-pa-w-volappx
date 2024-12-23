@@ -33,3 +33,10 @@ RUN apt-get install -y lp-solve \
 # Install mathsat
 RUN pysmt-install --msat --confirm-agreement
 RUN wmipa-install --nra
+
+WORKDIR /wmipa
+
+COPY ./requirements.txt ./requirements.txt
+RUN pip install -r requirements.txt
+
+

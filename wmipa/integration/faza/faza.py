@@ -9,6 +9,8 @@ import uuid
 import queue
 import threading
 import argparse
+logging.basicConfig(level=logging.INFO)
+    
 
 import sympy as sym
 from sympy.parsing.sympy_parser import parse_expr
@@ -642,14 +644,12 @@ def calculate_approximate_wmi(
         psi_minus = 0
     
     volume = psi_plus-psi_minus
-    logging.info(f"Volume: {psi_plus}(Psi+) - {psi_minus}(Psi-)={volume}")
+    logging.info(f"Shape: {integrand}, Volume: {psi_plus}(Psi+) - {psi_minus}(Psi-)={volume}")
     
  
     return volume
 
 if __name__ == "__main__":
-    
-    logging.basicConfig(level=logging.INFO)
     
     
     parser = argparse.ArgumentParser(
