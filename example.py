@@ -39,9 +39,11 @@ chi = (x >= 0) & (x <= 3) & (y >= 0) & (y <= 4)
 print("Weight function:", w.serialize())
 print("Support:", chi.serialize())
 
-for integrator in [VolestiIntegrator(), LatteIntegrator(), 
-                   FazaIntegrator(degree=3, max_workers=8, threshold=0.5)
-                   ]:
+for integrator in [
+        # VolestiIntegrator(), 
+        # LatteIntegrator(), 
+        FazaIntegrator(max_workers=8, threshold=0.5)
+    ]:
     for mode in [
             WMI.MODE_SAE4WMI
         ]:
