@@ -1,6 +1,7 @@
 from pysmt.shortcuts import Iff, Implies, Ite, Symbol
 from pysmt.typing import BOOL, REAL
-from wmipa.integration import VolestiIntegrator, LatteIntegrator, FazaIntegrator
+# from wmipa.integration import VolestiIntegrator, LatteIntegrator
+from wmipa.integration import FazaIntegrator
 
 from wmipa import WMI
 import time
