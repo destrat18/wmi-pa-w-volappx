@@ -1,6 +1,3 @@
-import pyximport
-pyximport.install(build_dir="./")
-
 from pysmt.shortcuts import Iff, Implies, Ite, Symbol
 from pysmt.typing import BOOL, REAL
 # from wmipa.integration import VolestiIntegrator, LatteIntegrator
