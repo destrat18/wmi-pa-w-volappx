@@ -9,6 +9,7 @@ from wmipa.integration.polytope import Polytope
 from wmipa.wmiexception import WMIRuntimeException, WMIIntegrationException
 from wmipa.integration.faza import faza
 import sympy as sym
+import logging
 
 # TODO: Add is_faza_installed
 _FAZA_INSTALLED = True
@@ -26,7 +27,7 @@ class FazaIntegrator(CommandLineIntegrator):
     max_workers = 1
 
     def __init__(self,
-                degree,
+                degree=degree,
                 threshold=threshold,
                 max_workers=max_workers,
                 **options
@@ -68,13 +69,19 @@ class FazaIntegrator(CommandLineIntegrator):
                         upper = min(upper, bound.constant/bound.coefficients[var])
                         
             var_bounds.append([lower+0, upper+0])
-                    
         
-            
+        integrand = sym.parse_expr(str(integrand))
+        
+        if self.degree is None:
+            total_degree = sym.total_degree(integrand)
+            logging.info(f"Total degree of {integrand} is {total_degree}!") 
+        else:
+            total_degree = self.degree
+        
         volume = faza.calculate_approximate_wmi(
-            degree=self.degree,
+            degree=total_degree,
             max_workers=self.max_workers,
-            integrand=sym.parse_expr(str(integrand)),
+            integrand=integrand,
             vars=[sym.var(str(var)) for var in variables],
             bounds=var_bounds,
             threshold=self.threshold
