@@ -52,12 +52,12 @@ if __name__ == "__main__":
         
     parser.add_argument("--degree", help="Handelman degree", type=int, default=None)
     parser.add_argument("--max-workers", help="Number of workers", type=int, default=1)
-    parser.add_argument("--threshold", help="Error threshold", type=float, default=0.001)
+    parser.add_argument("--threshold", help="Error threshold", type=float, default=0.5)
     
     args = parser.parse_args()
     
     for integrator in [
-            FazaIntegrator(max_workers=16, threshold=0.5)
+            FazaIntegrator(max_workers=args.max_workers, threshold=args.threshold)
         ]:
         for mode in [
                 WMI.MODE_SAE4WMI
