@@ -16,10 +16,13 @@ def _is_symbolic_installed():
     except ImportError:
         return False
 
+def _is_faza_installed():
+    return True
+
 
 IMPORT_ERR_MSG = "No integration backend installed. Run `wmipa-install --help` for more information."
 
-if not any((_is_latte_installed(), _is_volesti_installed(), _is_symbolic_installed())):
+if not any((_is_latte_installed(), _is_volesti_installed(), _is_symbolic_installed(), _is_faza_installed())):
     raise ImportError(IMPORT_ERR_MSG)
 else:
     from .latte_integrator import LatteIntegrator
