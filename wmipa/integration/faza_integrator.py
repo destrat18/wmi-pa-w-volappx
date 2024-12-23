@@ -67,7 +67,7 @@ class FazaIntegrator(CommandLineIntegrator):
                     elif bound.coefficients[var] > 0:
                         upper = min(upper, bound.constant/bound.coefficients[var])
                         
-            var_bounds.append([lower, upper])
+            var_bounds.append([lower+0, upper+0])
                     
         
             
