@@ -67,7 +67,8 @@ class CommandLineIntegrator(CacheIntegrator):
             result = self._read_output_file(output_file)
             chdir(original_cwd)
             
-            print(integrand, "|", polytope, "|", result)
+            print(integrand, "on", polytope, "=", result)
+
 
             return result
 
