@@ -2,7 +2,7 @@ import time, argparse, os, logging
 from wmipa.integration import FazaIntegrator, LatteIntegrator, VolestiIntegrator
 from wmipa import WMI
 from importlib.machinery import SourceFileLoader
-import pathlib, json
+import pathlib, json, pandas as pd
 
 if __name__ == "__main__":
     
@@ -47,7 +47,7 @@ if __name__ == "__main__":
                     ]:
                     start_time = time.time()
                     try:
-                        faza_integrator.log = []
+                        faza_integrator.logs = []
                         wmi = WMI(chi, w, integrator=integrator)
                         volume, n_integrations = wmi.computeWMI(phi, mode=mode)
                         total_time = time.time()-start_time
@@ -65,7 +65,7 @@ if __name__ == "__main__":
                                 'mode': mode,
                                 'result': volume,
                                 'n_integrations': n_integrations,
-                                'logs': faza_integrator
+                                'logs': faza_integrator.logs
                             }
                         )
                         
@@ -75,6 +75,7 @@ if __name__ == "__main__":
                                 mode, integrator.__class__.__name__, str(e)
                             )
                         )
+                        logging.exception(e)
                         results.append(
                             {
                                 'time': time.time()-start_time,
@@ -83,12 +84,14 @@ if __name__ == "__main__":
                                 'mode': mode,
                                 'result': str(e),
                                 'n_integrations': None,
-                                'logs': faza_integrator
+                                'logs': faza_integrator.logs
                             }
                         )
                     
-                    with open('example_results.json', 'w') as output_f:
-                        json.dump(results, output_f, indent = 6)
+                    pd.DataFrame(results).to_csv("example_results.csv", index=False)
+                    # with open('example_results.json', 'w') as output_f:
+                    #     print(results)
+                    #     json.dump(results, output_f, indent = 6)
                 
                 
                 
