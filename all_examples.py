@@ -38,9 +38,9 @@ if __name__ == "__main__":
             faza_integrator = FazaIntegrator(max_workers=args.max_workers, threshold=args.threshold)
             
             for integrator in [
-                faza_integrator,
                 LatteIntegrator(),
-                VolestiIntegrator()
+                VolestiIntegrator(),
+                faza_integrator,
             ]:
                 for mode in [
                         WMI.MODE_SAE4WMI
