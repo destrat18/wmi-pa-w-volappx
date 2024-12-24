@@ -2,7 +2,7 @@ import time, argparse, os, logging
 from wmipa.integration import FazaIntegrator, LatteIntegrator, VolestiIntegrator
 from wmipa import WMI
 from importlib.machinery import SourceFileLoader
-import pathlib
+import pathlib, json
 
 if __name__ == "__main__":
     
@@ -20,6 +20,8 @@ if __name__ == "__main__":
 
     examples_path = os.path.join(pathlib.Path(__file__).parent.resolve(), "data/examples")
 
+    results = []
+
     for f_name in os.listdir(examples_path):
         try:
             example = SourceFileLoader(f_name.split(".")[0], os.path.join(examples_path, f_name)).load_module()
@@ -33,29 +35,63 @@ if __name__ == "__main__":
             print("Weight function:", w.serialize())
             print("Support:", chi.serialize())
             
+            faza_integrator = FazaIntegrator(max_workers=args.max_workers, threshold=args.threshold)
+            
             for integrator in [
-                FazaIntegrator(max_workers=args.max_workers, threshold=args.threshold),
+                faza_integrator,
                 LatteIntegrator(),
                 VolestiIntegrator()
             ]:
                 for mode in [
                         WMI.MODE_SAE4WMI
                     ]:
+                    start_time = time.time()
                     try:
-                        start_time = time.time()
+                        faza_integrator.log = []
                         wmi = WMI(chi, w, integrator=integrator)
-                        result, n_integrations = wmi.computeWMI(phi, mode=mode)
+                        volume, n_integrations = wmi.computeWMI(phi, mode=mode)
+                        total_time = time.time()-start_time
                         print(
-                            "WMI with mode {}, \t integrator = {}, \t result = {}, \t # integrations = {}, \t time = {:.2f}s({:.2f}h)".format(
-                                mode, integrator.__class__.__name__, result, n_integrations, time.time()-start_time,(time.time()-start_time)/3600
+                            "WMI with mode {}, \t integrator = {}, \t volume = {}, \t # integrations = {}, \t time = {:.2f}s({:.2f}h)".format(
+                                mode, integrator.__class__.__name__, volume, n_integrations, total_time,(total_time)/3600
                             )
                         )
+                        
+                        results.append(
+                            {
+                                'time': total_time,
+                                'example': f_name,
+                                'integrator': integrator.__class__.__name__,
+                                'mode': mode,
+                                'result': volume,
+                                'n_integrations': n_integrations,
+                                'logs': faza_integrator
+                            }
+                        )
+                        
                     except Exception as e:
                         print(
                             "WMI with mode {}, \t integrator = {}, \t failed = {}".format(
                                 mode, integrator.__class__.__name__, str(e)
                             )
                         )
+                        results.append(
+                            {
+                                'time': time.time()-start_time,
+                                'example': f_name,
+                                'integrator': integrator.__class__.__name__,
+                                'mode': mode,
+                                'result': str(e),
+                                'n_integrations': None,
+                                'logs': faza_integrator
+                            }
+                        )
+                    
+                    with open('example_results.json', 'w') as output_f:
+                        json.dump(results, output_f, indent = 6)
+                
+                
+                
         except Exception as e:
             logging.error(e)
             
