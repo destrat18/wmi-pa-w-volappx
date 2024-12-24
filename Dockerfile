@@ -74,7 +74,7 @@ ENV PATH="$PATH:/home/des/app/latte/bin"
 # Install Volesti
 RUN sudo apt-get install -y lp-solve \
 && wmipa-install --volesti -yf \
-&& echo "export PATH=/root/.wmipa/approximate-integration/bin:$PATH" >> ~/.bash_profile
+&& echo "export PATH=/home/des/.wmipa/approximate-integration/bin:$PATH" >> ~/.bash_profile
 
 COPY ./requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
