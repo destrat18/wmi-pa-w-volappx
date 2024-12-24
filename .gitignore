@@ -387,3 +387,5 @@ experiments/**/table.tex
 tmp*/
 
 gurobi.lic
+
+experiments/*
