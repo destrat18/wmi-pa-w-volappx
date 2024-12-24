@@ -21,17 +21,3 @@ chi = And(Iff(a, GE(x, Real(0))),
           GE(x, Real(-1)), LE(x, Real(1)),
           GE(i, Real(0)), LE(i, Real(10)))
 # fmt: on
-
-print("Formula:", phi.serialize())
-print("Weight function:", w.serialize())
-print("Support:", chi.serialize())
-
-# print()
-# for mode in [WMI.MODE_ALLSMT, WMI.MODE_PA, WMI.MODE_SA_PA, WMI.MODE_SAE4WMI]:
-#     wmi = WMI(chi, w)
-#     result, n_integrations = wmi.computeWMI(phi, mode=mode)
-#     print(
-#         "WMI with mode {} \t result = {}, \t # integrations = {}".format(
-#             mode, result, n_integrations
-#         )
-#     )

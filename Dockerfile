@@ -57,5 +57,24 @@ RUN pip3 install pysmt && \
  pysmt-install --msat --confirm-agreement
 RUN wmipa-install --nra
 
+ # Install Latte
+ RUN sudo apt-get update \
+ && sudo apt-get install -y  build-essential m4 cmake g++ make 
+
+RUN wget -c "https://github.com/latte-int/latte/releases/download/version_1_7_5/latte-integrale-1.7.5.tar.gz" \
+ && tar xvf latte-integrale-1.7.5.tar.gz \
+ && cd latte-integrale-1.7.5\
+ && ./configure --prefix=/home/des/app/latte --with-default=/home/des/app/latte \
+ && make -j 8 \
+ && make install
+
+ENV PATH="$PATH:/home/des/app/latte/bin"
+
+
+# Install Volesti
+RUN sudo apt-get install -y lp-solve \
+&& wmipa-install --volesti -yf \
+&& echo "export PATH=/root/.wmipa/approximate-integration/bin:$PATH" >> ~/.bash_profile
+
 COPY ./requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt

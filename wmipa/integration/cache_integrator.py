@@ -2,6 +2,7 @@ import re
 import shutil
 import time
 from abc import abstractmethod
+
 from fractions import Fraction
 from multiprocessing import Manager, Pool
 import multiprocessing.pool
@@ -177,13 +178,15 @@ class CacheIntegrator(Integrator):
         assert len(problem_id) == len(problems)
         # Handle multithreading
         # TODO Fix their pool problem
-        results = []
-        for problem in problems_to_integrate:
-            results.append(self._integrate_wrapper(problem))
-        # pool = Pool(self.n_threads)
-        # results = pool.map(self._integrate_wrapper, problems_to_integrate)
-        # pool.close()
-        # pool.join()
+        if "faza" in str(self.__class__.__name__).lower():
+            results = []
+            for problem in problems_to_integrate:
+                results.append(self._integrate_wrapper(problem))
+        else:
+            pool = Pool(self.n_threads)
+            results = pool.map(self._integrate_wrapper, problems_to_integrate)
+            pool.close()
+            pool.join()
         values = [0.0 if pid == EMPTY else results[pid][0] for pid in problem_id]
         cached += sum([(pid == EMPTY) or results[pid][1] for pid in problem_id])
 
