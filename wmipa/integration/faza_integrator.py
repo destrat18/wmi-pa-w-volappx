@@ -38,7 +38,7 @@ class FazaIntegrator(CommandLineIntegrator):
         self.threshold = threshold
         self.degree = degree
         self.max_workers=max_workers
-        self.log = []
+        self.logs = []
     
     def _integrate_problem(self, integrand, polytope):
         """Generates the input files and calls integrator executable
@@ -90,7 +90,7 @@ class FazaIntegrator(CommandLineIntegrator):
         
         print(integrand, "on", polytope, "=", volume)
 
-        self.log.append({
+        self.logs.append({
             'integrand': integrand,
             "degree": total_degree,
             "threshold": self.threshold,

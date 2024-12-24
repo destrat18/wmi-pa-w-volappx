@@ -390,3 +390,4 @@ gurobi.lic
 
 experiments/*
 example_results.json
+example_results.csv

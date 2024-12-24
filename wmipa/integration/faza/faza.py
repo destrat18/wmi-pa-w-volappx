@@ -606,6 +606,11 @@ def calculate_approximate_wmi(
         )
     else:
         psi_plus = 0
+        psi_plus_stats = {
+        "hrect_checked_num": 0,
+        "total_solver_time": 0,
+        "total_subs_time": 0        
+        }
     
     ###### for psi- ######    
     # We need to calculate this for psi-
@@ -646,6 +651,11 @@ def calculate_approximate_wmi(
         )
     else:
         psi_minus = 0
+        psi_minus_stats = {
+        "hrect_checked_num": 0,
+        "total_solver_time": 0,
+        "total_subs_time": 0        
+        }
     
     volume = psi_plus-psi_minus
     logging.info(f"Shape: {integrand}, Volume: {psi_plus}(Psi+) - {psi_minus}(Psi-)={volume}")
