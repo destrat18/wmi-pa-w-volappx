@@ -389,3 +389,4 @@ tmp*/
 gurobi.lic
 
 experiments/*
+example_results.json
