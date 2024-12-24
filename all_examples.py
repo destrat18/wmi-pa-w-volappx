@@ -88,7 +88,7 @@ if __name__ == "__main__":
                             }
                         )
                     
-                    pd.DataFrame(results).to_csv("example_results.csv", index=False)
+                    pd.DataFrame(results).to_csv(f"example_results_{int(time.time())}.csv", index=False)
                     # with open('example_results.json', 'w') as output_f:
                     #     print(results)
                     #     json.dump(results, output_f, indent = 6)
