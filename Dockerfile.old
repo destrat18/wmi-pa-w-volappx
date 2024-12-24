@@ -28,7 +28,7 @@ ENV PATH="$PATH:/project/latte/bin"
 # Install Volesti
 RUN apt-get install -y lp-solve \
 && wmipa-install --volesti -yf \
-&& echo "export PATH=/root/.wmipa/approximate-integration/bin:$PATH" >> ~/.bash_profile
+&& echo "export PATH=/home/des/.wmipa/approximate-integration/bin:$PATH" >> ~/.bash_profile
 
 # Install mathsat
 RUN pysmt-install --msat --confirm-agreement

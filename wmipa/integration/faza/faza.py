@@ -393,7 +393,11 @@ def calculate_approximate_volume(
         # checker.join()
     
     
-    return volume+error
+    return volume+error, {
+        "hrect_checked_num": total_hrect_checked,
+        "total_solver_time": total_solver_time,
+        "total_subs_time": total_subs_time        
+    }
 
 def find_upper_bound(    
                      
@@ -592,7 +596,7 @@ def calculate_approximate_wmi(
     
     
     if upper_bound != 0:
-        psi_plus = calculate_approximate_volume(
+        psi_plus, psi_plus_stats = calculate_approximate_volume(
             degree=degree,
             max_workers=max_workers,
             integrand=new_integrand,
@@ -632,7 +636,7 @@ def calculate_approximate_wmi(
     logging.info(f"Psi- bounds: [{lower_bound}, {0}]")
     
     if lower_bound != 0:
-        psi_minus = calculate_approximate_volume(
+        psi_minus, psi_minus_stats = calculate_approximate_volume(
             degree=degree,
             max_workers=max_workers,
             integrand=new_integrand,
@@ -646,8 +650,11 @@ def calculate_approximate_wmi(
     volume = psi_plus-psi_minus
     logging.info(f"Shape: {integrand}, Volume: {psi_plus}(Psi+) - {psi_minus}(Psi-)={volume}")
     
- 
-    return volume
+    return volume, {
+        "hrect_checked_num": psi_plus_stats["hrect_checked_num"]+psi_minus_stats["hrect_checked_num"],
+        "total_solver_time": psi_plus_stats["total_solver_time"]+psi_minus_stats["total_solver_time"],
+        "total_subs_time": psi_plus_stats["total_subs_time"]+psi_minus_stats["total_subs_time"]        
+    }
 
 if __name__ == "__main__":
     

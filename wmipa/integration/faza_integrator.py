@@ -38,6 +38,7 @@ class FazaIntegrator(CommandLineIntegrator):
         self.threshold = threshold
         self.degree = degree
         self.max_workers=max_workers
+        self.log = []
     
     def _integrate_problem(self, integrand, polytope):
         """Generates the input files and calls integrator executable
@@ -78,7 +79,7 @@ class FazaIntegrator(CommandLineIntegrator):
         else:
             total_degree = self.degree
         
-        volume = faza.calculate_approximate_wmi(
+        volume, stats = faza.calculate_approximate_wmi(
             degree=total_degree,
             max_workers=self.max_workers,
             integrand=integrand,
@@ -88,6 +89,16 @@ class FazaIntegrator(CommandLineIntegrator):
         )
         
         print(integrand, "on", polytope, "=", volume)
+
+        self.log.append({
+            'integrand': integrand,
+            "degree": total_degree,
+            "threshold": self.threshold,
+            "max_workers": self.max_workers,
+            "hrect_checked_num": stats["hrect_checked_num"],
+            "total_solver_time": stats["total_solver_time"],
+            "total_subs_time": stats["total_subs_time"],
+        })
 
         return volume
         
