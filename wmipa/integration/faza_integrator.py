@@ -87,6 +87,8 @@ class FazaIntegrator(CommandLineIntegrator):
             threshold=self.threshold
         )
         
+        print(integrand, "on", polytope, "=", volume)
+
         return volume
         
     def _write_integrand_file(self, integrand, variables, path):
