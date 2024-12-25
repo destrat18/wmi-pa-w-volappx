@@ -388,5 +388,6 @@ tmp*/
 
 gurobi*.lic
 
-experiments/*
 example_results*
+experiments/synthetic_exp
+experiments/pywmi
