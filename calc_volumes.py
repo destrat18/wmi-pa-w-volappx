@@ -66,6 +66,8 @@ if __name__ == "__main__":
                 
                 if stats['error'] > 0:
                     break
+                    
+                total_degree += 1
             
         
         except Exception as e:
