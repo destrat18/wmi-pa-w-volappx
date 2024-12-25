@@ -77,7 +77,9 @@ RUN sudo apt-get install -y lp-solve \
 # RUN echo "export PATH=/home/des/.wmipa/approximate-integration/bin:$PATH" >> ~/.bash_profile
 ENV PATH="/home/des/.wmipa/approximate-integration/bin:$PATH"
 
-COPY ./requirements.txt ./requirements.txt
-RUN pip install -r requirements.txt
+COPY ./ ./
+
+
+# RUN pip install -r requirements.txt
 
 CMD ["/bin/bash"]

@@ -1,39 +1,46 @@
 example,integrator,result,time,mode,n_integrations
-example1.py         ,FazaIntegrator    ,1.5,2.01649022102356,SAE4WMI ,2
-example1.py         ,LatteIntegrator   ,1.0,0.192162275314331,SAE4WMI ,2
-example1.py         ,VolestiIntegrator ,1.020509,0.1300210952758789,SAE4WMI ,2
-example3.py         ,FazaIntegrator    ,9.98828125,9.181718826293944,SAE4WMI ,4
-example3.py         ,LatteIntegrator   ,9.0,0.2232270240783691,SAE4WMI ,4
-example3.py         ,VolestiIntegrator ,8.599661000000001,0.149961233139038,SAE4WMI ,4
-example5.py         ,FazaIntegrator    ,0.00732421875,18.497398853302,SAE4WMI ,4
-example5.py         ,LatteIntegrator   ,0.0,0.2133734226226806,SAE4WMI ,4
-example5.py         ,VolestiIntegrator ,0.1912300000000004,0.1524412631988525,SAE4WMI ,4
-example6.py         ,FazaIntegrator    ,92.0,1.7049214839935305,SAE4WMI ,7
-example6.py         ,LatteIntegrator   ,92.0,0.4501054286956787,SAE4WMI ,9
-example6.py         ,VolestiIntegrator ,90.27283,0.1974740028381347,SAE4WMI ,7
-example7.py         ,FazaIntegrator    ,108.0,1.0231523513793943,SAE4WMI ,4
-example7.py         ,LatteIntegrator   ,108.0,0.228506326675415,SAE4WMI ,4
-example7.py         ,VolestiIntegrator ,104.02337,0.1661977767944336,SAE4WMI ,4
-example8.py         ,FazaIntegrator    ,2048.0,6.6003148555755615,SAE4WMI ,27
-example8.py         ,LatteIntegrator   ,2048.0,0.5946075916290283,SAE4WMI ,27
-example8.py         ,VolestiIntegrator ,2021.1596,0.4048225879669189,SAE4WMI ,27
-example_aliases.py  ,FazaIntegrator    ,5.99560546875,3.2835116386413574,SAE4WMI ,1
-example_aliases.py  ,LatteIntegrator   ,6.0,0.1967570781707763,SAE4WMI ,1
-example_aliases.py  ,VolestiIntegrator ,6.37522,0.1259193420410156,SAE4WMI ,1
-example_board.py    ,FazaIntegrator    ,16.242450714111328,622.6981112957001,SAE4WMI ,4
-example_board.py    ,LatteIntegrator   ,15.25,0.2205390930175781,SAE4WMI ,4
-example_board.py    ,VolestiIntegrator ,14.87606,0.1455378532409668,SAE4WMI ,4
-example_convert.py  ,FazaIntegrator    ,11.307693481445312,53.026464223861694,SAE4WMI ,6
-example_convert.py  ,LatteIntegrator   ,10.75,0.2780649662017822,SAE4WMI ,6
-example_convert.py  ,VolestiIntegrator ,10.971723,0.1875479221343994,SAE4WMI ,6
-example_convert2.py ,FazaIntegrator    ,84.05513000488281,987.9534771442412,SAE4WMI ,8
-example_convert2.py ,LatteIntegrator   ,76.0,0.3034889698028564,SAE4WMI ,8
-example_convert2.py ,VolestiIntegrator ,76.687208,0.2293727397918701,SAE4WMI ,8
-example_euf0.py     ,FazaIntegrator    ,16.24878692626953,657.0123331546783,SAE4WMI ,4
-example_euf0.py     ,LatteIntegrator   ,15.25,0.2349824905395507,SAE4WMI ,4
-example_euf0.py     ,VolestiIntegrator ,14.46744,0.215275764465332,SAE4WMI ,4
-example_euf1.py     ,FazaIntegrator    ,9.047882080078123,5175.051414728165,SAE4WMI ,7
-example_euf1.py     ,LatteIntegrator   ,48.55,0.3263351917266845,SAE4WMI ,7
-example_euf1.py     ,VolestiIntegrator ,49.08421,0.4167799949645996,SAE4WMI ,7
-example_euf2.py     ,LatteIntegrator   ,59.16666666666667,0.5673978328704834,SAE4WMI ,8
-example_euf2.py     ,VolestiIntegrator ,59.04176,0.3733997344970703,SAE4WMI ,8
+example1.py,FazaIntegrator,1.5,2.01649022102356,SAE4WMI,2
+example1.py,LatteIntegrator,1.0,0.192162275314331,SAE4WMI,2
+example1.py,VolestiIntegrator,1.020509,0.1300210952758789,SAE4WMI,2
+example3.py,FazaIntegrator,9.98828125,9.181718826293944,SAE4WMI,4
+example3.py,LatteIntegrator,9.0,0.2232270240783691,SAE4WMI,4
+example3.py,VolestiIntegrator,8.599661000000001,0.149961233139038,SAE4WMI,4
+example5.py,FazaIntegrator,0.00732421875,18.497398853302,SAE4WMI,4
+example5.py,LatteIntegrator,0.0,0.2133734226226806,SAE4WMI,4
+example5.py,VolestiIntegrator,0.1912300000000004,0.1524412631988525,SAE4WMI,4
+example6.py,FazaIntegrator,92.0,1.7049214839935305,SAE4WMI,7
+example6.py,LatteIntegrator,92.0,0.4501054286956787,SAE4WMI,9
+example6.py,VolestiIntegrator,90.27283,0.1974740028381347,SAE4WMI,7
+example7.py,FazaIntegrator,108.0,1.0231523513793943,SAE4WMI,4
+example7.py,LatteIntegrator,108.0,0.228506326675415,SAE4WMI,4
+example7.py,VolestiIntegrator,104.02337,0.1661977767944336,SAE4WMI,4
+example8.py,FazaIntegrator,2048.0,6.6003148555755615,SAE4WMI,27
+example8.py,LatteIntegrator,2048.0,0.5946075916290283,SAE4WMI,27
+example8.py,VolestiIntegrator,2021.1596,0.4048225879669189,SAE4WMI,27
+example_aliases.py,FazaIntegrator,5.99560546875,3.2835116386413574,SAE4WMI,1
+example_aliases.py,LatteIntegrator,6.0,0.1967570781707763,SAE4WMI,1
+example_aliases.py,VolestiIntegrator,6.37522,0.1259193420410156,SAE4WMI,1
+example_board.py,FazaIntegrator,16.242450714111328,622.6981112957001,SAE4WMI,4
+example_board.py,LatteIntegrator,15.25,0.2205390930175781,SAE4WMI,4
+example_board.py,VolestiIntegrator,14.87606,0.1455378532409668,SAE4WMI,4
+example_convert.py,FazaIntegrator,11.307693481445312,53.026464223861694,SAE4WMI,6
+example_convert.py,LatteIntegrator,10.75,0.2780649662017822,SAE4WMI,6
+example_convert.py,VolestiIntegrator,10.971723,0.1875479221343994,SAE4WMI,6
+example_convert2.py,FazaIntegrator,84.05513000488281,987.9534771442412,SAE4WMI,8
+example_convert2.py,LatteIntegrator,76.0,0.3034889698028564,SAE4WMI,8
+example_convert2.py,VolestiIntegrator,76.687208,0.2293727397918701,SAE4WMI,8
+example_euf0.py,FazaIntegrator,16.24878692626953,657.0123331546783,SAE4WMI,4
+example_euf0.py,LatteIntegrator,15.25,0.2349824905395507,SAE4WMI,4
+example_euf0.py,VolestiIntegrator,14.46744,0.215275764465332,SAE4WMI,4
+example_euf1.py,FazaIntegrator,9.047882080078123,5175.051414728165,SAE4WMI,7
+example_euf1.py,LatteIntegrator,48.55,0.3263351917266845,SAE4WMI,7
+example_euf1.py,VolestiIntegrator,49.08421,0.4167799949645996,SAE4WMI,7
+example_euf2.py,FazaIntegrator,61.192424774169936,5008.858836174011,SAE4WMI,8
+example_euf2.py,LatteIntegrator,59.16666666666667,0.5673978328704834,SAE4WMI,8
+example_euf2.py,VolestiIntegrator,59.04176,0.3733997344970703,SAE4WMI,8
+example_euf3.py,FazaIntegrator,84.08316040039062,1019.315345287323,SAE4WMI,8
+example_euf3.py,LatteIntegrator,76.0,0.5305278301239014,SAE4WMI,8
+example_euf3.py,VolestiIntegrator,75.560524,0.425776720046997,SAE4WMI,8
+example_euf4.py,FazaIntegrator,11.301666259765623,61.77847695350647,SAE4WMI,6
+example_euf4.py,LatteIntegrator,10.75,0.4594557285308838,SAE4WMI,6
+example_euf4.py,VolestiIntegrator,10.561139,0.3819715976715088,SAE4WMI,6
