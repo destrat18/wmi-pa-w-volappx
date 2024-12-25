@@ -74,12 +74,14 @@ ENV PATH="$PATH:/home/des/app/latte/bin"
 # Install Volesti
 RUN sudo apt-get install -y lp-solve \
 && wmipa-install --volesti -yf
-# RUN echo "export PATH=/home/des/.wmipa/approximate-integration/bin:$PATH" >> ~/.bash_profile
 ENV PATH="/home/des/.wmipa/approximate-integration/bin:$PATH"
 
-COPY ./ ./
+COPY ./ ./wmi-pa-w-volappx
+WORKDIR /home/des/app/wmi-pa-w-volappx
+
+RUN pip install -r requirements.txt
+RUN pip3 install experiments/wmi-benchmarks/
 
 
-# RUN pip install -r requirements.txt
-
+WORKDIR /home/des/app/
 CMD ["/bin/bash"]
