@@ -386,7 +386,7 @@ experiments/**/table.tex
 .vscode
 tmp*/
 
-gurobi.lic
+gurobi*.lic
 
 experiments/*
 example_results*
