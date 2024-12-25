@@ -29,38 +29,43 @@ if __name__ == "__main__":
                     os.path.join(volume_dir, volume_id, 'integrand.txt'), 
                     os.path.join(volume_dir, volume_id, 'bounds.txt')
                 )
-            total_degree = sym.total_degree(integrand)+1
+            total_degree = sym.total_degree(integrand)
             
-            logging.info(f"Total degree of {integrand} is {total_degree}!") 
-            start_time = time.time()
+            while True:
             
-            volume, stats = faza.calculate_approximate_volume(
-                degree=total_degree,
-                max_workers=args.max_workers,
-                integrand=integrand,
-                bounds=bounds,
-                vars=vars,
-                threshold=args.threshold
-            )
-            
-            results.append(
-                {
-                    'volume_id': volume_id,
-                    "volume": volume,
-                    "time": time.time()-start_time,
-                    "hrect_checked_num": stats["hrect_checked_num"],
-                    "total_solver_time": stats["total_solver_time"],
-                    "total_subs_time": stats["total_subs_time"],
-                    "threshold": args.threshold,
-                    "max_workers": args.max_workers,
-                    "integrand": integrand,
-                    "bounds": bounds,
-                    "degree": total_degree
-                }
+                logging.info(f"Checking {integrand} with degree {total_degree}!") 
+                start_time = time.time()
                 
-            )
-            
-            pd.DataFrame(results).to_csv(output_path, index=False)
+                volume, stats = faza.calculate_approximate_volume(
+                    degree=total_degree,
+                    max_workers=args.max_workers,
+                    integrand=integrand,
+                    bounds=bounds,
+                    vars=vars,
+                    threshold=args.threshold
+                )
+                
+                results.append(
+                    {
+                        'volume_id': volume_id,
+                        "volume": volume,
+                        "time": time.time()-start_time,
+                        "hrect_checked_num": stats["hrect_checked_num"],
+                        "total_solver_time": stats["total_solver_time"],
+                        "total_subs_time": stats["total_subs_time"],
+                        "threshold": args.threshold,
+                        "max_workers": args.max_workers,
+                        "integrand": integrand,
+                        "bounds": bounds,
+                        "degree": total_degree
+                    }
+                    
+                )
+                
+                pd.DataFrame(results).to_csv(output_path, index=False)
+                
+                if stats['error'] > 0:
+                    break
             
         
         except Exception as e:

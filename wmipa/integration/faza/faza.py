@@ -396,7 +396,8 @@ def calculate_approximate_volume(
     return volume+error, {
         "hrect_checked_num": total_hrect_checked,
         "total_solver_time": total_solver_time,
-        "total_subs_time": total_subs_time        
+        "total_subs_time": total_subs_time,
+        "error": error        
     }
 
 def find_upper_bound(    
