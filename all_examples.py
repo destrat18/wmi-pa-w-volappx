@@ -88,7 +88,7 @@ if __name__ == "__main__":
                             }
                         )
                     
-                    pd.DataFrame(results).to_csv(f"example_results_{int(time.time())}.csv", index=False)
+                    pd.DataFrame(results).to_csv(f"example_results_{int(start_time)}.csv", index=False)
                 
                 
         except Exception as e:
