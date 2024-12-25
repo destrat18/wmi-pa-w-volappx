@@ -29,7 +29,7 @@ if __name__ == "__main__":
                     os.path.join(volume_dir, volume_id, 'integrand.txt'), 
                     os.path.join(volume_dir, volume_id, 'bounds.txt')
                 )
-            total_degree = sym.total_degree(integrand)
+            total_degree = sym.total_degree(integrand)+1
             
             logging.info(f"Total degree of {integrand} is {total_degree}!") 
             start_time = time.time()
