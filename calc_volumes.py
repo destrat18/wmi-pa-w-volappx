@@ -20,7 +20,7 @@ if __name__ == "__main__":
     output_path = os.path.join(f"data/volume_results_{int(time.time())}.csv")
     
     results = []
-    for f_name in os.listdir(volume_dir):
+    for f_name in sorted(os.listdir(volume_dir)):
         try:
         
             volume_id = f_name
