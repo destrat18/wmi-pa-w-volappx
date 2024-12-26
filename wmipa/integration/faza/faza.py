@@ -587,11 +587,11 @@ def find_lower_bound(
                 return False, None, m.runtime
 
 def calculate_approximate_wmi(
-        degree,
         max_workers,
-        integrand, 
-        bounds, 
-        vars,
+        w, 
+        chi,
+        phi, 
+        variables,
         threshold,
     ):
 
@@ -601,43 +601,52 @@ def calculate_approximate_wmi(
     # The input form of Handelman is f_i>=0 => g >=0
 
     # RHS
-    g = sym.simplify(integrand)
+    w = sym.simplify(w)
+    w_degree = sym.total_degree(w)
     
     # Generate symbolic f_is with symbolic variable for upper bound and lower bound
-    f_list, bound_vars = generate_f_list(vars)
+    f_list, bound_vars = generate_f_list(variables)
     
     ###### for psi+ ######
     has_upper_bound, upper_bound, runtime = find_upper_bound(
-        degree=degree,
+        degree=w_degree,
         f_list=f_list,
-        g=g,
+        g=w,
         bound_vars=bound_vars,
-        bounds=bounds,
-        vars=vars
+        bounds=chi,
+        vars=variables
     )
     
     # We introduce a new variable
     y = sym.Symbol(f"y_{str(uuid.uuid4()).split('-')[0]}")
 
-
     # TODO: add proof rules
-    if sym.denom(g)!=1:
-        n, d = sym.fraction(g)
+    if sym.denom(w)!=1:
+        n, d = sym.fraction(w)
         new_integrand = n - d*y
     else:
-        new_integrand = g - y
+        new_integrand = w - y
         
-    new_bounds = bounds+[[0, upper_bound]]
-    new_vars = vars+[y]
+    new_bounds = chi+[[0, upper_bound]]
+    new_vars = variables+[y]
+    inputs = [new_integrand]
+    
+    # we convert the inputs to the form g_i>0 or g_i >=0
+    for exp in phi:
+        if isinstance(exp, sym.core.relational.Lt) or isinstance(exp, sym.core.relational.Le):
+            inputs.append(exp.rhs - exp.lhs)
+        elif isinstance(exp, sym.core.relational.Gt) or isinstance(exp, sym.core.relational.Ge):
+            inputs.append(exp.lhs-exp.rhs)
+
     
     logging.info(f"Psi+ bounds: [{0}, {upper_bound}]")
     
     
     if upper_bound != 0:
         psi_plus, psi_plus_stats = calculate_approximate_volume(
-            degree=degree,
+            degrees=[sym.total_degree(i) for i in inputs],
             max_workers=max_workers,
-            integrand=new_integrand,
+            inputs=inputs,
             bounds=new_bounds,
             variables=new_vars,
             threshold=threshold
@@ -654,12 +663,12 @@ def calculate_approximate_wmi(
     # We need to calculate this for psi-
     
     has_lower_bound, lower_bound, runtime = find_lower_bound(
-        degree=degree,
+        degree=w_degree,
         f_list=f_list,
-        g=g,
+        g=w,
         bound_vars=bound_vars,
-        bounds=bounds,
-        vars=vars
+        bounds=chi,
+        vars=variables
     )
     
     # We introduce a new variable
@@ -667,22 +676,32 @@ def calculate_approximate_wmi(
 
 
     # TODO: add proof rules
-    if sym.denom(g)!=1:
-        n, d = sym.fraction(g)
+    if sym.denom(w)!=1:
+        n, d = sym.fraction(w)
         new_integrand = d*y - n 
     else:
-        new_integrand = y - g
+        new_integrand = y - w
         
-    new_bounds = bounds+[[lower_bound, 0]]
-    new_vars = vars+[y]
+    new_bounds = chi+[[lower_bound, 0]]
+    new_vars = variables+[y]
+    
+    formula = [new_integrand>0]+phi
+    inputs = []
+    
+    # we convert the inputs to the form g_i>0 or g_i >=0
+    for exp in sym.to_cnf(formula).args:
+        if isinstance(exp, sym.core.relational.Lt) or isinstance(exp, sym.core.relational.Le):
+            inputs.append(exp.rhs - exp.lhs)
+        elif isinstance(exp, sym.core.relational.Gt) or isinstance(exp, sym.core.relational.Ge):
+            inputs.append(exp.lhs-exp.rhs)
     
     logging.info(f"Psi- bounds: [{lower_bound}, {0}]")
     
     if lower_bound != 0:
         psi_minus, psi_minus_stats = calculate_approximate_volume(
-            degree=degree,
+            degree=[sym.total_degree(i) for i in inputs],
             max_workers=max_workers,
-            integrand=new_integrand,
+            inputs=inputs,
             bounds=new_bounds,
             variables=new_vars,
             threshold=threshold
@@ -696,7 +715,7 @@ def calculate_approximate_wmi(
         }
     
     volume = psi_plus-psi_minus
-    logging.info(f"Shape: {integrand}, Volume: {psi_plus}(Psi+) - {psi_minus}(Psi-)={volume}")
+    logging.info(f"Inputs: {inputs}, Volume: {psi_plus}(Psi+) - {psi_minus}(Psi-)={volume}")
     
     return volume, {
         "hrect_checked_num": psi_plus_stats["hrect_checked_num"]+psi_minus_stats["hrect_checked_num"],

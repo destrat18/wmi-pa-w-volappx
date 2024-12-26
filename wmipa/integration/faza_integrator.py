@@ -57,48 +57,48 @@ class FazaIntegrator(CommandLineIntegrator):
         variables = sorted(integrand.variables.union(polytope.variables))
         
         # Create the string representation of the polytope (LattE format)
-        var_bounds = []
-        
+        chi = []
+                
         for var in variables:
             lower = -float('inf')
             upper = float('inf')
             for _, bound in enumerate(polytope.bounds):
-                if var in bound.coefficients:
-                    if bound.coefficients[var] < 0:
-                        lower = max(bound.constant/bound.coefficients[var], lower)
-                    elif bound.coefficients[var] > 0:
-                        upper = min(upper, bound.constant/bound.coefficients[var])
-                        
-            var_bounds.append([lower+0, upper+0])
+                if len(bound.coefficients) == 1:
+                    if var in bound.coefficients:
+                        if bound.coefficients[var] < 0:
+                            lower = max(bound.constant/bound.coefficients[var], lower)
+                        elif bound.coefficients[var] > 0:
+                            upper = min(upper, bound.constant/bound.coefficients[var])
+            chi.append([lower+0, upper+0])
         
-        integrand = sym.parse_expr(str(integrand))
         
-        if self.degree is None:
-            total_degree = sym.total_degree(integrand)
-            logging.info(f"Total degree of {integrand} is {total_degree}!") 
-        else:
-            total_degree = self.degree
+        phi = []
+        for bound in polytope.bounds:
+            if len(bound.coefficients) > 1:
+                phi.append(sym.parse_expr(str(bound)))
+                
+        w = sym.parse_expr(str(integrand))
         
         volume, stats = faza.calculate_approximate_wmi(
-            degree=total_degree,
             max_workers=self.max_workers,
-            integrand=integrand,
-            vars=[sym.var(str(var)) for var in variables],
-            bounds=var_bounds,
+            w=w,
+            variables=[sym.var(str(var)) for var in variables],
+            chi=chi,
+            phi=phi,
             threshold=self.threshold
         )
         
         print(integrand, "on", polytope, "=", volume)
 
-        self.logs.append({
-            'integrand': integrand,
-            "degree": total_degree,
-            "threshold": self.threshold,
-            "max_workers": self.max_workers,
-            "hrect_checked_num": stats["hrect_checked_num"],
-            "total_solver_time": stats["total_solver_time"],
-            "total_subs_time": stats["total_subs_time"],
-        })
+        # self.logs.append({
+        #     'integrand': integrand,
+        #     "degree": total_degree,
+        #     "threshold": self.threshold,
+        #     "max_workers": self.max_workers,
+        #     "hrect_checked_num": stats["hrect_checked_num"],
+        #     "total_solver_time": stats["total_solver_time"],
+        #     "total_subs_time": stats["total_subs_time"],
+        # })
 
         return volume
         
