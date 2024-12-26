@@ -41,7 +41,7 @@ if __name__ == "__main__":
                     max_workers=args.max_workers,
                     integrand=integrand,
                     bounds=bounds,
-                    vars=vars,
+                    variables=vars,
                     threshold=args.threshold
                 )
                 
