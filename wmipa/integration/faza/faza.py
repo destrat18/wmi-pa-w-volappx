@@ -122,16 +122,32 @@ def is_feasible(equations, temp_vars):
             return not(m.status==gp.GRB.INFEASIBLE), m.runtime
     
 
-def read_input(integrand_path, polytope_path):
+def read_input(input_path, bounds_path):
     
+    inputs = []
     # Read integrand and list of variables
-    with open(integrand_path) as f:
-        vars = sym.symbols(f.readline().strip().split(" "))
-        integrand = sym.parse_expr(f.readline())
+    with open(input_path) as f:
+        variables = sym.symbols(f.readline().strip().split(" "))
+        
+        # Support language with small expressiveness
+        inp = sym.parse_expr(f.readline())
+        
+        # Convert the input to CNF
+        inp = sym.to_cnf(inp)
+        
+        # we convert the inputs to the form g_i>0 or g_i >=0
+        for exp in inp.args:
+            if isinstance(exp, sym.core.relational.Lt) or isinstance(exp, sym.core.relational.Le):
+                inputs.append(exp.rhs - exp.lhs)
+            elif isinstance(exp, sym.core.relational.Gt) or isinstance(exp, sym.core.relational.Ge):
+                inputs.append(exp.lhs-exp.rhs)
+        
+        
+        
     
     # Read bounds
     bounds = []
-    with open(polytope_path) as f:
+    with open(bounds_path) as f:
 
         n_ineq, n_vars = pd.to_numeric(f.readline().split(" "))
         n_vars = n_vars -1
@@ -151,7 +167,7 @@ def read_input(integrand_path, polytope_path):
                     bounds[j][0] = -1*constant/abs(c)    
                 # print(j, c, bounds)
                 
-    return integrand, bounds, vars
+    return inputs, bounds, variables
 
 
 def generate_f_list(vars):
@@ -181,13 +197,11 @@ class Checker(mp.Process):
         pass
     daemon = property(_get_daemon, _set_daemon)
     
-    def __init__(self, inside_equations, outside_equations, vars, temp_vars, to_check_queue, checked_queue):
+    def __init__(self, equations, variables, to_check_queue, checked_queue):
         mp.Process.__init__(self)
         self.check_next = True
-        self.inside_equations = inside_equations
-        self.outside_equations = outside_equations
-        self.temp_vars = temp_vars
-        self.vars = vars
+        self.equations = equations
+        self.variables = variables
         self.to_check_queue = to_check_queue
         self.checked_queue = checked_queue
     
@@ -202,47 +216,60 @@ class Checker(mp.Process):
                 if hrect == None: # Time to close the process
                     break
                 
-                cur_depth, cur_bounds, cur_volume, bound_vars = hrect
+                cur_depth, cur_bounds, cur_volume, bound_vars, cur_memoization = hrect
                 
                 # timing
                 start_time = time.time()
 
-                # Optimization porblem
-                subs_dict = {}
-                for i in range(len(cur_bounds)):
-                    subs_dict[bound_vars[i][0]] = cur_bounds[i][0] 
-                    subs_dict[bound_vars[i][1]] = cur_bounds[i][1]
-
-                cur_inside_equations_ = [
-                    sym.Poly(a.subs(subs_dict)) for a in self.inside_equations
-                    ]
-                cur_outside_equations_ = [
-                    sym.Poly(a.subs(subs_dict)) for a in self.outside_equations
-                    ]
-
-                subs_time = time.time()-start_time
-
-                start_time = time.time()
-                is_inside, inside_runtime = is_feasible(cur_inside_equations_, self.temp_vars)
-                is_outside, outside_runtime = is_feasible(cur_outside_equations_, self.temp_vars)
-                solver_time = time.time()-start_time
+                is_inside_list = []
+                is_outside_list = []
                 
-                # logging.info(f"Bounds: {cur_bounds}, Inside: {is_inside}, Outside: {is_outside}")
+                for equation_i, (inside_equations, outside_equations, temp_vars) in enumerate(self.equations):
 
-                stats = {
-                    "solver_time": solver_time,
-                    "subs_time": subs_time
-                }
+                    if cur_memoization[equation_i]:
+                        # it means that we already know that this hrect is inside of the current euqations
+                        is_inside_list.append(True)
+                        is_outside_list.append(False)
+                    else:
+
+                        # Optimization porblem
+                        subs_dict = {}
+                        for i in range(len(cur_bounds)):
+                            subs_dict[bound_vars[i][0]] = cur_bounds[i][0] 
+                            subs_dict[bound_vars[i][1]] = cur_bounds[i][1]
+
+                        cur_inside_equations_ = [
+                            sym.Poly(a.subs(subs_dict)) for a in inside_equations
+                            ]
+                        cur_outside_equations_ = [
+                            sym.Poly(a.subs(subs_dict)) for a in outside_equations
+                            ]
+
+                        subs_time = time.time()-start_time
+
+                        start_time = time.time()
+                        is_inside, inside_runtime = is_feasible(cur_inside_equations_, temp_vars)
+                        is_outside, outside_runtime = is_feasible(cur_outside_equations_, temp_vars)
+                        solver_time = time.time()-start_time
+                        
+                        stats = {
+                            "solver_time": solver_time,
+                            "subs_time": subs_time
+                        }
+                        
+                        is_inside_list.append(is_inside)
+                        is_outside_list.append(is_outside)
+                    
                             
                 # if it's inside or outside remove it from error
-                if is_inside:
+                if sum(is_inside_list)==len(self.equations):
                     self.checked_queue.put((
                             0, # Inside
                             cur_volume, # volume of hyper-rect
                             cur_bounds,
                             stats
                         ))
-                elif is_outside:
+                elif sum(is_outside_list)>0:
                     self.checked_queue.put(
                         (
                             1, # mean it is outside
@@ -262,17 +289,17 @@ class Checker(mp.Process):
                     )
                     
                     # create two smaller hyper-rects
-                    i = cur_depth%len(self.vars)
+                    i = cur_depth%len(self.variables)
                     s_bounds = cur_bounds[i]
                     s_bound_middle = (s_bounds[0]+s_bounds[1])/2
                     
                     left_bounds = copy.deepcopy(cur_bounds)
                     left_bounds[i]=[s_bounds[0], s_bound_middle]
-                    self.to_check_queue.put((cur_depth+1, left_bounds, cur_volume/2, bound_vars))
+                    self.to_check_queue.put((cur_depth+1, left_bounds, cur_volume/2, bound_vars, is_inside_list))
                     
                     right_bounds = copy.deepcopy(cur_bounds)
                     right_bounds[i]=[s_bound_middle, s_bounds[1]]
-                    self.to_check_queue.put((cur_depth+1, right_bounds, cur_volume/2, bound_vars))
+                    self.to_check_queue.put((cur_depth+1, right_bounds, cur_volume/2, bound_vars, is_inside_list))
             
             except Exception as e:
                 logging.exception(e)
@@ -280,11 +307,11 @@ class Checker(mp.Process):
         logging.debug("I'm done!")
 
 def calculate_approximate_volume(
-        degree,
+        degrees,
         max_workers,
-        integrand, 
+        inputs, 
         bounds, 
-        vars,
+        variables,
         threshold,
     ):
 
@@ -292,24 +319,33 @@ def calculate_approximate_volume(
 
 
     # We apply Handelman below
-    # The input form of Handelman is f_i>=0 => g >=0
+    # The input form of Handelman is f_i>=0 => g_j >=0
 
-    # RHS
-    g = sym.simplify(integrand)
+    logging.info(f"Integral {inputs} over {bounds} with degrees {degrees}")
     
-    # Generate symbolic f_is with symbolic variable for upper bound and lower bound
-    f_list, bound_vars = generate_f_list(vars)
+    
+    equations = []
+    # for each clause in RHS, we must apply handelmans
+    for i, g_i in enumerate(inputs):
 
-    # we apply handelman here to generate eqations based on l_is.
-    # l_0 + l_1(f_1) + l_2(f_2) + ... + l_n(f_n) = g
-    inside_equations, outside_equations, temp_vars = generate_handelman_equations(
-        degree=degree,
-        f_list=f_list,
-        g = g,
-        vars=vars
-    )
+        # RHS
+        g_i = sym.simplify(g_i)
+        
+        # Generate symbolic f_is with symbolic variable for upper bound and lower bound
+        f_list, bound_vars = generate_f_list(variables)
+
+        # we apply handelman here to generate eqations based on l_is.
+        # l_0 + l_1(f_1) + l_2(f_2) + ... + l_n(f_n) = g
+        equations.append(
+            # Generate inside_equations, outside_equations, temp_vars
+            generate_handelman_equations(
+            degree=degrees[i],
+            f_list=f_list,
+            g = g_i,
+            vars=variables
+            )
+        )
     
-    logging.info(f"Integral {g} over {bounds}")
     
     # We run n instance of hardhats which listion on a queue and execute blocks
     # Create two queues
@@ -319,10 +355,8 @@ def calculate_approximate_volume(
     checker_list = []
     for _ in range(max_workers):
         checker = Checker(
-            inside_equations=inside_equations,
-            outside_equations=outside_equations,
-            temp_vars=temp_vars,
-            vars=vars,
+            equations=equations,
+            variables=variables,
             to_check_queue=to_check_queue,
             checked_queue=checked_queue
         )
@@ -338,7 +372,10 @@ def calculate_approximate_volume(
             0, # start depth
             bounds, # starting bounds
             start_volume, #start volume
-            bound_vars # bound vars that need to be replaced
+            bound_vars, # bound vars that need to be replaced,
+            [False]*len(inputs) #Memoization
+            # If a hyperrect is implies one literal, it will implies for all the smaller hyper rects which we create in future based on the current one
+            
         )
     )
     
@@ -602,7 +639,7 @@ def calculate_approximate_wmi(
             max_workers=max_workers,
             integrand=new_integrand,
             bounds=new_bounds,
-            vars=new_vars,
+            variables=new_vars,
             threshold=threshold
         )
     else:
@@ -647,7 +684,7 @@ def calculate_approximate_wmi(
             max_workers=max_workers,
             integrand=new_integrand,
             bounds=new_bounds,
-            vars=new_vars,
+            variables=new_vars,
             threshold=threshold
         )
     else:
