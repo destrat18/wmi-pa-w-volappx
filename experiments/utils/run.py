@@ -4,13 +4,17 @@ from queue import Empty as EmptyQueueError
 
 import psutil
 from pysmt.shortcuts import Real, Bool
-from pywmi import Domain as PywmiDomain, PyXaddEngine, XsddEngine, PyXaddAlgebra, FactorizedXsddEngine as FXSDD, \
-    RejectionEngine
-from pywmi.engines.algebraic_backend import SympyAlgebra
-from pywmi.engines.xsdd.vtrees.vtree import balanced
+
+try:
+    from pywmi import Domain as PywmiDomain, PyXaddEngine, XsddEngine, PyXaddAlgebra, FactorizedXsddEngine as FXSDD, \
+        RejectionEngine
+    from pywmi.engines.algebraic_backend import SympyAlgebra
+    from pywmi.engines.xsdd.vtrees.vtree import balanced
+except:
+    pass
 
 from wmipa import WMI
-from wmipa.integration import LatteIntegrator, VolestiIntegrator, SymbolicIntegrator
+from wmipa.integration import LatteIntegrator, VolestiIntegrator, SymbolicIntegrator, FazaIntegrator
 
 WMIResult = namedtuple("WMIResult", ["wmi_id",
                                      "value",
@@ -31,6 +35,9 @@ def get_integrators(args):
         return [None]
     if args.integrator == "latte":
         return [LatteIntegrator(n_threads=args.n_threads, stub_integrate=args.stub)]
+    # Add by soroush
+    if args.integrator == "faza":
+        return [FazaIntegrator(max_workers=args.n_threads, threshold=args.threshold)]
     elif args.integrator == "volesti":
         seeds = list(range(args.seed, args.seed + args.n_seeds))
         return [VolestiIntegrator(n_threads=args.n_threads, stub_integrate=args.stub,
@@ -38,6 +45,8 @@ def get_integrators(args):
                                   walk_length=args.walk_length, seed=seed, N=args.N) for seed in seeds]
     elif args.integrator == "symbolic":
         return [SymbolicIntegrator(n_threads=args.n_threads, stub_integrate=args.stub)]
+    #### Add integrators
+    
     else:
         raise ValueError(f"Invalid integrator {args.integrator}")
 

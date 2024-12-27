@@ -38,8 +38,8 @@ if __name__ == "__main__":
             faza_integrator = FazaIntegrator(max_workers=args.max_workers, threshold=args.threshold)
             
             for integrator in [
-                # LatteIntegrator(),
-                # VolestiIntegrator(),
+                LatteIntegrator(),
+                VolestiIntegrator(),
                 faza_integrator,
             ]:
                 for mode in [
