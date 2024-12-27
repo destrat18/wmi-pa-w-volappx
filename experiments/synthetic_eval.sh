@@ -8,11 +8,11 @@ do
 	res_dir=$(sed "s+data+results+g" <<< $dir)
 	mkdir -p $res_dir
 	echo Evaluating $dir
-	for mode in "PA latte" "SAPA latte" "SAE4WMI latte"
-	do
-		echo Mode $mode
-		python3 evaluateModels.py $dir -o $res_dir -m $mode 
-	done
+	# for mode in "SAE4WMI latte"
+	# do
+	# 	echo Mode $mode
+	# 	python3 evaluateModels.py $dir -o $res_dir -m $mode 
+	# done
 
   error=0.1
 	for N in 100 1000 10000

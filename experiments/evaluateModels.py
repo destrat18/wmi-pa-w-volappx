@@ -82,12 +82,15 @@ def parse_args():
     parser.add_argument("--unweighted", action="store_true",
                         help="Set this flag if you want to compute the (unweighted) model integration, "
                              "i.e., to use 1 as weight")
+    parser.add_argument("--threshold", type=float, default=0.1, help="Faza error threshold")
 
     integration_parsers = parser.add_subparsers(title="integrator", description="Integrator to use for WMIPA methods",
                                                 dest="integrator")
     latte_parser = integration_parsers.add_parser("latte", formatter_class=Formatter)
     symbolic_parser = integration_parsers.add_parser("symbolic", formatter_class=Formatter)
+    faza_parser = integration_parsers.add_parser("faza", formatter_class=Formatter)
     volesti_parser = integration_parsers.add_parser("volesti", formatter_class=Formatter)
+    
     volesti_parser.add_argument("-e", "--error", default=0.1, type=float,
                                 help="Relative error for the volume computation [in (0, 1)]")
     volesti_parser.add_argument("--algorithm", choices=VolestiIntegrator.ALGORITHMS,

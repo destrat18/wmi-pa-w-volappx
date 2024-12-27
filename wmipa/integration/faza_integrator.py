@@ -76,8 +76,10 @@ class FazaIntegrator(CommandLineIntegrator):
         for bound in polytope.bounds:
             if len(bound.coefficients) > 1:
                 phi.append(sym.parse_expr(str(bound)))
-                
-        w = sym.parse_expr(str(integrand))
+                        
+        print(integrand, "on", polytope)
+
+        w = sym.parse_expr(str(integrand)).simplify()
         
         volume, stats = faza.calculate_approximate_wmi(
             max_workers=self.max_workers,
@@ -167,15 +169,10 @@ class FazaIntegrator(CommandLineIntegrator):
                 raise WMIIntegrationException(WMIIntegrationException.OTHER_ERROR, "Error while calling VolEsti")
 
     def to_json(self):
-        return {"name": "volesti",
-                "algorithm": self.algorithm,
-                "error": self.error,
-                "walk_type": self.walk_type,
-                "walk_length": self.walk_length,
-                "seed": self.seed,
-                "N": self.N,
-                "n_threads": self.n_threads}
+        return {"name": "faza",
+                "threshold": self.threshold,
+                "max_workers": self.max_workers
+                }
 
     def to_short_str(self):
-        return "faza_{}_{}_{}_{}_{}_{}".format(self.algorithm, self.error, self.walk_type, self.walk_length,
-                                                  self.seed, self.N)
+        return "faza_{}_{}".format(self.threshold, self.max_workers)
