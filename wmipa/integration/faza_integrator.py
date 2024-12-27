@@ -78,7 +78,7 @@ class FazaIntegrator(CommandLineIntegrator):
                 phi.append(sym.parse_expr(str(bound)))
                         
 
-        w = sym.simplify(sym.expand(sym.parse_expr(str(integrand))))
+        w = sym.simplify(sym.expand(sym.parse_expr(str(integrand).replace("^", "**"))))
         
         volume = 0
         # volume, stats = faza.calculate_approximate_wmi(
