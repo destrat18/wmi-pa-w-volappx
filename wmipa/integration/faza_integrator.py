@@ -77,21 +77,21 @@ class FazaIntegrator(CommandLineIntegrator):
             if len(bound.coefficients) > 1:
                 phi.append(sym.parse_expr(str(bound)))
                         
-        print(integrand, "on", polytope)
 
-        w = sym.parse_expr(str(integrand)).simplify()
+        w = sym.simplify(sym.expand(sym.parse_expr(str(integrand))))
         
-        volume, stats = faza.calculate_approximate_wmi(
-            max_workers=self.max_workers,
-            w=w,
-            variables=[sym.var(str(var)) for var in variables],
-            chi=chi,
-            phi=phi,
-            threshold=self.threshold
-        )
+        volume = 0
+        # volume, stats = faza.calculate_approximate_wmi(
+        #     max_workers=self.max_workers,
+        #     w=w,
+        #     variables=[sym.var(str(var)) for var in variables],
+        #     chi=chi,
+        #     phi=phi,
+        #     threshold=self.threshold
+        # )
         
-        print(integrand, "on", polytope, "=", volume)
-
+        print(integrand, "on", polytope, "=", volume, "Total degree:", sym.total_degree(w))
+        
         # self.logs.append({
         #     'integrand': integrand,
         #     "degree": total_degree,
