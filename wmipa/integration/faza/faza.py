@@ -684,12 +684,10 @@ def calculate_approximate_wmi(
         
     new_bounds = chi+[[lower_bound, 0]]
     new_vars = variables+[y]
-    
-    formula = [new_integrand>0]+phi
-    inputs = []
+    inputs = [new_integrand]
     
     # we convert the inputs to the form g_i>0 or g_i >=0
-    for exp in sym.to_cnf(formula).args:
+    for exp in phi:
         if isinstance(exp, sym.core.relational.Lt) or isinstance(exp, sym.core.relational.Le):
             inputs.append(exp.rhs - exp.lhs)
         elif isinstance(exp, sym.core.relational.Gt) or isinstance(exp, sym.core.relational.Ge):
