@@ -57,8 +57,10 @@ def generate_monoids_up_to_degree(vars, d):
 
 def generate_handelman_equations(degree, f_list, g, vars):
     
+    start_time = time.time()
     # Generate all possible monoids
     monoids = generate_monoids_up_to_degree(f_list, degree)
+    logging.info(f"Monoids generation time: {time.time()-start_time:.2f}s")
     
     # create temp variable for each monoind
     temp_vars = []
