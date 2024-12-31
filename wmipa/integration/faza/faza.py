@@ -134,14 +134,20 @@ def read_input(input_path, bounds_path):
         
         # Convert the input to CNF
         inp = sym.to_cnf(inp)
-        
-        # we convert the inputs to the form g_i>0 or g_i >=0
-        for exp in inp.args:
-            if isinstance(exp, sym.core.relational.Lt) or isinstance(exp, sym.core.relational.Le):
-                inputs.append(exp.rhs - exp.lhs)
-            elif isinstance(exp, sym.core.relational.Gt) or isinstance(exp, sym.core.relational.Ge):
-                inputs.append(exp.lhs-exp.rhs)
-        
+        if isinstance(inp, sym.core.relational.Lt) or isinstance(inp, sym.core.relational.Le):
+            inputs.append(inp.rhs - inp.lhs)
+        elif isinstance(inp, sym.core.relational.Gt) or isinstance(inp, sym.core.relational.Ge):
+            inputs.append(inp.lhs-inp.rhs)
+        else:
+            # we convert the inputs to the form g_i>0 or g_i >=0
+            for exp in inp.args:
+                if isinstance(exp, sym.core.relational.Lt) or isinstance(exp, sym.core.relational.Le):
+                    inputs.append(exp.rhs - exp.lhs)
+                elif isinstance(exp, sym.core.relational.Gt) or isinstance(exp, sym.core.relational.Ge):
+                    inputs.append(exp.lhs-exp.rhs)
+
+    
+    inputs = [sym.simplify(sym.expand(i))for i in inputs]
         
         
     

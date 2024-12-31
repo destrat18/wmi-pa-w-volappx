@@ -78,19 +78,21 @@ class FazaIntegrator(CommandLineIntegrator):
                 phi.append(sym.parse_expr(str(bound)))
                         
 
-        w = sym.simplify(sym.expand(sym.parse_expr(str(integrand).replace("^", "**"))))
-        print("Total degree:", sym.total_degree(w))
-        # TODO: Add expand and simplify
-        volume, stats = faza.calculate_approximate_wmi(
-            max_workers=self.max_workers,
-            w=w,
-            variables=[sym.var(str(var)) for var in variables],
-            chi=chi,
-            phi=phi,
-            threshold=self.threshold
-        )
+        w = sym.parse_expr(str(integrand).replace("^", "**"))
+        print("Polynomial degree:", sym.total_degree(w))
+        volume = 0
+        # # TODO: Add expand and simplify
+        w = sym.simplify(sym.expand(w))
+        # volume, stats = faza.calculate_approximate_wmi(
+        #     max_workers=self.max_workers,
+        #     w=w,
+        #     variables=[sym.var(str(var)) for var in variables],
+        #     chi=chi,
+        #     phi=phi,
+        #     threshold=self.threshold
+        # )
         
-        print(integrand, "on", polytope, "=", volume)
+        # print(integrand, "on", polytope, "=", volume)
         
         # self.logs.append({
         #     'integrand': integrand,

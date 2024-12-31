@@ -391,3 +391,4 @@ gurobi*.lic
 *_results*.csv
 experiments/synthetic_exp
 experiments/pywmi
+experiments/pol_deg.txt
