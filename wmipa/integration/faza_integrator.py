@@ -82,7 +82,7 @@ class FazaIntegrator(CommandLineIntegrator):
         print("Polynomial degree:", sym.total_degree(w))
         volume = 0
         # # TODO: Add expand and simplify
-        w = sym.simplify(sym.expand(w))
+        # w = sym.simplify(sym.expand(w))
         # volume, stats = faza.calculate_approximate_wmi(
         #     max_workers=self.max_workers,
         #     w=w,
