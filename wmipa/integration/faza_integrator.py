@@ -54,33 +54,35 @@ class FazaIntegrator(CommandLineIntegrator):
 
         """
         
-        variables = sorted(integrand.variables.union(polytope.variables))
+        print("hererere")
+        # w = sym.parse_expr(str(integrand).replace("^", "**"))
+        # print("Polynomial degree:", sym.total_degree(w))
+        volume = 0
         
-        # Create the string representation of the polytope (LattE format)
-        chi = []
+        # variables = sorted(integrand.variables.union(polytope.variables))
+        
+        # # Create the string representation of the polytope (LattE format)
+        # chi = []
                 
-        for var in variables:
-            lower = -float('inf')
-            upper = float('inf')
-            for _, bound in enumerate(polytope.bounds):
-                if len(bound.coefficients) == 1:
-                    if var in bound.coefficients:
-                        if bound.coefficients[var] < 0:
-                            lower = max(bound.constant/bound.coefficients[var], lower)
-                        elif bound.coefficients[var] > 0:
-                            upper = min(upper, bound.constant/bound.coefficients[var])
-            chi.append([lower+0, upper+0])
+        # for var in variables:
+        #     lower = -float('inf')
+        #     upper = float('inf')
+        #     for _, bound in enumerate(polytope.bounds):
+        #         if len(bound.coefficients) == 1:
+        #             if var in bound.coefficients:
+        #                 if bound.coefficients[var] < 0:
+        #                     lower = max(bound.constant/bound.coefficients[var], lower)
+        #                 elif bound.coefficients[var] > 0:
+        #                     upper = min(upper, bound.constant/bound.coefficients[var])
+        #     chi.append([lower+0, upper+0])
         
         
-        phi = []
-        for bound in polytope.bounds:
-            if len(bound.coefficients) > 1:
-                phi.append(sym.parse_expr(str(bound)))
+        # phi = []
+        # for bound in polytope.bounds:
+        #     if len(bound.coefficients) > 1:
+        #         phi.append(sym.parse_expr(str(bound)))
                         
 
-        w = sym.parse_expr(str(integrand).replace("^", "**"))
-        print("Polynomial degree:", sym.total_degree(w))
-        volume = 0
         # # TODO: Add expand and simplify
         # w = sym.simplify(sym.expand(w))
         # volume, stats = faza.calculate_approximate_wmi(

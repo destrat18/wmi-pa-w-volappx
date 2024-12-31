@@ -10,5 +10,5 @@ do
 	echo Evaluating $dir
 
     echo "Mode SAE4WMI faza"
-    python3 evaluateModels.py "$dir" -o "$res_dir" --n-threads "1" --threshold "0.1" -m SAE4WMI faza 
+    python3 -u evaluateModels.py "$dir" -o "$res_dir" --n-threads "4" --threshold "0.1" -m SAE4WMI faza 
 done
