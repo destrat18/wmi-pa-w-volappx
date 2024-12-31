@@ -53,10 +53,8 @@ class FazaIntegrator(CommandLineIntegrator):
             real: The integration result.
 
         """
-        
-        print("hererere")
-        # w = sym.parse_expr(str(integrand).replace("^", "**"))
-        # print("Polynomial degree:", sym.total_degree(w))
+        w = sym.parse_expr(str(integrand).replace("^", "**"))
+        print("Polynomial degree:", sym.total_degree(w))
         volume = 0
         
         # variables = sorted(integrand.variables.union(polytope.variables))

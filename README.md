@@ -110,3 +110,7 @@ The code for running the experiments reported in the papers above can be found i
 
 
 bash -c "cd /project/t3_sfarokhnia/wmi-pa-w-volappx/experiments && GRB_LICENSE_FILE=/project/t3_sfarokhnia/wmi-pa-w-volappx/gurobi.lic python3 evaluateModels.py synthetic_exp/data/pa_r3_b3_d4_m10_s666 --output synthetic_exp/results --n-threads 1 --threshold 1 --mode SAE4WMI faza"
+
+
+
+bash -c "cd /project/t3_sfarokhnia/wmi-pa-w-volappx && GRB_LICENSE_FILE=/project/t3_sfarokhnia/wmi-pa-w-volappx/gurobi.lic python3 approximate_volume.py --threshold 0.1 --max-workers 16 --input data/volumes/d_f_over_g/integrand.txt --bounds data/volumes/d_f_over_g/bounds.txt"

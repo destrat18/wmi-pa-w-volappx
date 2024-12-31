@@ -66,8 +66,7 @@ def generate_handelman_equations(degree, f_list, g, vars):
         l = sym.symbols(f"l_{i}")
         monoids[i] = monoids[i]*l
         temp_vars.append(l)
-
-    # TODO do it for negetive    
+    
     a_pos = sym.simplify(sym.expand(sum(monoids)-(g)))
 
     pos_equations = []
@@ -313,7 +312,7 @@ class Checker(mp.Process):
         logging.debug("I'm done!")
 
 def calculate_approximate_volume(
-        degrees,
+        degree_list,
         max_workers,
         inputs, 
         bounds, 
@@ -327,7 +326,7 @@ def calculate_approximate_volume(
     # We apply Handelman below
     # The input form of Handelman is f_i>=0 => g_j >=0
 
-    logging.info(f"Integral {inputs} over {bounds} with degrees {degrees}")
+    logging.info(f"Integral {inputs} over {bounds} with degrees {degree_list}")
     
     
     equations = []
@@ -335,8 +334,7 @@ def calculate_approximate_volume(
     for i, g_i in enumerate(inputs):
 
         # RHS
-        g_i = sym.simplify(g_i)
-        
+
         # Generate symbolic f_is with symbolic variable for upper bound and lower bound
         f_list, bound_vars = generate_f_list(variables)
 
@@ -345,7 +343,7 @@ def calculate_approximate_volume(
         equations.append(
             # Generate inside_equations, outside_equations, temp_vars
             generate_handelman_equations(
-            degree=degrees[i],
+            degree=degree_list[i],
             f_list=f_list,
             g = g_i,
             vars=variables
@@ -650,7 +648,7 @@ def calculate_approximate_wmi(
     
     if upper_bound != 0:
         psi_plus, psi_plus_stats = calculate_approximate_volume(
-            degrees=[sym.total_degree(i) for i in inputs],
+            degree_list=[sym.total_degree(i) for i in inputs],
             max_workers=max_workers,
             inputs=inputs,
             bounds=new_bounds,
