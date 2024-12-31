@@ -81,7 +81,8 @@ WORKDIR /home/des/app/wmi-pa-w-volappx
 
 RUN pip install -r requirements.txt
 RUN pip3 install .
-RUN pip3 install experiments/wmi-benchmarks/
+RUN cd experiments/wmi-benchmarks \
+ && pip3 install .
 
 
 WORKDIR /home/des/app/
