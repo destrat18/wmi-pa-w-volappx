@@ -55,7 +55,7 @@ examples = [
         },
         ###################### 1/(x+y) ######################
         {
-                "phi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0)),LE(y, Real(1)),),
+                "phi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0.1)),LE(y, Real(1)),),
                 'w': Div(Real(1), x+y)        
         },
 ]
