@@ -42,12 +42,12 @@ def generate_monoids(vars, d):
         monoids.add(sym.prod(combo))
     return list(monoids)
 
-def generate_monoids_up_to_degree(vars, d):
+def generate_monoids_up_to_degree(var_list, d):
 
     # Generate all combinations of variables of degree up to d
     monoids = set()
     for i in range(0, d+1):
-        combinations = product(vars, repeat=i)
+        combinations = product(var_list, repeat=i)
         for combo in combinations:
             monoids.add(sym.prod(combo))
             
@@ -445,7 +445,6 @@ def calculate_approximate_volume(
 
 def find_upper_bound(    
                      
-    degree, 
     f_list, 
     g, 
     vars,
@@ -475,6 +474,8 @@ def find_upper_bound(
     else:
         gU = U - g
     
+    gU = sym.expand(gU)
+    degree = sym.total_degree(gU)
         
     upper_equations, _, temp_vars = generate_handelman_equations(
         degree=degree,
@@ -519,8 +520,6 @@ def find_upper_bound(
 
 
 def find_lower_bound(    
-                     
-    degree, 
     f_list, 
     g, 
     vars,
@@ -550,6 +549,9 @@ def find_lower_bound(
         gL = n - L*d
     else:
         gL = g - L
+    
+    gL = sym.expand(gL)
+    degree = sym.total_degree(gL)
     
     lower_equations, _, temp_vars = generate_handelman_equations(
         degree=degree,
@@ -608,14 +610,12 @@ def calculate_approximate_wmi(
 
     # RHS
     w = sym.simplify(w)
-    w_degree = sym.total_degree(w)
     
     # Generate symbolic f_is with symbolic variable for upper bound and lower bound
     f_list, bound_vars = generate_f_list(variables)
     
     ###### for psi+ ######
     has_upper_bound, upper_bound, runtime = find_upper_bound(
-        degree=w_degree,
         f_list=f_list,
         g=w,
         bound_vars=bound_vars,
@@ -645,8 +645,9 @@ def calculate_approximate_wmi(
             inputs.append(exp.lhs-exp.rhs)
 
     
-    logging.info(f"Psi+ bounds: [{0}, {upper_bound}]")
     
+    inputs = [sym.expand(i) for i in inputs]    
+    logging.info(f"Psi+ bounds: [{0}, {upper_bound}]")
     
     if upper_bound != 0:
         psi_plus, psi_plus_stats = calculate_approximate_volume(
@@ -669,7 +670,6 @@ def calculate_approximate_wmi(
     # We need to calculate this for psi-
     
     has_lower_bound, lower_bound, runtime = find_lower_bound(
-        degree=w_degree,
         f_list=f_list,
         g=w,
         bound_vars=bound_vars,
@@ -699,6 +699,7 @@ def calculate_approximate_wmi(
         elif isinstance(exp, sym.core.relational.Gt) or isinstance(exp, sym.core.relational.Ge):
             inputs.append(exp.lhs-exp.rhs)
     
+    inputs = [sym.expand(i) for i in inputs]
     logging.info(f"Psi- bounds: [{lower_bound}, {0}]")
     
     if lower_bound != 0:

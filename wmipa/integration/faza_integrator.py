@@ -9,7 +9,7 @@ from wmipa.integration.polytope import Polytope
 from wmipa.wmiexception import WMIRuntimeException, WMIIntegrationException
 from wmipa.integration.faza import faza
 import sympy as sym
-import logging
+import logging, re
 
 # TODO: Add is_faza_installed
 _FAZA_INSTALLED = True
@@ -53,44 +53,48 @@ class FazaIntegrator(CommandLineIntegrator):
             real: The integration result.
 
         """
-        w = sym.parse_expr(str(integrand).replace("^", "**"))
-        print("Polynomial degree:", sym.total_degree(w))
-        volume = 0
         
-        # variables = sorted(integrand.variables.union(polytope.variables))
+        variables = sorted(integrand.variables.union(polytope.variables))
+        # TODO find a better way to do this
+        a = re.compile('\^\ \d+.0')
+        integrand = a.sub(lambda x: "**" + str(x.group(0))[1:-2], str(integrand))
+        w = sym.parse_expr(integrand)
+        # print("Polynomial degree:", sym.total_degree(w))
+        # volume = 0
         
-        # # Create the string representation of the polytope (LattE format)
-        # chi = []
+        
+        # Create the string representation of the polytope (LattE format)
+        chi = []
                 
-        # for var in variables:
-        #     lower = -float('inf')
-        #     upper = float('inf')
-        #     for _, bound in enumerate(polytope.bounds):
-        #         if len(bound.coefficients) == 1:
-        #             if var in bound.coefficients:
-        #                 if bound.coefficients[var] < 0:
-        #                     lower = max(bound.constant/bound.coefficients[var], lower)
-        #                 elif bound.coefficients[var] > 0:
-        #                     upper = min(upper, bound.constant/bound.coefficients[var])
-        #     chi.append([lower+0, upper+0])
+        for var in variables:
+            lower = -float('inf')
+            upper = float('inf')
+            for _, bound in enumerate(polytope.bounds):
+                if len(bound.coefficients) == 1:
+                    if var in bound.coefficients:
+                        if bound.coefficients[var] < 0:
+                            lower = max(bound.constant/bound.coefficients[var], lower)
+                        elif bound.coefficients[var] > 0:
+                            upper = min(upper, bound.constant/bound.coefficients[var])
+            chi.append([lower+0, upper+0])
         
         
-        # phi = []
-        # for bound in polytope.bounds:
-        #     if len(bound.coefficients) > 1:
-        #         phi.append(sym.parse_expr(str(bound)))
+        phi = []
+        for bound in polytope.bounds:
+            if len(bound.coefficients) > 1:
+                phi.append(sym.parse_expr(str(bound)))
                         
 
-        # # TODO: Add expand and simplify
-        # w = sym.simplify(sym.expand(w))
-        # volume, stats = faza.calculate_approximate_wmi(
-        #     max_workers=self.max_workers,
-        #     w=w,
-        #     variables=[sym.var(str(var)) for var in variables],
-        #     chi=chi,
-        #     phi=phi,
-        #     threshold=self.threshold
-        # )
+        # TODO: Add expand and simplify
+        w = sym.simplify(sym.expand(w))
+        volume, stats = faza.calculate_approximate_wmi(
+            max_workers=self.max_workers,
+            w=w,
+            variables=[sym.var(str(var)) for var in variables],
+            chi=chi,
+            phi=phi,
+            threshold=self.threshold
+        )
         
         # print(integrand, "on", polytope, "=", volume)
         
