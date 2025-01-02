@@ -93,13 +93,14 @@ if __name__ == "__main__":
                         VolestiIntegrator(), 
                         FazaIntegrator(max_workers=args.max_workers, threshold=args.threshold)
                         ):
+                        
+                        start_time = time.time()
                         try:
-                                start_time = time.time()
                                 wmi = WMI(chi, w, integrator=integrator)
                                 volume, n_integrations = wmi.computeWMI(phi, mode=mode)
                                 print(
                                         "Formula {}, \t integrator= {}, \t result = {}, \t time = {:.4f}s".format(
-                                                w.serialize(), integrator.__class__.__name__, volume, n_integrations, time.time()-start_time
+                                                w.serialize(), integrator.__class__.__name__, volume, time.time()-start_time
                                         )
                                 )
                                 results.append(
