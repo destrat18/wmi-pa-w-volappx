@@ -31,10 +31,10 @@ examples = [
         # },
         
         ###################### x/(4+x^2) ######################
-        {
-                "phi": And(GE(x, Real(0)),LE(x, Real(1))),
-                'w': Div(x, a+ Pow(x, Real(2)))        
-        },
+        # {
+        #         "phi": And(GE(x, Real(0)),LE(x, Real(1))),
+        #         'w': Div(x, a+ Pow(x, Real(2)))        
+        # },
 
         ###################### x^3/(4+x^2) ######################
         {
@@ -53,11 +53,11 @@ examples = [
                 "phi": And(GE(x, Real(0)),LE(x, Real(1))),
                 'w': Div(Real(1), Times(x+a, x+b) )        
         },
-        ###################### 1/(x+y) ######################
-        {
-                "phi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0.1)),LE(y, Real(1)),),
-                'w': Div(Real(1), x+y)        
-        },
+        # ###################### 1/(x+y) ######################
+        # {
+        #         "phi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0.1)),LE(y, Real(1)),),
+        #         'w': Div(Real(1), x+y)        
+        # },
 ]
 
 
