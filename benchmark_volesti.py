@@ -5,7 +5,7 @@ from wmipa import WMI
 from wmipa.integration import LatteIntegrator, VolestiIntegrator, FazaIntegrator
 import pandas as pd
 import time, argparse, os
-from benchmarks import benchmark_group1
+from benchmarks import group1
 
 
 # fmt: on
@@ -31,11 +31,11 @@ if __name__ == "__main__":
 
         results = []
         
-        benchmark_name = f'{benchmark_group1=}'.split('=')[0]
+        benchmark_name = f'{group1=}'.split('=')[0]
         results_dir = "experimental_results"
         results_path = os.path.join(results_dir, f"benchmark_{benchmark_name}_volesti_{int(time.time())}.csv")
 
-        for bench in benchmark_group1:
+        for bench in group1:
 
                 w = bench['w']
                 phi = bench['phi']
@@ -57,7 +57,7 @@ if __name__ == "__main__":
                                     )
                                     results.append(
                                     {
-                                            "benchmark": benchmark_group1,
+                                            "benchmark": group1,
                                             'time': time.time()-start_time,
                                             'formula': w.serialize(),
                                             'integrator': integrator.__class__.__name__,
@@ -80,7 +80,7 @@ if __name__ == "__main__":
                                     )
                                     results.append(
                                     {
-                                            "benchmark": benchmark_group1,
+                                            "benchmark": group1,
                                             'time': time.time()-start_time,
                                             'formula': w.serialize(),
                                             'integrator': integrator.__class__.__name__,
