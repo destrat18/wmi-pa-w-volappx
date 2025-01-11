@@ -443,6 +443,21 @@ def calculate_approximate_volume(
         "error": error        
     }
 
+def apply_reduction_rules(g, y):
+    
+    if isinstance(g, sym.core.power.Pow):
+        y = pow(y, 1/g.args[-1])
+        g = g.args[0]
+        
+    # TODO: add proof rules
+    if sym.denom(g)!=1:
+        n, d = sym.fraction(g)
+        gY = y*d - n
+    else:
+        gY = y - g
+    
+    gY = sym.expand(gY)
+
 def find_upper_bound(    
                      
     f_list, 
@@ -467,14 +482,7 @@ def find_upper_bound(
     U = sym.Symbol(f"U_{str(uuid.uuid4()).split('-')[0]}")
 
     # g <= U => U - g>=0
-    # TODO: add proof rules
-    if sym.denom(g)!=1:
-        n, d = sym.fraction(g)
-        gU = U*d - n
-    else:
-        gU = U - g
-    
-    gU = sym.expand(gU)
+    gU = apply_reduction_rules(g, U)
     degree = sym.total_degree(gU)
         
     upper_equations, _, temp_vars = generate_handelman_equations(
@@ -608,8 +616,9 @@ def calculate_approximate_wmi(
     # We apply Handelman below
     # The input form of Handelman is f_i>=0 => g >=0
 
-    # RHS
-    w = sym.simplify(w)
+    # Normalize the weight function
+    if type(w) == str:
+        w = sym.parse_expr(w)
     
     # Generate symbolic f_is with symbolic variable for upper bound and lower bound
     f_list, bound_vars = generate_f_list(variables)

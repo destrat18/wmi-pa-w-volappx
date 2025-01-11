@@ -1,0 +1,22 @@
+bechmark,formula,index,output,error,time,details
+benchmarks,(x)*100,0,49.995,,0.05918264389038086,"{'n_integrations': 1, 'mode': 'SAE4WMI', 'output': 49.995}"
+benchmarks,(x**2)*100,1,33.333333333333336,,0.07384967803955078,"{'n_integrations': 1, 'mode': 'SAE4WMI', 'output': 33.333333333333336}"
+benchmarks,(x**3)*100,2,25.0,,0.07010102272033691,"{'n_integrations': 1, 'mode': 'SAE4WMI', 'output': 25.0}"
+benchmarks,(x**3 + x**2 + x + 1)*100,3,208.33333333333334,,0.09180188179016113,"{'n_integrations': 1, 'mode': 'SAE4WMI', 'output': 208.33333333333334}"
+benchmarks,(x**4 + x**3 + x**2 + x**1 + 1)*100,4,228.33333333333334,,0.06873250007629395,"{'n_integrations': 1, 'mode': 'SAE4WMI', 'output': 228.33333333333334}"
+benchmarks,(100/x),5,,Memory limit exceeded (maybe),0.1318650245666504,[]
+benchmarks,(100/(x+y)),6,,Not a monomial: (x + y),0.03753209114074707,[]
+benchmarks,(100/(x+y+(x*y))),7,,Not a monomial: (x + y + (x * y)),0.019190311431884766,[]
+benchmarks,(100/(x+y+z)),8,,Not a monomial: (x + y + z),0.02540755271911621,[]
+benchmarks,(100/(x**2 -1)),9,,Not a monomial: (-1.0 + (x ^ 2.0)),0.027608871459960938,[]
+benchmarks,((x**2+x+1)*100)/(x**3+1),10,,Not a monomial: (1.0 + (x ^ 3.0)),0.03370261192321777,[]
+benchmarks,(x*100/( 4.0 + x**2)),11,,Not a monomial: (4.0 + (x ^ 2.0)),0.026772260665893555,[]
+benchmarks,((x**3)*100/(4.0+x**2)),12,,Not a monomial: (4.0 + (x ^ 2.0)),0.024808883666992188,[]
+benchmarks,(100/(4.0*x**2 + 9.0*x + 16.0)),13,,Not a monomial: (16.0 + (4.0 * (x ^ 2.0)) + (9.0 * x)),0.02330160140991211,[]
+benchmarks,(100/( (4.0+x) * (x+9.0) )),14,,Not a monomial: (36.0 + (x ^ 2.0) + (13.0 * x)),0.023703336715698242,[]
+benchmarks,((10000/x)**(1/2)),15,,N\S,0.00011038780212402344,[]
+benchmarks,((1000000/x)**(1/3)),16,,N\S,5.698204040527344e-05,[]
+benchmarks,((10000/(x+1))**(1/2)),17,,N\S,0.00011444091796875,[]
+benchmarks,(10000/(x**2-1))**(1/2),18,,N\S,5.0067901611328125e-05,[]
+benchmarks,(10000/(x+y))**(1/2),19,,N\S,4.482269287109375e-05,[]
+benchmarks,((x**2 + 2*y**2 + 3*y*x + x + 1)*100/(2*y**2 + y*x + y + 2)),20,,Not a monomial: (2.0 + y + (2.0 * (y ^ 2.0)) + (x * y)),0.027681350708007812,[]

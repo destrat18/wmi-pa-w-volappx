@@ -1,1 +1,1 @@
-from .faza import read_input, calculate_approximate_volume
+from .faza import read_input, calculate_approximate_volume, calculate_approximate_wmi
