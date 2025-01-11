@@ -98,7 +98,8 @@ selected_benchmark = [
         {
                 "faza":{
                         "chi": [[0, 1]],
-                        "phi": True,
+                        "phi": True,                        
+                        "variables": ["x"],
                         "w": "(x)*100"          
                 },
                 "wmipa":{
@@ -119,6 +120,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": "(x**2)*100"          
                 },
                 "wmipa":{
@@ -139,6 +141,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": "(x**3)*100"          
                 },
                 "wmipa":{
@@ -158,6 +161,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": "(x**3 + x**2 + x + 1)*100"          
                 },
                 "wmipa":{
@@ -178,6 +182,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": "(x**4 + x**3 + x**2 + x**1 + 1)*100"          
                 },
                 "wmipa":{
@@ -198,6 +203,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0.01, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": "(100/x)"          
                 },
                 "wmipa":{
@@ -218,6 +224,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0.01, 1], [0, 1]],
                         "phi": True,
+                        "variables": ["x", "y"],
                         "w": f"(100/(x+y))"          
                 },
                 "wmipa":{
@@ -239,6 +246,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0.01, 1], [0, 1]],
                         "phi": True,
+                        "variables": ["x", "y"],
                         "w": f"(100/(x+y+(x*y)))"          
                 },
                 "wmipa":{
@@ -259,6 +267,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0.01, 1], [0, 1], [0, 1]],
                         "phi": True,
+                        "variables": ["x", "y", "z"],
                         "w": f"(100/(x+y+z))"          
                 },
                 "wmipa":{
@@ -279,6 +288,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[1.01, 2]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": "(100/(x**2 -1))"          
                 },
                 "wmipa":{
@@ -299,6 +309,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": "((x**2+x+1)*100)/(x**3+1)"          
                 },
                 "wmipa":{
@@ -319,6 +330,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": f"(x*100/( {a} + x**2))"          
                 },
                 "wmipa":{
@@ -339,6 +351,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": f"((x**3)*100/({a}+x**2))"          
                 },
                 "wmipa":{
@@ -360,6 +373,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": f"(100/({a}*x**2 + {b}*x + {c}))"          
                 },
                 "wmipa":{
@@ -380,6 +394,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": f"(100/( ({a}+x) * (x+{b}) ))"          
                 },
                 "wmipa":{
@@ -401,6 +416,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0.01, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": f"((10000/x)**(1/2))"          
                 },
                 "wmipa":{
@@ -419,6 +435,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0.01, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": f"((1000000/x)**(1/3))"          
                 },
                 "wmipa":{
@@ -437,6 +454,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0.01, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": f"((10000/(x+1))**(1/2))"          
                 },
                 "wmipa":{
@@ -455,6 +473,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[1.01, 2]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": f"(10000/(x**2-1))**(1/2)"          
                 },
                 "wmipa":{
@@ -474,6 +493,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0.01, 1], [0, 1]],
                         "phi": True,
+                        "variables": ["x"],
                         "w": f"(10000/(x+y))**(1/2)"          
                 },
                 "wmipa":{
@@ -494,6 +514,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0, 1], [0, 1]],
                         "phi": True,
+                        "variables": ["x", "y"],
                         "w": "((x**2 + 2*y**2 + 3*y*x + x + 1)*100/(2*y**2 + y*x + y + 2))"          
                 },
                 "wmipa":{

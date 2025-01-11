@@ -32,12 +32,12 @@ import multiprocessing as mp
 import sympy as sym
 from sympy.parsing.sympy_parser import parse_expr
 
-def generate_monoids(vars, d):
+def generate_monoids(variables, d):
 
     # Generate all combinations of variables of degree up to d
     monoids = set()
 
-    combinations = product(vars, repeat=d)
+    combinations = product(variables, repeat=d)
     for combo in combinations:
         monoids.add(sym.prod(combo))
     return list(monoids)
@@ -55,7 +55,7 @@ def generate_monoids_up_to_degree(var_list, d):
     return list(monoids)
 
 
-def generate_handelman_equations(degree, f_list, g, vars):
+def generate_handelman_equations(degree, f_list, g, variables):
     
     start_time = time.time()
     # Generate all possible monoids
@@ -73,7 +73,7 @@ def generate_handelman_equations(degree, f_list, g, vars):
 
     pos_equations = []
     for d in range(degree, 0, -1):
-        for mn in generate_monoids(vars, d):
+        for mn in generate_monoids(variables, d):
             new_assert = a_pos.coeff(mn)
             pos_equations.append(new_assert)
             a_pos = sym.simplify(a_pos - (new_assert)*mn)
@@ -83,7 +83,7 @@ def generate_handelman_equations(degree, f_list, g, vars):
 
     neq_equations = []
     for d in range(degree, 0, -1):
-        for mn in generate_monoids(vars, d):
+        for mn in generate_monoids(variables, d):
             new_assert = a_neg.coeff(mn)
             neq_equations.append(new_assert)
             a_neg = sym.simplify(a_neg - (new_assert)*mn)
@@ -348,7 +348,7 @@ def calculate_approximate_volume(
             degree=degree_list[i],
             f_list=f_list,
             g = g_i,
-            vars=variables
+            variables=variables
             )
         )
     
@@ -407,14 +407,14 @@ def calculate_approximate_volume(
         
         
         if total_hrect_checked%250 == 0:
-            logging.info(f"#Checked: {total_hrect_checked}, Error: {error:.6f}, Volume: {volume+error:.6f}, Total time: {(time.time()-start_time)/60:.2f}m({(time.time()-start_time):.2f}s)")
+            logging.info(f"#Checked: {total_hrect_checked}, Error: {error:.6f}, Volume: ({volume:.6f},{volume+error:.6f}), Total time: {(time.time()-start_time)/60:.2f}m({(time.time()-start_time):.2f}s)")
                      
             logging.info(f"Avg subs time: {(total_subs_time)/(total_hrect_checked*2):.6f}s, Avg solver time: {total_solver_time/(total_hrect_checked*2):.6f}s")
 
 
     # Must stop the thread
     logging.info("###################### Done ######################")
-    logging.info(f"#Checked: {total_hrect_checked}, Error: {error:.6f}, Volume: {volume+error:.6f}, Total time: {(time.time()-start_time):.2f}")
+    logging.info(f"#Checked: {total_hrect_checked}, Error: {error:.6f}, Volume: ({volume:.6f},{volume+error:.6f}), Total time: {(time.time()-start_time):.2f}")
     
     if total_hrect_checked > 0:
         logging.info(f"Avg subs time: {(total_subs_time)/(total_hrect_checked):.6f}s, Avg solver time: {total_solver_time/(total_hrect_checked):.6f}s")
@@ -436,36 +436,121 @@ def calculate_approximate_volume(
         # checker.join()
     
     
-    return volume+error, {
+    return volume, volume+error, {
         "hrect_checked_num": total_hrect_checked,
         "total_solver_time": total_solver_time,
         "total_subs_time": total_subs_time,
         "error": error        
     }
 
+
+
+# Assumptions:
+# g, y>0 and g <= y
+# returns y-g for later that we need y-g>0
 def apply_reduction_rules(g, y):
+
+    changed = True
+    while changed:
+        changed = False    
+        if isinstance(g, sym.core.power.Pow):
+            root = int(1/g.args[-1])
+            if root > 1:
+                y = sym.Pow(y, root, evaluate=False)
+                g = g.args[0]
+                changed = True
+            
+        # TODO: add proof rules
+        if sym.denom(g)!=1:
+            n, d = sym.fraction(g)
+            y = sym.Mul(y, d, evaluate=False)
+            g = n
+            changed = True
     
-    if isinstance(g, sym.core.power.Pow):
-        y = pow(y, 1/g.args[-1])
-        g = g.args[0]
-        
-    # TODO: add proof rules
-    if sym.denom(g)!=1:
-        n, d = sym.fraction(g)
-        gY = y*d - n
-    else:
-        gY = y - g
+    g = sym.sympify(sym.expand(g))
+    y = sym.sympify(sym.expand(y))
     
-    gY = sym.expand(gY)
+    return g, y
+
+# def find_upper_bound(    
+#     g, 
+#     vars,
+#     bounds
+#     ):
+    
+    
+#     f_list, bound_vars = generate_f_list(variables)
+#      # Optimization porblem
+#     subs_dict = {}
+#     for i in range(len(bounds)):
+#         subs_dict[bound_vars[i][0]] = bounds[i][0] 
+#         subs_dict[bound_vars[i][1]] = bounds[i][1]
+    
+#     # Subsitute
+#     # we apply handelman here to generate eqations based on l_is.
+#     # l_0 + l_1(f_1) + l_2(f_2) + ... + l_n(f_n) = g
+    
+#     # Since we need to find upper and lower bounds, we introduce two new variables
+#     U = sym.Symbol(f"U_{str(uuid.uuid4()).split('-')[0]}")
+    
+#     # g <= U => U - g>=0
+#     g, U = apply_reduction_rules(g, U)
+#     gU = sym.simplify(sym.expand(U - g))
+#     degree = sym.total_degree(gU)
+    
+    
+#     upper_equations, _, temp_vars = generate_handelman_equations(
+#         degree=degree,
+#         f_list=f_list,
+#         g = gU,
+#         vars=vars
+#     )
+#     equations = [
+#         sym.Poly(a.subs(subs_dict)) for a in upper_equations
+#         ]
+    
+#     coeff_matrix = []
+#     for a in equations:
+#         coeff = []
+#         for v in [1]+temp_vars+[U]:
+#             try:
+#                 coeff.append(float(a.coeff_monomial(v)))
+#             except:
+#                 coeff.append(0)
+#         coeff_matrix.append(coeff)
+
+#     M = np.array(coeff_matrix)
+#     RHS = (M[:,:1]*-1).flatten()
+#     M = M[:,1:]
+    
+#     with gp.Env(empty=True) as env:
+#         env.setParam('OutputFlag', 0)
+#         env.start()
+#         with gp.Model(env=env) as m:
+            
+#             lp_l = m.addMVar(shape=len(temp_vars)+1, name="l", ub=[float('inf')]*len(temp_vars)+[float('inf')], lb=[0]*len(temp_vars)+[0])
+
+#             m.addConstr( M @ lp_l == RHS, name="c")
+
+#             m.setObjective(lp_l[-1], gp.GRB.MINIMIZE)            
+#             m.optimize()
+            
+#             if m.status == gp.GRB.OPTIMAL:
+#                 return True, float(lp_l[-1].x), m.runtime
+#             else:
+#                 return False, None, m.runtime
+
+
+
 
 def find_upper_bound(    
-                     
-    f_list, 
     g, 
-    vars,
-    bound_vars,
+    variables,
     bounds
     ):
+    
+    
+    f_list, bound_vars = generate_f_list(variables)
     
     
      # Optimization porblem
@@ -481,15 +566,41 @@ def find_upper_bound(
     # Since we need to find upper and lower bounds, we introduce two new variables
     U = sym.Symbol(f"U_{str(uuid.uuid4()).split('-')[0]}")
 
+
+    # g_c = copy.deepcopy(g)
+    # U_c = copy.deepcopy(U)
     # g <= U => U - g>=0
-    gU = apply_reduction_rules(g, U)
+    # TODO: add proof rules
+    # if sym.denom(g)!=1:
+    #     n, d = sym.fraction(g)
+    #     gU = U*d - n
+    # else:
+    #     gU = U - g
+    # g <= U => U - g>=0
+    
+    # TODO: Fix this fucking shit, FUCK SYMPY    
+    if isinstance(g, sym.core.power.Pow):
+        root = int(1/g.args[-1])
+        if root > 1:
+            U = sym.expand(sym.Pow(U,root, evaluate=False))
+            g = g.args[0]
+    
+    y = U*1
+    if sym.denom(g)!=1:
+        n, d = sym.fraction(g)
+        y = sym.Mul(y,d, evaluate=False)
+        g = n
+        
+    gU = sym.simplify(sym.expand(y-g))
     degree = sym.total_degree(gU)
+    print(gU, degree)
+    
         
     upper_equations, _, temp_vars = generate_handelman_equations(
         degree=degree,
         f_list=f_list,
         g = gU,
-        vars=vars
+        variables=variables
     )
     equations = [
         sym.Poly(a.subs(subs_dict)) for a in upper_equations
@@ -525,82 +636,81 @@ def find_upper_bound(
                 return True, float(lp_l[-1].x), m.runtime
             else:
                 return False, None, m.runtime
-
-
-def find_lower_bound(    
-    f_list, 
-    g, 
-    vars,
-    bound_vars,
-    bounds
-    ):
-    
-    
-     # Optimization porblem
-    subs_dict = {}
-    for i in range(len(bounds)):
-        subs_dict[bound_vars[i][0]] = bounds[i][0] 
-        subs_dict[bound_vars[i][1]] = bounds[i][1]
-
-    # Subsitute
-    # we apply handelman here to generate eqations based on l_is.
-    # l_0 + l_1(f_1) + l_2(f_2) + ... + l_n(f_n) = g
-    
-    # Since we need to find upper and lower bounds, we introduce two new variables
-    L = sym.Symbol(f"L_{str(uuid.uuid4()).split('-')[0]}")
-
-    # g <= U => U - g>=0    
-    
-    # TODO: add proof rules
-    if sym.denom(g)!=1:
-        n, d = sym.fraction(g)
-        gL = n - L*d
-    else:
-        gL = g - L
-    
-    gL = sym.expand(gL)
-    degree = sym.total_degree(gL)
-    
-    lower_equations, _, temp_vars = generate_handelman_equations(
-        degree=degree,
-        f_list=f_list,
-        g = gL,
-        vars=vars
-    )
-    equations = [
-        sym.Poly(a.subs(subs_dict)) for a in lower_equations
-        ]
-    
-    coeff_matrix = []
-    for a in equations:
-        coeff = []
-        for v in [1]+temp_vars+[L]:
-            try:
-                coeff.append(float(a.coeff_monomial(v)))
-            except:
-                coeff.append(0)
-        coeff_matrix.append(coeff)
-
-    M = np.array(coeff_matrix)
-    RHS = (M[:,:1]*-1).flatten()
-    M = M[:,1:]
-    
-    with gp.Env(empty=True) as env:
-        env.setParam('OutputFlag', 0)
-        env.start()
-        with gp.Model(env=env) as m:
             
-            lp_l = m.addMVar(shape=len(temp_vars)+1, name="l", ub=[float('inf')]*len(temp_vars)+[0], lb=[0]*len(temp_vars)+[float('-inf')])
+# def find_lower_bound(    
+#     f_list, 
+#     g, 
+#     vars,
+#     bound_vars,
+#     bounds
+#     ):
+    
+    
+#      # Optimization porblem
+#     subs_dict = {}
+#     for i in range(len(bounds)):
+#         subs_dict[bound_vars[i][0]] = bounds[i][0] 
+#         subs_dict[bound_vars[i][1]] = bounds[i][1]
+
+#     # Subsitute
+#     # we apply handelman here to generate eqations based on l_is.
+#     # l_0 + l_1(f_1) + l_2(f_2) + ... + l_n(f_n) = g
+    
+#     # Since we need to find upper and lower bounds, we introduce two new variables
+#     L = sym.Symbol(f"L_{str(uuid.uuid4()).split('-')[0]}")
+
+#     # g <= U => U - g>=0    
+    
+#     # TODO: add proof rules
+#     if sym.denom(g)!=1:
+#         n, d = sym.fraction(g)
+#         gL = n - L*d
+#     else:
+#         gL = g - L
+    
+#     gL = sym.expand(gL)
+#     degree = sym.total_degree(gL)
+    
+#     lower_equations, _, temp_vars = generate_handelman_equations(
+#         degree=degree,
+#         f_list=f_list,
+#         g = gL,
+#         variables=vars
+#     )
+#     equations = [
+#         sym.Poly(a.subs(subs_dict)) for a in lower_equations
+#         ]
+    
+#     coeff_matrix = []
+#     for a in equations:
+#         coeff = []
+#         for v in [1]+temp_vars+[L]:
+#             try:
+#                 coeff.append(float(a.coeff_monomial(v)))
+#             except:
+#                 coeff.append(0)
+#         coeff_matrix.append(coeff)
+
+#     M = np.array(coeff_matrix)
+#     RHS = (M[:,:1]*-1).flatten()
+#     M = M[:,1:]
+    
+#     with gp.Env(empty=True) as env:
+#         env.setParam('OutputFlag', 0)
+#         env.start()
+#         with gp.Model(env=env) as m:
             
-            m.addConstr( M @ lp_l == RHS, name="c")
-            m.setObjective(lp_l[-1], gp.GRB.MAXIMIZE)
+#             lp_l = m.addMVar(shape=len(temp_vars)+1, name="l", ub=[float('inf')]*len(temp_vars)+[0], lb=[0]*len(temp_vars)+[float('-inf')])
+            
+#             m.addConstr( M @ lp_l == RHS, name="c")
+#             m.setObjective(lp_l[-1], gp.GRB.MAXIMIZE)
                         
-            m.optimize()
+#             m.optimize()
             
-            if m.status == gp.GRB.OPTIMAL:
-                return True, float(lp_l[-1].x), m.runtime
-            else:
-                return False, None, m.runtime
+#             if m.status == gp.GRB.OPTIMAL:
+#                 return True, float(lp_l[-1].x), m.runtime
+#             else:
+#                 return False, None, m.runtime
 
 def calculate_approximate_wmi(
         max_workers,
@@ -618,40 +728,57 @@ def calculate_approximate_wmi(
 
     # Normalize the weight function
     if type(w) == str:
-        w = sym.parse_expr(w)
-    
-    # Generate symbolic f_is with symbolic variable for upper bound and lower bound
-    f_list, bound_vars = generate_f_list(variables)
+        w = sym.parse_expr(w, evaluate=False)
     
     ###### for psi+ ######
     has_upper_bound, upper_bound, runtime = find_upper_bound(
-        f_list=f_list,
         g=w,
-        bound_vars=bound_vars,
         bounds=chi,
-        vars=variables
+        variables=variables
     )
     
+    if not has_upper_bound:
+        raise Exception("Upper bound not found.")
+    
     # We introduce a new variable
-    y = sym.Symbol(f"y_{str(uuid.uuid4()).split('-')[0]}")
+    y_symbol = sym.Symbol(f"y_{str(uuid.uuid4()).split('-')[0]}")
 
-    # TODO: add proof rules
+
+    y = y_symbol*1
+    
+    # TODO: Fix this fucking shit, FUCK SYMPY    
+    if isinstance(w, sym.core.power.Pow):
+        root = int(1/w.args[-1])
+        if root > 1:
+            y = sym.expand(sym.Pow(y,root, evaluate=False))
+            w = w.args[0]
+    
     if sym.denom(w)!=1:
         n, d = sym.fraction(w)
-        new_integrand = n - d*y
+        
+        new_integrand = n - sym.Mul(y,d, evaluate=False)
     else:
         new_integrand = w - y
         
+    
+    # # TODO: add proof rules
+    # if sym.denom(w)!=1:
+    #     n, d = sym.fraction(w)
+    #     new_integrand = n - d*y
+    # else:
+    #     new_integrand = w - y
+        
     new_bounds = chi+[[0, upper_bound]]
-    new_vars = variables+[y]
+    new_vars = variables+[y_symbol]
     inputs = [new_integrand]
     
     # we convert the inputs to the form g_i>0 or g_i >=0
-    for exp in phi:
-        if isinstance(exp, sym.core.relational.Lt) or isinstance(exp, sym.core.relational.Le):
-            inputs.append(exp.rhs - exp.lhs)
-        elif isinstance(exp, sym.core.relational.Gt) or isinstance(exp, sym.core.relational.Ge):
-            inputs.append(exp.lhs-exp.rhs)
+    if phi is not True:
+        for exp in phi:
+            if isinstance(exp, sym.core.relational.Lt) or isinstance(exp, sym.core.relational.Le):
+                inputs.append(exp.rhs - exp.lhs)
+            elif isinstance(exp, sym.core.relational.Gt) or isinstance(exp, sym.core.relational.Ge):
+                inputs.append(exp.lhs-exp.rhs)
 
     
     
@@ -659,7 +786,7 @@ def calculate_approximate_wmi(
     logging.info(f"Psi+ bounds: [{0}, {upper_bound}]")
     
     if upper_bound != 0:
-        psi_plus, psi_plus_stats = calculate_approximate_volume(
+        lower_psi_plus, upper_psi_plus, psi_plus_stats = calculate_approximate_volume(
             degree_list=[sym.total_degree(i) for i in inputs],
             max_workers=max_workers,
             inputs=inputs,
@@ -668,72 +795,105 @@ def calculate_approximate_wmi(
             threshold=threshold
         )
     else:
-        psi_plus = 0
+        lower_psi_plus, upper_psi_plus = 0
         psi_plus_stats = {
         "hrect_checked_num": 0,
         "total_solver_time": 0,
         "total_subs_time": 0        
         }
     
-    ###### for psi- ######    
-    # We need to calculate this for psi-
+    # ###### for psi- ######    
+    # # We need to calculate this for psi-
     
-    has_lower_bound, lower_bound, runtime = find_lower_bound(
-        f_list=f_list,
-        g=w,
-        bound_vars=bound_vars,
-        bounds=chi,
-        vars=variables
-    )
+    # has_lower_bound, lower_bound, runtime = find_lower_bound(
+    #     f_list=f_list,
+    #     g=w,
+    #     bound_vars=bound_vars,m.status
+    #     bounds=chi,
+    #     vars=variables
+    # )
     
-    # We introduce a new variable
-    y = sym.Symbol(f"y_{str(uuid.uuid4()).split('-')[0]}")
+    # # We introduce a new variable
+    # y = sym.Symbol(f"y_{str(uuid.uuid4()).split('-')[0]}")
 
 
-    # TODO: add proof rules
-    if sym.denom(w)!=1:
-        n, d = sym.fraction(w)
-        new_integrand = d*y - n 
-    else:
-        new_integrand = y - w
+    # # TODO: add proof rules
+    # if sym.denom(w)!=1:
+    #     n, d = sym.fraction(w)
+    #     new_integrand = d*y - n 
+    # else:
+    #     new_integrand = y - w
         
-    new_bounds = chi+[[lower_bound, 0]]
-    new_vars = variables+[y]
-    inputs = [new_integrand]
+    # new_bounds = chi+[[lower_bound, 0]]
+    # new_vars = variables+[y]
+    # inputs = [new_integrand]
     
-    # we convert the inputs to the form g_i>0 or g_i >=0
-    for exp in phi:
-        if isinstance(exp, sym.core.relational.Lt) or isinstance(exp, sym.core.relational.Le):
-            inputs.append(exp.rhs - exp.lhs)
-        elif isinstance(exp, sym.core.relational.Gt) or isinstance(exp, sym.core.relational.Ge):
-            inputs.append(exp.lhs-exp.rhs)
+    # # we convert the inputs to the form g_i>0 or g_i >=0
+    # for exp in phi:
+    #     if isinstance(exp, sym.core.relational.Lt) or isinstance(exp, sym.core.relational.Le):
+    #         inputs.append(exp.rhs - exp.lhs)
+    #     elif isinstance(exp, sym.core.relational.Gt) or isinstance(exp, sym.core.relational.Ge):
+    #         inputs.append(exp.lhs-exp.rhs)
     
-    inputs = [sym.expand(i) for i in inputs]
-    logging.info(f"Psi- bounds: [{lower_bound}, {0}]")
+    # inputs = [sym.expand(i) for i in inputs]
+    # logging.info(f"Psi- bounds: [{lower_bound}, {0}]")
     
-    if lower_bound != 0:
-        psi_minus, psi_minus_stats = calculate_approximate_volume(
-            degree=[sym.total_degree(i) for i in inputs],
-            max_workers=max_workers,
-            inputs=inputs,
-            bounds=new_bounds,
-            variables=new_vars,
-            threshold=threshold
-        )
-    else:
-        psi_minus = 0
-        psi_minus_stats = {
-        "hrect_checked_num": 0,
-        "total_solver_time": 0,
-        "total_subs_time": 0        
+    # if lower_bound != 0:
+    #     psi_minus, psi_minus_stats = calculate_approximate_volume(
+    #         degree=[sym.total_degree(i) for i in inputs],
+    #         max_workers=max_workers,
+    #         inputs=inputs,
+    #         bounds=new_bounds,
+    #         variables=new_vars,
+    #         threshold=threshold
+    #     )
+    # else:
+    #     psi_minus = 0
+    #     psi_minus_stats = {
+    #     "hrect_checked_num": 0,
+    #     "total_solver_time": 0,
+    #     "total_subs_time": 0        
+    #     }
+    
+    logging.info(f"Inputs: {inputs}, Volume: ({lower_psi_plus},{upper_psi_plus})")
+    
+    return lower_psi_plus, upper_psi_plus, {
+        "hrect_checked_num": psi_plus_stats["hrect_checked_num"],
+        "total_solver_time": psi_plus_stats["total_solver_time"],
+        "total_subs_time": psi_plus_stats["total_subs_time"]        
+    }
+
+
+if __name__ == "__main__":
+    
+    bench = {
+        "faza":{
+            'chi': True,
+            "w": "(1/x)**(1/2)",
+            "chi": [[0.01,1]],
+            "variables": ['x']
         }
-    
-    volume = psi_plus-psi_minus
-    logging.info(f"Inputs: {inputs}, Volume: {psi_plus}(Psi+) - {psi_minus}(Psi-)={volume}")
-    
-    return volume, {
-        "hrect_checked_num": psi_plus_stats["hrect_checked_num"]+psi_minus_stats["hrect_checked_num"],
-        "total_solver_time": psi_plus_stats["total_solver_time"]+psi_minus_stats["total_solver_time"],
-        "total_subs_time": psi_plus_stats["total_subs_time"]+psi_minus_stats["total_subs_time"]        
     }
     
+    print(
+        calculate_approximate_wmi(
+            phi=True,
+            chi=bench['faza']['chi'],
+            max_workers=4,
+            threshold=0.1,
+            w=bench['faza']['w'],
+            variables=[sym.symbols(v) for v in bench['faza']['variables']]
+        )
+    )
+    
+    
+    # print(
+    #     calculate_approximate_volume(
+    #         degree_list=[3],
+    #         max_workers=1,
+    #         inputs=[sym.parse_expr("-1*(x)*(y**2) + 1")],
+    #         bounds=[[0.01, 1], [0, 10]],
+    #         variables=[sym.symbols(v) for v in ['x', 'y']],
+    #         threshold=0.01
+    #     )
+    # )

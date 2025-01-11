@@ -149,98 +149,85 @@ def evaluate_latte(
         pd.DataFrame(results).sort_values('index').to_csv(result_path, index=False)
 
 
-# def evaluate_faza(
-#         benchmarks,
-#         result_dir,
-#         epsilon,
-#         max_workers         
+def evaluate_faza(
+        benchmarks,
+        result_dir,
+        epsilon,
+        max_workers         
         
-# ):
+):
 
 
-#         chi = Bool(True)
-#         mode = WMI.MODE_SAE4WMI
+        chi = Bool(True)
+        mode = WMI.MODE_SAE4WMI
 
-#         results = []
+        results = []
         
-#         benchmark_name = f'{benchmarks=}'.split('=')[0]
-#         results_path = os.path.join(result_dir, f"benchmark_{benchmark_name}_faza_{int(time.time())}.csv")
+        benchmark_name = f'{benchmarks=}'.split('=')[0]
+        result_path = os.path.join(result_dir, f"benchmark_{benchmark_name}_faza_{int(time.time())}.csv")
 
-#         for bench in benchmarks:
+        for bench_i, bench in enumerate(benchmarks):
 
 
-#                 try:
-#                         start_time = time.time()
-#                         w = bench['smt_w']
-#                         phi = bench['smt_phi']
-#                         # If the format is supported by WMI-PA input format
-#                         if bench['smt_w'] != None and bench['smt_phi'] != None:
-                                
-
-        
-#                                 integrator = FazaIntegrator(threshold=epsilon, max_workers=max_workers) 
+            try:
+                    
+                if "faza" not in  bench:
+                    raise Exception('Missing input formula')
+                if bench['faza']['w'] is None:
+                    raise Exception('N\S')
                 
-#                                 wmi = WMI(chi, w, integrator=integrator)
-#                                 volume, n_integrations = wmi.computeWMI(phi, mode=mode)
-                        
-#                         else:
-#                                 faza
-                                
-#                                 volume = faza.calculate_approximate_wmi(
-#                                         phi=None,
-#                                         chi=bench['bounds'],
-#                                         max_workers=args.max_workers,
-#                                         threshold=epsilon,
-#                                         w=bench['w'],
-#                                         variables=[sym.symbols('x')]
-#                                 )
-#                                 n_integrations = 1
-                        
-#                         print(
-#                                 "Formula {}, \t integrator= {}(e={}), \t result = {}, \t time = {:.4f}s".format(
-#                                         w.serialize(), integrator.__class__.__name__, epsilon, volume, time.time()-start_time
-#                                 )
-#                         )
-#                         results.append(
-#                         {
-#                                 "benchmark": benchmark_name,
-#                                 'time': time.time()-start_time,
-#                                 'formula': w.serialize(),
-#                                 'integrator': integrator.__class__.__name__,
-#                                 'mode': mode,
-#                                 'volume': volume,
-#                                 'n_integrations': n_integrations,
-#                                 'details': {
-#                                         "epsilon": args.epsilon,
-#                                         "max_workers": args.max_workers
-#                                 },
-#                                 'error': None
-#                         }
-#                         )               
-#                 except Exception as e:
-#                         print(
-#                                 "Formula {}, \t integrator = {}, \t failed = {}".format(
-#                                 w.serialize(), integrator.__class__.__name__, str(e)
-#                                 )
-#                         )
-#                         results.append(
-#                         {
-#                                 "benchmark": benchmark_name,
-#                                 'time': time.time()-start_time,
-#                                 'formula': w.serialize(),
-#                                 'integrator': integrator.__class__.__name__,
-#                                 'mode': mode,
-#                                 'volume': None,
-#                                 'n_integrations': None,
-#                                 'details': {
-#                                         "epsilon": args.epsilon,
-#                                         "max_workers": args.max_workers
-#                                 },
-#                                 'error': str(e)
-#                         }
-#                         )
-#                         seed=seed
-                        
+                start_time = time.time()
+
+                # If the format is not supported by WMI-PA input format
+                if bench['wmipa']['w'] is None:
+                
+                    output = faza.calculate_approximate_wmi(
+                            phi=bench['faza']['phi'],
+                            chi=bench['faza']['chi'],
+                            max_workers=args.max_workers,
+                            threshold=1,
+                            w=bench['faza']['w'],
+                            variables=[sym.symbols(v) for v in bench['faza']['variables']]
+                    )
+                    
+                    results.append({
+                            "bechmark": benchmark_name,
+                            "formula": bench['faza']['w'],
+                            "index": bench_i,
+                            'output': (output[0], output[1]),
+                            'error': None,
+                            "time": time.time()-start_time,
+                            'details': {
+                                    'n_integrations': 1,
+                                    'mode': mode,
+                                    'output': output,
+                        }
+                    })
+
+                else:
+                    raise NotImplementedError("Not implemented")
+                    # integrator = FazaIntegrator(threshold=epsilon, max_workers=max_workers) 
+    
+                    # wmi = WMI(chi, w, integrator=integrator)
+                    # volume, n_integrations = wmi.computeWMI(phi, mode=mode)
+                
+                
+                
+                logging.info(f"Bench {bench_i} ({bench['faza']['w']}) is done: {results[-1]['output']}")
+                
+            except Exception as e:
+                logging.info(f"Bench {bench_i} ({bench['faza']['w']}) is failed: {e}")
+                results.append({
+                    "bechmark": benchmark_name,
+                    "formula": bench['faza']['w'],
+                    "index": bench_i,
+                    "output": None,
+                    'error': str(e),
+                    "time": time.time()-start_time,
+                    'details': []
+                })
+                
+            pd.DataFrame(results).sort_values('index').to_csv(result_path, index=False) 
                         
 
 if __name__ == "__main__":
@@ -272,17 +259,17 @@ if __name__ == "__main__":
                         args.result_dir,
                         repeat=args.repeat
                 )
-        if args.latte or True:
+        if args.latte:
                 evaluate_latte(
                         FazaBenchmarks.selected_benchmark,
                         args.result_dir
                 )
                 
-        # if args.faza:
-        #         evaluate_faza(
-        #                 benchmarks=group2,
-        #                 result_dir=args.result_dir,
-        #                 epsilon=args.epsilon,
-        #                 max_workers=args.max_workers
-        #         )
+        if args.faza or True:
+                evaluate_faza(
+                        benchmarks=FazaBenchmarks.selected_benchmark,
+                        result_dir=args.result_dir,
+                        epsilon=args.epsilon,
+                        max_workers=args.max_workers
+                )
                 
