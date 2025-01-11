@@ -205,11 +205,29 @@ def evaluate_faza(
                     })
 
                 else:
-                    raise NotImplementedError("Not implemented")
-                    # integrator = FazaIntegrator(threshold=epsilon, max_workers=max_workers) 
-    
-                    # wmi = WMI(chi, w, integrator=integrator)
-                    # volume, n_integrations = wmi.computeWMI(phi, mode=mode)
+                    
+                    integrator = FazaIntegrator(threshold=epsilon, max_workers=max_workers) 
+                    wmi = WMI(bench['wmipa']['chi'], bench['wmipa']['w'], integrator=integrator)
+                    volume, n_integrations = wmi.computeWMI(bench['wmipa']['phi'], mode=mode)
+
+                    if len(integrator.logs)==1:
+                        output = integrator.logs[0]['volume']
+                    else:
+                        output = (None, volume)
+                    
+                    results.append({
+                            "bechmark": benchmark_name,
+                            "formula": bench['faza']['w'],
+                            "index": bench_i,
+                            'output': output,
+                            'error': None,
+                            "time": time.time()-start_time,
+                            'details': {
+                                    'n_integrations': 1,
+                                    'mode': mode,
+                                    'output': output,
+                        }
+                    })
                 
                 
                 

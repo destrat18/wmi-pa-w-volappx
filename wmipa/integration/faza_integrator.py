@@ -58,7 +58,7 @@ class FazaIntegrator(CommandLineIntegrator):
         # TODO find a better way to do this
         a = re.compile('\^\ \d+.0')
         integrand = a.sub(lambda x: "**" + str(x.group(0))[1:-2], str(integrand))
-        w = sym.parse_expr(integrand)
+        w = sym.parse_expr(integrand, evaluate=False)
         # print("Polynomial degree:", sym.total_degree(w))
         # volume = 0
         
@@ -86,8 +86,7 @@ class FazaIntegrator(CommandLineIntegrator):
                         
 
         # TODO: Add expand and simplify
-        w = sym.simplify(sym.expand(w))
-        volume, stats = faza.calculate_approximate_wmi(
+        lower_volume, upper_volume, stats = faza.calculate_approximate_wmi(
             max_workers=self.max_workers,
             w=w,
             variables=[sym.var(str(var)) for var in variables],
@@ -98,17 +97,17 @@ class FazaIntegrator(CommandLineIntegrator):
         
         # print(integrand, "on", polytope, "=", volume)
         
-        # self.logs.append({
-        #     'integrand': integrand,
-        #     "degree": total_degree,
-        #     "threshold": self.threshold,
-        #     "max_workers": self.max_workers,
-        #     "hrect_checked_num": stats["hrect_checked_num"],
-        #     "total_solver_time": stats["total_solver_time"],
-        #     "total_subs_time": stats["total_subs_time"],
-        # })
+        self.logs.append({
+            'volume ': (lower_volume, upper_volume),
+            'integrand': integrand,
+            "threshold": self.threshold,
+            "max_workers": self.max_workers,
+            "hrect_checked_num": stats["hrect_checked_num"],
+            "total_solver_time": stats["total_solver_time"],
+            "total_subs_time": stats["total_subs_time"],
+        })
 
-        return volume
+        return upper_volume
         
     def _write_integrand_file(self, integrand, variables, path):
         """Writes the integrand to the given file.
