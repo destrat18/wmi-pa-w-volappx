@@ -98,7 +98,7 @@ class FazaIntegrator(CommandLineIntegrator):
         # print(integrand, "on", polytope, "=", volume)
         
         self.logs.append({
-            'volume ': (lower_volume, upper_volume),
+            'volume': (lower_volume, upper_volume),
             'integrand': integrand,
             "threshold": self.threshold,
             "max_workers": self.max_workers,

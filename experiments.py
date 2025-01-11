@@ -255,7 +255,7 @@ if __name__ == "__main__":
                 description='I am experimenting!'
                 )
         
-        parser.add_argument("--epsilon", help="Number of workers", type=float, default=0.1)        
+        parser.add_argument("--epsilon", help="Number of workers", type=float, default=50)        
         parser.add_argument("--max-workers", help="Number of workers", type=int, default=1)
         parser.add_argument("--N", help="Number of samples", type=int, default=[10000], nargs="+")
         parser.add_argument("--seed", help="Random seed for (the first instance of) VolEsti integrator", type=int, default=[666, 667, 668, 669, 670], nargs="+")
