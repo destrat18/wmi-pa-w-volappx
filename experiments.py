@@ -184,8 +184,8 @@ def evaluate_faza(
                     output = faza.calculate_approximate_wmi(
                             phi=bench['faza']['phi'],
                             chi=bench['faza']['chi'],
-                            max_workers=args.max_workers,
-                            threshold=1,
+                            max_workers=max_workers,
+                            threshold=epsilon,
                             w=bench['faza']['w'],
                             variables=[sym.symbols(v) for v in bench['faza']['variables']]
                     )
