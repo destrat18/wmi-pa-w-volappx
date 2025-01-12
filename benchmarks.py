@@ -721,7 +721,8 @@ def load_rational_2_benchmarks(benchmak_path, bounds=[[0.01, 1], [0.01, 1]]):
                                         "w": "(" + " + ".join([ f"{a}*{mons[i]}" for i, a in reversed(list(enumerate(a_i)))]) + ")" + " / " + "(" + " + ".join([ f"{b}*{mons[i]}" for i, b in reversed(list(enumerate(b_i)))]) + ")"          
                                 },
                                 "wmipa":{
-                                        "chi": And(GE(x, Real(bounds[0][0])),LE(x, Real(bounds[0][1]))),        
+                                        "chi": And(GE(x, Real(bounds[0][0])),LE(x, Real(bounds[0][1])),
+                                                   GE(y, Real(bounds[1][0])),LE(y, Real(bounds[1][1]))),        
                                         'w':   Div( Plus([ Real(a)*wmipa_mons[i] for i, a in reversed(list(enumerate(a_i)))]), Plus([ Real(b)*wmipa_mons[i] for i, b in reversed(list(enumerate(b_i)))])),
                                         "phi": Bool(True),
                                 },

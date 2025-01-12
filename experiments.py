@@ -39,7 +39,7 @@ def evaluate_volesi(
                 if bench['wmipa']['w'] is None:
                     raise Exception('N\S')
         
-                for N in [10000]:
+                for N in [1000]:
                     for i in range(args.repeat):
 
                         integrator = VolestiIntegrator(N=N) 
