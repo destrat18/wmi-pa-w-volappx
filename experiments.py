@@ -16,6 +16,7 @@ import pandas as pd
 
 def evaluate_volesi(
     benchmarks,
+    benchmark_name,
     result_dir,
     repeat         
         
@@ -24,9 +25,7 @@ def evaluate_volesi(
 
     mode = WMI.MODE_SAE4WMI
     
-    results = []
-    benchmark_name = f'{benchmarks=}'.split('=')[0]
-    
+    results = []    
     result_path = os.path.join(result_dir, f"benchmark_{benchmark_name}_volesti_{int(time.time())}.csv")
 
     for bench_i, bench in enumerate(benchmarks):
@@ -39,7 +38,7 @@ def evaluate_volesi(
                 if bench['wmipa']['w'] is None:
                     raise Exception('N\S')
         
-                for N in args.N:
+                for N in [10000]:
                     for i in range(args.repeat):
 
                         integrator = VolestiIntegrator(N=N) 
@@ -89,15 +88,14 @@ def evaluate_volesi(
 
 def evaluate_latte(
     benchmarks,
-    result_dir        
+    result_dir,
+    benchmark_name        
 ):
 
 
     mode = WMI.MODE_SAE4WMI
     
-    results = []
-    benchmark_name = f'{benchmarks=}'.split('=')[0]
-    
+    results = []    
     result_path = os.path.join(result_dir, f"benchmark_{benchmark_name}_latte_{int(time.time())}.csv")
 
     for bench_i, bench in enumerate(benchmarks):
@@ -153,7 +151,8 @@ def evaluate_faza(
         benchmarks,
         result_dir,
         epsilon,
-        max_workers         
+        max_workers,
+        benchmark_name         
         
 ):
 
@@ -163,7 +162,6 @@ def evaluate_faza(
 
         results = []
         
-        benchmark_name = f'{benchmarks=}'.split('=')[0]
         result_path = os.path.join(result_dir, f"benchmark_{benchmark_name}_faza_{int(time.time())}.csv")
 
         for bench_i, bench in enumerate(benchmarks):
@@ -262,6 +260,10 @@ if __name__ == "__main__":
         parser.add_argument('--volesti', action='store_true', default=False)
         parser.add_argument('--latte', action='store_true', default=False)
         parser.add_argument('--faza', action='store_true', default=False)
+        parser.add_argument('--benchmark', choices=['manual', 'rational'], default="manual")
+        parser.add_argument('--benchmark-path', type=str, help="Path to the benchmark")
+        
+        
         
         parser.add_argument('--result-dir', type=str, default="experimental_results")
         
@@ -270,23 +272,38 @@ if __name__ == "__main__":
         
         os.makedirs(args.result_dir, exist_ok=True)
 
+
+        if args.benchmark == 'manual':
+            benchmarks = FazaBenchmarks.selected_benchmark
+        elif args.benchmark == "rational":
+            benchmarks = FazaBenchmarks.load_rational_benchmarks(
+                args.benchmark_path
+            )
+        else:
+            raise NotImplementedError()
+
+
         if args.volesti:
                 evaluate_volesi(
-                        FazaBenchmarks.selected_benchmark,
-                        args.result_dir,
-                        repeat=args.repeat
+                    benchmarks=benchmarks,
+                    benchmark_name=args.benchmark,
+                    result_dir=args.result_dir,
+                    repeat=args.repeat
                 )
         if args.latte:
                 evaluate_latte(
-                        FazaBenchmarks.selected_benchmark,
-                        args.result_dir
+                    benchmarks=benchmarks,
+                    result_dir=args.result_dir,
+                    benchmark_name=args.benchmark,
+
                 )
                 
         if args.faza:
                 evaluate_faza(
-                        benchmarks=FazaBenchmarks.selected_benchmark,
-                        result_dir=args.result_dir,
-                        epsilon=args.epsilon,
-                        max_workers=args.max_workers
+                    benchmarks=benchmarks,
+                    result_dir=args.result_dir,
+                    epsilon=args.epsilon,
+                    max_workers=args.max_workers,
+                    benchmark_name=args.benchmark,
                 )
                 

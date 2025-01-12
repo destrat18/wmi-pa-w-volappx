@@ -554,7 +554,7 @@ selected_benchmark = [
 # 0 < x < 1
 # 0 < غ < 1
 
-def generate_rational_bechmarks(number_of_benchmarks, max_m, max_n, output_path):
+def generate_rational_bechmarks(number_of_benchmarks, max_den_deg, max_nom_deg, output_path):
 
         benchmarks = []
         
@@ -564,8 +564,8 @@ def generate_rational_bechmarks(number_of_benchmarks, max_m, max_n, output_path)
                 # assert(max_m>max_n)
                 
                 # select degree of numinator and denuminator randomly 
-                m = random.randint(1, max_n)
-                n = random.randint(0, max_n)
+                n = random.randint(0, max_nom_deg)
+                m = random.randint(0, max_den_deg)
                 
                 # generate coefficents randomly
                 a_coefficients = [round(random.uniform(0, 10),2) for i in range(n+1)]
@@ -583,7 +583,7 @@ def generate_rational_bechmarks(number_of_benchmarks, max_m, max_n, output_path)
                 json.dump(benchmarks, f)
 
 
-def load_rational_benchmarks(benchmak_path):
+def load_rational_benchmarks(benchmak_path, bounds=[[0.01, 1]]):
         
         benchmaks = []
         
@@ -591,16 +591,31 @@ def load_rational_benchmarks(benchmak_path):
                 benchmak_coefficients = json.load(f)
         
         for c in benchmak_coefficients:
-                a_coefs = c['a_coefficients']
-                b_coefs = c['b_coefficients']
+                a_i = c['a_i']
+                b_i = c['b_i']
                 
-                benchmaks.append({
-                'bounds': [0.01, 1],
-                'w': "(" + "+".join([ f"{a}*x**{i}" for i, a in enumerate(a_coefs)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x**{j}" for j, b in enumerate(b_coefs)]) + ")",
-                'smt_w': Div(Plus([Times(Real(a), Pow(x, Real(i))) for i, a in enumerate(a_coefs)]), Plus([Times(Real(b), Pow(x, Real(j))) for j, b in enumerate(b_coefs)])),
-                'smt_phi': And(GE(x, Real(0.01)),LE(x, Real(1))),
-                })
-        
+                benchmaks.append(
+                        {
+                                "faza":{
+                                        "chi": bounds,
+                                        "phi": True,
+                                        "variables": ["x"],
+                                        "w": "(" + "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x**{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")"          
+                                },
+                                "wmipa":{
+                                        "chi": And(GE(x, Real(bounds[0][0])),LE(x, Real(bounds[0][1]))),        
+                                        'w':   Div(Plus([Times(Real(a), Pow(x, Real(len(a_i)-i-1))) for i, a in enumerate(a_i)]), Plus([Times(Real(b), Pow(x, Real(len(b_i)-i-1))) for i, b in enumerate(b_i)])),
+                                        "phi": Bool(True),
+                                },
+                                "psi": {
+                                        "formula": "(" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x^{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")" ,        
+                                },
+                                "gubpi": {
+                                        "formula": "div((" + "+".join([f"{a}*{'*'.join(['x']*(len(a_i)-i-1)+['1'])}" for i, a in enumerate(a_i)]) + ")" + " , " + "(" + " + ".join([f"{b}*{'*'.join(['x']*(len(b_i)-i-1)+['1'])}" for i, b in enumerate(b_i)]) + "))"        
+                                }
+                        }
+                )
+                
         return benchmaks        
         
 
@@ -614,12 +629,20 @@ if __name__ == "__main__":
                 )
         
 
-        parser.add_argument('--result-dir', type=str, default="experimental_results")
-        parser.add_argument('--max-denominator-degree', type=int)
-        parser.add_argument('--max-nominator-degree', type=int)
+        parser.add_argument('--output', type=str, default="experimental_results")
+        parser.add_argument('--max-den-deg', type=int)
+        parser.add_argument('--max-nom-deg', type=int)
+        parser.add_argument('--num-benchmarks', type=int)
 
         
         args = parser.parse_args()
         
         
-        os.makedirs(args.result_dir, exist_ok=True)
+        os.makedirs(os.path.dirname(args.output), exist_ok=True)
+        
+        generate_rational_bechmarks(
+                number_of_benchmarks=args.num_benchmarks,
+                max_den_deg=args.max_den_deg,
+                max_nom_deg=args.max_nom_deg,
+                output_path=args.output       
+        )
