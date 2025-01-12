@@ -753,7 +753,7 @@ def load_rational_sqrt_benchmarks(benchmak_path, bounds=[[0.01, 1]]):
                                         "chi": bounds,
                                         "phi": True,
                                         "variables": ["x"],
-                                        "w": "(" + "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x**{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")"+"**(1/2)"          
+                                        "w": "(" + "(" + "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x**{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")"+" )**(1/2)"          
                                 },
                                 "wmipa":{
                                         "chi": None,        
@@ -761,7 +761,7 @@ def load_rational_sqrt_benchmarks(benchmak_path, bounds=[[0.01, 1]]):
                                         "phi": None,
                                 },
                                 "psi": {
-                                        "formula": "(" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x^{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")" +"^(1/2)",        
+                                        "formula": "(" + "(" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x^{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")" +") ^(1/2)",        
                                 },
                                 "gubpi": {
                                         "formula": "sqrt(div((" + "+".join([f"{a}*{'*'.join(['x']*(len(a_i)-i-1)+['1'])}" for i, a in enumerate(a_i)]) + ")" + " , " + "(" + " + ".join([f"{b}*{'*'.join(['x']*(len(b_i)-i-1)+['1'])}" for i, b in enumerate(b_i)]) + ")))"        
