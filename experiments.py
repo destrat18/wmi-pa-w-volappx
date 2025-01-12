@@ -283,7 +283,7 @@ if __name__ == "__main__":
                         args.result_dir
                 )
                 
-        if args.faza or True:
+        if args.faza:
                 evaluate_faza(
                         benchmarks=FazaBenchmarks.selected_benchmark,
                         result_dir=args.result_dir,
