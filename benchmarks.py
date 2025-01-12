@@ -275,18 +275,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"(x*1/( {a} + x**2))"          
+                        "w": f"((x*100)/( {a} + x**2))"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-                        'w': Div(x*Real(1), a+ Pow(x, Real(2)))    ,
+                        'w': Div(x*Real(100), a+ Pow(x, Real(2)))    ,
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": f"(x*1/( {a} + x^2))"        
+                        "formula": f"((x*100)/( {a} + x^2))"        
                 },
                 "gubpi": {
-                        "formula": f"(div(x*1,({a} + x*x)))"        
+                        "formula": f"(div((x*100),({a} + x*x)))"        
                 }
         },
 
@@ -297,18 +297,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"((x**3)*1/({a}+x**2))"          
+                        "w": f"(((x**3)*100)/({a}+x**2))"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-                        'w':  Div(Pow(x, Real(3))*Real(1), a + Pow(x, Real(2))),
+                        'w':  Div(Pow(x, Real(3))*Real(100), a + Pow(x, Real(2))),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": f"((x^3)*1/({a}+x^2))",        
+                        "formula": f"(((x^3)*100)/({a}+x^2))",        
                 },
                 "gubpi": {
-                        "formula": f"(div(x*x*x*1,({a} + x*x)))"        
+                        "formula": f"(div((x*x*x*100),({a} + x*x)))"        
                 }
                 
         },
@@ -320,18 +320,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"(1/({a}*x**2 + {b}*x + {c}))"          
+                        "w": f"(100/({a}*x**2 + {b}*x + {c}))"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-                        'w':   Div(Real(1), a*Pow(x, Real(2)) + b*x + c)*Real(1)  ,
+                        'w':   Div(Real(100), a*Pow(x, Real(2)) + b*x + c)*Real(1)  ,
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": f"(1/({a}*(x^2) + {b}*x + {c}))",        
+                        "formula": f"(100/({a}*(x^2) + {b}*x + {c}))",        
                 },
                 "gubpi": {
-                        "formula": f"(div(1,({a}*x*x) + ({b}*x) + {c}))"        
+                        "formula": f"(div(100,({a}*x*x) + ({b}*x) + {c}))"        
                 }
         },
         
@@ -342,18 +342,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"(1/( ({a}+x) * (x+{b}) ))"          
+                        "w": f"(100/( ({a}+x) * (x+{b}) ))"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-                        'w':   Div(Real(1), Times(x+a, x+b) )*Real(1),
+                        'w':   Div(Real(100), Times(x+a, x+b) )*Real(1),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": f"(1/( ({a}+x) * (x+{b}) ))",        
+                        "formula": f"(100/( ({a}+x) * (x+{b}) ))",        
                 },
                 "gubpi": {
-                        "formula": f"(div(1,({a} + x) * ({b} + x)))"        
+                        "formula": f"(div(100,({a} + x) * ({b} + x)))"        
                 }
         },
     

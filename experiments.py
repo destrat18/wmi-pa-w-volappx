@@ -277,6 +277,7 @@ if __name__ == "__main__":
 
         if args.benchmark == 'manual':
             benchmarks = FazaBenchmarks.selected_benchmark
+            args.benchmark = "manual"
         elif args.benchmark == "rational":
             benchmarks = FazaBenchmarks.load_rational_benchmarks(
                 args.benchmark_path
