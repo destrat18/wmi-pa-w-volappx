@@ -93,180 +93,180 @@ GUBPI_SOLVER_THREE_VAR_TEMPLATE = """
 
 selected_benchmark = [
 
-        # # #########################################################
-        # {
-        #         "index": 0,
-        #         "faza":{
-        #                 "chi": [[0, 1]],
-        #                 "phi": True,                        
-        #                 "variables": ["x"],
-        #                 "w": "(x)*1"          
-        #         },
-        #         "wmipa":{
-        #                 "chi": And(GE(x, Real(0.01)),LE(x, Real(1))),
-        #                 'w': (x)*Real(1),
-        #                 "phi": Bool(True)        
-        #         },
-        #         "psi": {
-        #                 "formula": "(x)*1"        
-        #         },
-        #         "gubpi": {
-        #             "formula": "(x)*1"
-        #         }
-        # },
+        # #########################################################
+        {
+                "index": 0,
+                "faza":{
+                        "chi": [[0, 1]],
+                        "phi": True,                        
+                        "variables": ["x"],
+                        "w": "(x)*1"          
+                },
+                "wmipa":{
+                        "chi": And(GE(x, Real(0.01)),LE(x, Real(1))),
+                        'w': (x)*Real(1),
+                        "phi": Bool(True)        
+                },
+                "psi": {
+                        "formula": "(x)*1"        
+                },
+                "gubpi": {
+                    "formula": "(x)*1"
+                }
+        },
     
-        # # #########################################################
-        # {
-        #         "index": 1,
-        #         "faza":{
-        #                 "chi": [[0, 1]],
-        #                 "phi": True,
-        #                 "variables": ["x"],
-        #                 "w": "(x**2)*1"          
-        #         },
-        #         "wmipa":{
-        #                 "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-        #                 'w': (Pow(x, Real(2)))*Real(1),
-        #                 "phi": Bool(True)        
-        #         },
-        #         "psi": {
-        #                 "formula": "(x^2)*1"        
-        #         },
-        #         "gubpi": {
-        #                 "formula": "(x*x)*1"        
-        #         }
-        # },
+        # #########################################################
+        {
+                "index": 1,
+                "faza":{
+                        "chi": [[0, 1]],
+                        "phi": True,
+                        "variables": ["x"],
+                        "w": "(x**2)*1"          
+                },
+                "wmipa":{
+                        "chi": And(GE(x, Real(0)),LE(x, Real(1))),
+                        'w': (Pow(x, Real(2)))*Real(1),
+                        "phi": Bool(True)        
+                },
+                "psi": {
+                        "formula": "(x^2)*1"        
+                },
+                "gubpi": {
+                        "formula": "(x*x)*1"        
+                }
+        },
     
-        # # #########################################################
-        # {
-        #         "index": 2,
-        #         "faza":{
-        #                 "chi": [[0, 1]],
-        #                 "phi": True,
-        #                 "variables": ["x"],
-        #                 "w": "(x**3)*1"          
-        #         },
-        #         "wmipa":{
-        #                 "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-        #                 'w': (Pow(x, Real(3)))*Real(1),
-        #                 "phi": Bool(True)        
-        #         },
-        #         "psi": {
-        #                 "formula": "(x^3)*1"        
-        #         },
-        #         "gubpi": {
-        #                 "formula": "(x*x*x)*1"        
-        #         }
-        # },
-        # # #########################################################
-        #         {
-        #         "index": 3,
-        #         "faza":{
-        #                 "chi": [[0, 1]],
-        #                 "phi": True,
-        #                 "variables": ["x"],
-        #                 "w": "(x**3 + x**2 + x + 1)*1"          
-        #         },
-        #         "wmipa":{
-        #                 "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-        #                 'w': Plus(Pow(x, Real(3)), Pow(x, Real(2)), x, Real(1))*Real(1),
-        #                 "phi": Bool(True)        
-        #         },
-        #         "psi": {
-        #                 "formula": "(x^3  + x^2 + x + 1)*1"        
-        #         },
-        #         "gubpi": {
-        #                 "formula": "(x*x*x + x*x + x + 1)*1"        
-        #         }
-        # },
+        # #########################################################
+        {
+                "index": 2,
+                "faza":{
+                        "chi": [[0, 1]],
+                        "phi": True,
+                        "variables": ["x"],
+                        "w": "(x**3)*1"          
+                },
+                "wmipa":{
+                        "chi": And(GE(x, Real(0)),LE(x, Real(1))),
+                        'w': (Pow(x, Real(3)))*Real(1),
+                        "phi": Bool(True)        
+                },
+                "psi": {
+                        "formula": "(x^3)*1"        
+                },
+                "gubpi": {
+                        "formula": "(x*x*x)*1"        
+                }
+        },
+        # #########################################################
+                {
+                "index": 3,
+                "faza":{
+                        "chi": [[0, 1]],
+                        "phi": True,
+                        "variables": ["x"],
+                        "w": "(x**3 + x**2 + x + 1)*1"          
+                },
+                "wmipa":{
+                        "chi": And(GE(x, Real(0)),LE(x, Real(1))),
+                        'w': Plus(Pow(x, Real(3)), Pow(x, Real(2)), x, Real(1))*Real(1),
+                        "phi": Bool(True)        
+                },
+                "psi": {
+                        "formula": "(x^3  + x^2 + x + 1)*1"        
+                },
+                "gubpi": {
+                        "formula": "(x*x*x + x*x + x + 1)*1"        
+                }
+        },
                 
-        # # #########################################################
-        # {
-        #         "index": 4,
-        #         "faza":{
-        #                 "chi": [[0, 1]],
-        #                 "phi": True,
-        #                 "variables": ["x"],
-        #                 "w": "(x**4 + x**3 + x**2 + x**1 + 1)*1"          
-        #         },
-        #         "wmipa":{
-        #                 "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-        #                 'w': (Plus(Pow(x, Real(4)), Pow(x, Real(3)), Pow(x,Real(2)), Pow(x,Real(1)), Real(1)))*Real(1),
-        #                 "phi": Bool(True)        
-        #         },
-        #         "psi": {
-        #                 "formula": "(x^4 + x^3 + x^2 + x + 1)*1"        
-        #         },
-        #         "gubpi": {
-        #                 "formula": "((x*x*x*x) + (x*x*x) + (x*x) + (x) + 1)*1"        
-        #         }
-        # },
+        # #########################################################
+        {
+                "index": 4,
+                "faza":{
+                        "chi": [[0, 1]],
+                        "phi": True,
+                        "variables": ["x"],
+                        "w": "(x**4 + x**3 + x**2 + x**1 + 1)*1"          
+                },
+                "wmipa":{
+                        "chi": And(GE(x, Real(0)),LE(x, Real(1))),
+                        'w': (Plus(Pow(x, Real(4)), Pow(x, Real(3)), Pow(x,Real(2)), Pow(x,Real(1)), Real(1)))*Real(1),
+                        "phi": Bool(True)        
+                },
+                "psi": {
+                        "formula": "(x^4 + x^3 + x^2 + x + 1)*1"        
+                },
+                "gubpi": {
+                        "formula": "((x*x*x*x) + (x*x*x) + (x*x) + (x) + 1)*1"        
+                }
+        },
         
-        # # #########################################################
-        # {
-        #         "index": 5,
-        #         "faza":{
-        #                 "chi": [[0.01, 1]],
-        #                 "phi": True,
-        #                 "variables": ["x"],
-        #                 "w": "(1/x)"          
-        #         },
-        #         "wmipa":{
-        #                 "chi": And(GE(x, Real(0.01)),LE(x, Real(1))),
-        #                 'w': Div(Real(1), x),
-        #                 "phi": Bool(True)        
-        #         },
-        #         "psi": {
-        #                 "formula": "(1/x)"        
-        #         },
-        #         "gubpi": {
-        #                 "formula": "(div(1,x))"        
-        #         }
-        # },
+        # #########################################################
+        {
+                "index": 5,
+                "faza":{
+                        "chi": [[0.01, 1]],
+                        "phi": True,
+                        "variables": ["x"],
+                        "w": "(1/x)"          
+                },
+                "wmipa":{
+                        "chi": And(GE(x, Real(0.01)),LE(x, Real(1))),
+                        'w': Div(Real(1), x),
+                        "phi": Bool(True)        
+                },
+                "psi": {
+                        "formula": "(1/x)"        
+                },
+                "gubpi": {
+                        "formula": "(div(1,x))"        
+                }
+        },
         
-        # # #########################################################
-        # {
-        #         "index": 9,
-        #         "faza":{
-        #                 "chi": [[1.01, 2]],
-        #                 "phi": True,
-        #                 "variables": ["x"],
-        #                 "w": "(1/(x**2 -1))"          
-        #         },
-        #         "wmipa":{
-        #                 "chi": And(GE(x, Real(1.01)),LE(x, Real(2))),
-        #                 'w': Div(Real(1), Pow(x, Real(2)) - Real(1)),
-        #                 "phi": Bool(True)        
-        #         },
-        #         "psi": {
-        #                 "formula": "(1/(x^2 -1))"        
-        #         },
-        #         "gubpi": {
-        #                 "formula": "(div(1,(x*x - 1)))"        
-        #         }
-        # },
+        # #########################################################
+        {
+                "index": 9,
+                "faza":{
+                        "chi": [[1.01, 2]],
+                        "phi": True,
+                        "variables": ["x"],
+                        "w": "(1/(x**2 -1))"          
+                },
+                "wmipa":{
+                        "chi": And(GE(x, Real(1.01)),LE(x, Real(2))),
+                        'w': Div(Real(1), Pow(x, Real(2)) - Real(1)),
+                        "phi": Bool(True)        
+                },
+                "psi": {
+                        "formula": "(1/(x^2 -1))"        
+                },
+                "gubpi": {
+                        "formula": "(div(1,(x*x - 1)))"        
+                }
+        },
 
-        # # #########################################################
-        # {
-        #         "index": 10,
-        #         "faza":{
-        #                 "chi": [[0, 1]],
-        #                 "phi": True,
-        #                 "variables": ["x"],
-        #                 "w": "((x**2+x+1)*1)/(x**3+1)"          
-        #         },
-        #         "wmipa":{
-        #                 "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-        #                 'w': Div(Plus(Pow(x, Real(2)), x, Real(1))*Real(1), Pow(x, Real(3)) + Real(1)),
-        #                 "phi": Bool(True)        
-        #         },
-        #         "psi": {
-        #                 "formula": "((x^2+x+1)*1/(x^3+1))"     
-        #         },
-        #         "gubpi": {
-        #                 "formula": "(div((x*x + x + 1)*1,(x*x*x + 1)))"        
-        #         }
-        # },
+        # #########################################################
+        {
+                "index": 10,
+                "faza":{
+                        "chi": [[0, 1]],
+                        "phi": True,
+                        "variables": ["x"],
+                        "w": "((x**2+x+1)*1)/(x**3+1)"          
+                },
+                "wmipa":{
+                        "chi": And(GE(x, Real(0)),LE(x, Real(1))),
+                        'w': Div(Plus(Pow(x, Real(2)), x, Real(1))*Real(1), Pow(x, Real(3)) + Real(1)),
+                        "phi": Bool(True)        
+                },
+                "psi": {
+                        "formula": "((x^2+x+1)*1/(x^3+1))"     
+                },
+                "gubpi": {
+                        "formula": "(div((x*x + x + 1)*1,(x*x*x + 1)))"        
+                }
+        },
     
         # #########################################################
         {
