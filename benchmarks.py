@@ -2,7 +2,7 @@ from pysmt.shortcuts import GE, LE, And, Bool, Iff, Ite, Real, Symbol, Times, Di
 from pysmt.typing import BOOL, REAL
 from pysmt.parsing import parse, HRParser
 
-import random, json
+import random, json, argparse, os
 
 
 # variables definition
@@ -568,13 +568,13 @@ def generate_rational_bechmarks(number_of_benchmarks, max_m, max_n, output_path)
                 n = random.randint(0, max_n)
                 
                 # generate coefficents randomly
-                a_coefficients = [round(random.uniform(0, 10),2) for i in range(n+1) ]
-                b_coefficients = [round(random.uniform(0, 10),2) for i in range(0,m+1)]
+                a_coefficients = [round(random.uniform(0, 10),2) for i in range(n+1)]
+                b_coefficients = [round(random.uniform(0, 10),2) for i in range(m+1)]
                 
                 benchmarks.append(
                         {
-                               "a_coefficients": a_coefficients,
-                               "b_coefficients": b_coefficients 
+                               "a_i": a_coefficients,
+                               "b_i": b_coefficients 
                         }
                 )
         
@@ -603,3 +603,23 @@ def load_rational_benchmarks(benchmak_path):
         
         return benchmaks        
         
+
+
+
+if __name__ == "__main__":
+        
+        parser = argparse.ArgumentParser(
+                prog='Faza Integrator',
+                description='I am generating!'
+                )
+        
+
+        parser.add_argument('--result-dir', type=str, default="experimental_results")
+        parser.add_argument('--max-denominator-degree', type=int)
+        parser.add_argument('--max-nominator-degree', type=int)
+
+        
+        args = parser.parse_args()
+        
+        
+        os.makedirs(args.result_dir, exist_ok=True)

@@ -258,13 +258,11 @@ if __name__ == "__main__":
         
         parser.add_argument("--epsilon", help="Number of workers", type=float, default=50)        
         parser.add_argument("--max-workers", help="Number of workers", type=int, default=1)
-        parser.add_argument("--N", help="Number of samples", type=int, default=[10000], nargs="+")
-        parser.add_argument("--seed", help="Random seed for (the first instance of) VolEsti integrator", type=int, default=[666, 667, 668, 669, 670], nargs="+")
         parser.add_argument("--repeat", help="Number of trials", type=int, default=10)
         parser.add_argument('--volesti', action='store_true', default=False)
         parser.add_argument('--latte', action='store_true', default=False)
         parser.add_argument('--faza', action='store_true', default=False)
-
+        
         parser.add_argument('--result-dir', type=str, default="experimental_results")
         
         args = parser.parse_args()
