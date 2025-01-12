@@ -706,6 +706,71 @@ def load_sqrt_benchmarks(benchmak_path, bounds=[[0, 1]]):
         return benchmaks        
         
 
+def generate_rational_sqrt_bechmarks(number_of_benchmarks, max_den_deg, max_nom_deg, output_path):
+
+        benchmarks = []
+        
+        for i in range(number_of_benchmarks):
+        
+                # denuminator must have higher degree than numinator
+                # assert(max_m>max_n)
+                
+                # select degree of numinator and denuminator randomly 
+                n = random.randint(0, max_nom_deg)
+                m = random.randint(0, max_den_deg)
+                
+                # generate coefficents randomly
+                a_coefficients = [round(random.uniform(0, 10),2) for i in range(n+1)]
+                b_coefficients = [round(random.uniform(0, 10),2) for i in range(m+1)]
+                
+                benchmarks.append(
+                        {
+                               "a_i": a_coefficients,
+                               "b_i": b_coefficients 
+                        }
+                )
+        
+        # Save it to
+        with open(output_path, 'w') as f:
+                json.dump(benchmarks, f)
+
+
+def load_rational_sqrt_benchmarks(benchmak_path, bounds=[[0.01, 1]]):
+        
+        benchmaks = []
+        
+        with open(benchmak_path, 'r') as f:
+                benchmak_coefficients = json.load(f)
+        
+        for bench_i, c in enumerate(benchmak_coefficients):
+                a_i = c['a_i']
+                b_i = c['b_i']
+                
+                benchmaks.append(
+                        {
+                                "index": bench_i,
+                                "faza":{
+                                        "chi": bounds,
+                                        "phi": True,
+                                        "variables": ["x"],
+                                        "w": "(" + "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x**{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")"+"**(1/2)"          
+                                },
+                                "wmipa":{
+                                        "chi": None,        
+                                        'w': None,
+                                        "phi": None,
+                                },
+                                "psi": {
+                                        "formula": "(" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x^{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")" +"^(1/2)",        
+                                },
+                                "gubpi": {
+                                        "formula": "sqrt(div((" + "+".join([f"{a}*{'*'.join(['x']*(len(a_i)-i-1)+['1'])}" for i, a in enumerate(a_i)]) + ")" + " , " + "(" + " + ".join([f"{b}*{'*'.join(['x']*(len(b_i)-i-1)+['1'])}" for i, b in enumerate(b_i)]) + ")))"        
+                                }
+                        }
+                )
+                
+        return benchmaks        
+        
 
 
 if __name__ == "__main__":
@@ -721,7 +786,7 @@ if __name__ == "__main__":
         parser.add_argument('--max-deg', type=int)
         parser.add_argument('--num-benchmarks', type=int)
 
-        parser.add_argument('--type', choices=['rational', 'sqrt'], default=False)
+        parser.add_argument('--type', choices=['rational', 'sqrt', 'rational_sqrt'], default=False)
 
         
         
@@ -742,5 +807,12 @@ if __name__ == "__main__":
                 generate_sqrt_bechmarks(
                         number_of_benchmarks=args.num_benchmarks,
                         max_deg=args.max_deg,
+                        output_path=args.output      
+                )
+        elif args.type == 'rational_sqrt':
+                generate_rational_sqrt_bechmarks(
+                        number_of_benchmarks=args.num_benchmarks,
+                        max_den_deg=args.max_den_deg,
+                        max_nom_deg=args.max_deg,
                         output_path=args.output      
                 )
