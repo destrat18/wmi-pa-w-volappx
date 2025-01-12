@@ -2,7 +2,7 @@ from pysmt.shortcuts import GE, LE, And, Bool, Iff, Ite, Real, Symbol, Times, Di
 from pysmt.typing import BOOL, REAL
 from pysmt.parsing import parse, HRParser
 
-import random, json, argparse, os
+import random, json, argparse, os, math
 
 
 # variables definition
@@ -640,6 +640,102 @@ def load_rational_benchmarks(benchmak_path, bounds=[[0.01, 1]]):
         
 
 
+def generate_rational_2_bechmarks(number_of_benchmarks, max_den_deg, max_nom_deg, output_path):
+
+        benchmarks = []
+        
+        for i in range(number_of_benchmarks):
+        
+                # denuminator must have higher degree than numinator
+                # assert(max_m>max_n)
+                
+                # select degree of numinator and denuminator randomly 
+                var_count = 2
+                nom_monomial_count = 0
+                for d in range(1, max_nom_deg+1):
+                        nom_monomial_count += int(math.factorial(d+var_count-1)/(math.factorial(var_count-1)*math.factorial(d))) 
+                # add constant
+                nom_monomial_count += 1
+                
+                den_monomial_count = 0
+                for d in range(1, max_den_deg+1):
+                        den_monomial_count += int(math.factorial(d+var_count-1)/(math.factorial(var_count-1)*math.factorial(d))) 
+                # add constant
+                den_monomial_count += 1
+                
+                # generate coefficents randomly
+                a_coefficients = [round(random.uniform(0, 10),2) for i in range(nom_monomial_count)]
+                b_coefficients = [round(random.uniform(0, 10),2) for i in range(den_monomial_count)]
+                
+                benchmarks.append(
+                        {
+                               "a_i": a_coefficients,
+                               "b_i": b_coefficients 
+                        }
+                )
+        
+        # Save it to
+        with open(output_path, 'w') as f:
+                json.dump(benchmarks, f)
+
+
+def load_rational_2_benchmarks(benchmak_path, bounds=[[0.01, 1], [0.01, 1]]):
+        
+        benchmaks = []
+        
+        with open(benchmak_path, 'r') as f:
+                benchmak_coefficients = json.load(f)
+        
+        for bench_i, c in enumerate(benchmak_coefficients):
+                a_i = c['a_i']
+                b_i = c['b_i']
+                
+                variables = ["x", 'y']
+                
+                # Do this nicer
+                mons = [
+                        "1",
+                        "y",
+                        "x",
+                        "x*y",
+                        "y*y",
+                        "x*x"
+                ]
+                
+                wmipa_mons = [
+                        Real(1),
+                        y,
+                        x,
+                        x*y,
+                        y*y,
+                        x*x
+                ]
+                
+                benchmaks.append(
+                        {
+                                "index": bench_i,
+                                "faza":{
+                                        "chi": bounds,
+                                        "phi": True,
+                                        "variables": variables,
+                                        "w": "(" + " + ".join([ f"{a}*{mons[i]}" for i, a in reversed(list(enumerate(a_i)))]) + ")" + " / " + "(" + " + ".join([ f"{b}*{mons[i]}" for i, b in reversed(list(enumerate(b_i)))]) + ")"          
+                                },
+                                "wmipa":{
+                                        "chi": And(GE(x, Real(bounds[0][0])),LE(x, Real(bounds[0][1]))),        
+                                        'w':   Div( Plus([ Real(a)*wmipa_mons[i] for i, a in reversed(list(enumerate(a_i)))]), Plus([ Real(b)*wmipa_mons[i] for i, b in reversed(list(enumerate(b_i)))])),
+                                        "phi": Bool(True),
+                                },
+                                "psi": {
+                                        "formula": "(" + " + ".join([ f"{a}*{mons[i]}" for i, a in reversed(list(enumerate(a_i)))]) + ")" + " / " + "(" + " + ".join([ f"{b}*{mons[i]}" for i, b in reversed(list(enumerate(b_i)))]) + ")" ,        
+                                },
+                                "gubpi": {
+                                        "formula": "div((" + " + ".join([ f"{a}*{mons[i]}" for i, a in reversed(list(enumerate(a_i)))]) + ")" + " , " + "(" + " + ".join([ f"{b}*{mons[i]}" for i, b in reversed(list(enumerate(b_i)))]) + "))"        
+                                }
+                        }
+                )
+                
+        return benchmaks 
+
 # Sqrt Functions
 # Benchmark in form w = sqrt(a_n*x^n + a_(n-1)*x^(n-1) + ... + a_1*x + a_0)
 # 0 < x < 1
@@ -781,12 +877,12 @@ if __name__ == "__main__":
                 )
         
 
-        parser.add_argument('--output', type=str, default="experimental_results")
-        parser.add_argument('--max-den-deg', type=int)
-        parser.add_argument('--max-deg', type=int)
-        parser.add_argument('--num-benchmarks', type=int)
+        parser.add_argument('--output', type=str, default="experimental_results/test.json")
+        parser.add_argument('--max-den-deg', type=int, default=2)
+        parser.add_argument('--max-deg', type=int, default=2)
+        parser.add_argument('--num-benchmarks', type=int, default=30)
 
-        parser.add_argument('--type', choices=['rational', 'sqrt', 'rational_sqrt'], default=False)
+        parser.add_argument('--type', choices=['rational', 'sqrt', 'rational_sqrt', 'rational_2'], default=False)
 
         
         
@@ -816,3 +912,11 @@ if __name__ == "__main__":
                         max_nom_deg=args.max_deg,
                         output_path=args.output      
                 )
+        elif args.type == 'rational_2' or True:
+                generate_rational_2_bechmarks(
+                        number_of_benchmarks=args.num_benchmarks,
+                        max_den_deg=args.max_den_deg,
+                        max_nom_deg=args.max_deg,
+                        output_path=args.output      
+                )
+        
