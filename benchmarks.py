@@ -95,6 +95,7 @@ selected_benchmark = [
 
         # #########################################################
         {
+                "index": 0,
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,                        
@@ -116,6 +117,7 @@ selected_benchmark = [
     
         # #########################################################
         {
+                "index": 1,
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
@@ -137,6 +139,7 @@ selected_benchmark = [
     
         # #########################################################
         {
+                "index": 2,
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
@@ -157,6 +160,7 @@ selected_benchmark = [
         },
         # #########################################################
                 {
+                "index": 3,
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
@@ -178,6 +182,7 @@ selected_benchmark = [
                 
         # #########################################################
         {
+                "index": 4,
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
@@ -199,6 +204,7 @@ selected_benchmark = [
         
         # #########################################################
         {
+                "index": 5,
                 "faza":{
                         "chi": [[0.01, 1]],
                         "phi": True,
@@ -220,70 +226,7 @@ selected_benchmark = [
         
         # #########################################################
         {
-                "faza":{
-                        "chi": [[0.01, 1], [0, 1]],
-                        "phi": True,
-                        "variables": ["x", "y"],
-                        "w": f"(1/(x+y))"          
-                },
-                "wmipa":{
-                        "chi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0)),LE(y, Real(1))),
-                        'w':   Div(Real(1), x+y),
-                        "phi": Bool(True)        
-                },
-                "psi": {
-                        "formula": f"(1/(x+y))",        
-                },
-                "gubpi": {
-                        "formula": "div(1,(x+y))"        
-                }
-                
-        },
-        
-        # #########################################################
-        {
-                "faza":{
-                        "chi": [[0.01, 1], [0, 1]],
-                        "phi": True,
-                        "variables": ["x", "y"],
-                        "w": f"(1/(x+y+(x*y)))"          
-                },
-                "wmipa":{
-                        "chi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0)),LE(y, Real(1))),
-                        'w':   Div(Real(1), x+y+(x*y)),
-                        "phi": Bool(True)        
-                },
-                "psi": {
-                        "formula": f"(1 / ( x + y + (x*y) ) )",        
-                },
-                "gubpi": {
-                        "formula": "(div(1,(x+y + x*y)))"        
-                }
-        },
-        
-        # #########################################################
-        {
-                "faza":{
-                        "chi": [[0.01, 1], [0, 1], [0, 1]],
-                        "phi": True,
-                        "variables": ["x", "y", "z"],
-                        "w": f"(1/(x+y+z))"          
-                },
-                "wmipa":{
-                        "chi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0)),LE(y, Real(1)), GE(z, Real(0)),LE(z, Real(1))),
-                        'w':   Div(Real(1), x+y+z),
-                        "phi": Bool(True)        
-                },
-                "psi": {
-                        "formula": f"(1/(x+y+z))",        
-                },
-                "gubpi": {
-                        "formula": "(div(1,(x+y+z)))"        
-                }
-        },
-        
-        # #########################################################
-        {
+                "index": 9,
                 "faza":{
                         "chi": [[1.01, 2]],
                         "phi": True,
@@ -305,6 +248,7 @@ selected_benchmark = [
 
         # #########################################################
         {
+                "index": 10,
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
@@ -326,6 +270,7 @@ selected_benchmark = [
     
         # #########################################################
         {
+                "index": 11,
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
@@ -347,6 +292,7 @@ selected_benchmark = [
 
         # #########################################################
         {
+                "index": 12,
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
@@ -369,6 +315,7 @@ selected_benchmark = [
         
         # #########################################################
         {
+                "index": 13,
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
@@ -390,6 +337,7 @@ selected_benchmark = [
         
         # #########################################################
         {
+                "index": 14,
                 "faza":{
                         "chi": [[0, 1]],
                         "phi": True,
@@ -412,6 +360,7 @@ selected_benchmark = [
         
         ######################################################### 
         {
+                "index": 15,
                 "faza":{
                         "chi": [[0.01, 1]],
                         "phi": True,
@@ -431,6 +380,7 @@ selected_benchmark = [
                 }
         },
         {
+                "index": 16,
                 "faza":{
                         "chi": [[0.01, 1]],
                         "phi": True,
@@ -450,6 +400,7 @@ selected_benchmark = [
                 }
         },
         {
+                "index": 17,
                 "faza":{
                         "chi": [[0.01, 1]],
                         "phi": True,
@@ -469,6 +420,7 @@ selected_benchmark = [
                 }
         },
         {
+                "index": 18,
                 "faza":{
                         "chi": [[1.01, 2]],
                         "phi": True,
@@ -489,8 +441,9 @@ selected_benchmark = [
                 }
         },
         {
+                "index": 19,
                 "faza":{
-                        "chi": [[0.01, 1], [0, 1]],
+                        "chi": [[0.01, 1], [0.01, 1]],
                         "phi": True,
                         "variables": ["x"],
                         "w": f"(1/(x+y))**(1/2)"          
@@ -507,9 +460,75 @@ selected_benchmark = [
                         "formula": "sqrt(div(1,x+y))"        
                 }
         },
+        # #########################################################
+        {
+                "index": 6,
+                "faza":{
+                        "chi": [[0.01, 1], [0.01, 1]],
+                        "phi": True,
+                        "variables": ["x", "y"],
+                        "w": f"(1/(x+y))"          
+                },
+                "wmipa":{
+                        "chi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0.01)),LE(y, Real(1))),
+                        'w':   Div(Real(1), x+y),
+                        "phi": Bool(True)        
+                },
+                "psi": {
+                        "formula": f"(1/(x+y))",        
+                },
+                "gubpi": {
+                        "formula": "div(1,(x+y))"        
+                }
+                
+        },
         
         # #########################################################
         {
+                "index": 7,
+                "faza":{
+                        "chi": [[0.01, 1], [0.01, 1]],
+                        "phi": True,
+                        "variables": ["x", "y"],
+                        "w": f"(1/(x+y+(x*y)))"          
+                },
+                "wmipa":{
+                        "chi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0.01)),LE(y, Real(1))),
+                        'w':   Div(Real(1), x+y+(x*y)),
+                        "phi": Bool(True)        
+                },
+                "psi": {
+                        "formula": f"(1 / ( x + y + (x*y) ) )",        
+                },
+                "gubpi": {
+                        "formula": "(div(1,(x+y + x*y)))"        
+                }
+        },
+        
+        # #########################################################
+        {
+                "index": 8,
+                "faza":{
+                        "chi": [[0.01, 1], [0.01, 1], [0.01, 1]],
+                        "phi": True,
+                        "variables": ["x", "y", "z"],
+                        "w": f"(1/(x+y+z))"          
+                },
+                "wmipa":{
+                        "chi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0.01)),LE(y, Real(1)), GE(z, Real(0.01)),LE(z, Real(1))),
+                        'w':   Div(Real(1), x+y+z),
+                        "phi": Bool(True)        
+                },
+                "psi": {
+                        "formula": f"(1/(x+y+z))",        
+                },
+                "gubpi": {
+                        "formula": "(div(1,(x+y+z)))"        
+                }
+        },
+        # #########################################################
+        {
+                "index": 20,
                 "faza":{
                         "chi": [[0, 1], [0, 1]],
                         "phi": True,
