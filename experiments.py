@@ -262,7 +262,7 @@ if __name__ == "__main__":
         parser.add_argument('--volesti', action='store_true', default=False)
         parser.add_argument('--latte', action='store_true', default=False)
         parser.add_argument('--faza', action='store_true', default=False)
-        parser.add_argument('--benchmark', choices=['manual', 'rational'], default="manual")
+        parser.add_argument('--benchmark', choices=['manual', 'rational', 'sqrt'], default="manual")
         parser.add_argument('--benchmark-path', type=str, help="Path to the benchmark")
         
         
@@ -279,6 +279,10 @@ if __name__ == "__main__":
             benchmarks = FazaBenchmarks.selected_benchmark
         elif args.benchmark == "rational":
             benchmarks = FazaBenchmarks.load_rational_benchmarks(
+                args.benchmark_path
+            )
+        elif args.benchmark == "sqrt":
+            benchmarks = FazaBenchmarks.load_sqrt_benchmarks(
                 args.benchmark_path
             )
         else:

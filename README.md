@@ -117,3 +117,10 @@ bash -c "cd /project/t3_sfarokhnia/wmi-pa-w-volappx && GRB_LICENSE_FILE=/project
 
 
 bash -c "cd /project/t3_sfarokhnia/wmi-pa-w-volappx && GRB_LICENSE_FILE=/project/t3_sfarokhnia/wmi-pa-w-volappx/gurobi.lic python3 approximate_volume.py --degree 22 --threshold 0.1 --max-workers 16 --input data/volumes/done/x/integrand.txt --bounds data/volumes/done/x/bounds.txt"
+
+
+bash -c "cd /project/t3_sfarokhnia/wmi-pa-w-volappx && GRB_LICENSE_FILE=/project/t3_sfarokhnia/wmi-pa-w-volappx/gurobi1.lic python3 experiments.py --benchmark rational --benchmark-path experimental_results/random_rational_bench.json --faza --epsilon 0.1 --max-workers 16"
+
+
+python experiments.py --benchmark rational --benchmark-path experimental_results/random_rational_bench.json --faza --
+repeat 10 --epsilon 0.1 --max-workers 2
