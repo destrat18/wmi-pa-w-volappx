@@ -251,6 +251,8 @@ def evaluate_faza(
 
 if __name__ == "__main__":
         
+        logging.basicConfig(level=logging.INFO)
+        
         parser = argparse.ArgumentParser(
                 prog='Faza Integrator',
                 description='I am experimenting!'
