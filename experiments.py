@@ -28,8 +28,9 @@ def evaluate_volesi(
     results = []    
     result_path = os.path.join(result_dir, f"benchmark_{benchmark_name}_volesti_{int(time.time())}.csv")
 
-    for bench_i, bench in enumerate(benchmarks):
+    for _, bench in enumerate(benchmarks):
         
+        bench_i = bench['index']
         start_time = time.time()
         try:
                 details = []
@@ -98,8 +99,9 @@ def evaluate_latte(
     results = []    
     result_path = os.path.join(result_dir, f"benchmark_{benchmark_name}_latte_{int(time.time())}.csv")
 
-    for bench_i, bench in enumerate(benchmarks):
+    for _, bench in enumerate(benchmarks):
         
+        bench_i = bench['index']
         start_time = time.time()
         try:
                 
@@ -164,9 +166,9 @@ def evaluate_faza(
         
         result_path = os.path.join(result_dir, f"benchmark_{benchmark_name}_faza_{int(time.time())}.csv")
 
-        for bench_i, bench in enumerate(benchmarks):
+        for _, bench in enumerate(benchmarks):
 
-
+            bench_i = bench['index']
             try:
                     
                 if "faza" not in  bench:
