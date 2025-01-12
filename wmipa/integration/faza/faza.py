@@ -593,9 +593,7 @@ def find_upper_bound(
         
     gU = sym.simplify(sym.expand(y-g))
     degree = sym.total_degree(gU)
-    print(gU, degree)
-    
-        
+            
     upper_equations, _, temp_vars = generate_handelman_equations(
         degree=degree,
         f_list=f_list,

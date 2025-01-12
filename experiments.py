@@ -232,6 +232,7 @@ def evaluate_faza(
                 
                 
                 logging.info(f"Bench {bench_i} ({bench['faza']['w']}) is done: {results[-1]['output']}")
+                print(f"Bench {bench_i} ({bench['faza']['w']}) is done: {results[-1]['output']}")
                 
             except Exception as e:
                 logging.info(f"Bench {bench_i} ({bench['faza']['w']}) is failed: {e}")
