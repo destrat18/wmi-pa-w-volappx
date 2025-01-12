@@ -10,7 +10,6 @@ x = Symbol("x", REAL)
 y = Symbol("y", REAL)
 z = Symbol("z", REAL)
 
-
 a = Real(4)
 b = Real(9)
 c = Real(16)
@@ -100,18 +99,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,                        
                         "variables": ["x"],
-                        "w": "(x)*100"          
+                        "w": "(x)*1"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0.01)),LE(x, Real(1))),
-                        'w': (x)*Real(100),
+                        'w': (x)*Real(1),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": "(x)*100"        
+                        "formula": "(x)*1"        
                 },
                 "gubpi": {
-                    "formula": "(x)*100"
+                    "formula": "(x)*1"
                 }
         },
     
@@ -121,18 +120,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": "(x**2)*100"          
+                        "w": "(x**2)*1"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-                        'w': (Pow(x, Real(2)))*Real(100),
+                        'w': (Pow(x, Real(2)))*Real(1),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": "(x^2)*100"        
+                        "formula": "(x^2)*1"        
                 },
                 "gubpi": {
-                        "formula": "(x*x)*100"        
+                        "formula": "(x*x)*1"        
                 }
         },
     
@@ -142,18 +141,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": "(x**3)*100"          
+                        "w": "(x**3)*1"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-                        'w': (Pow(x, Real(3)))*Real(100),
+                        'w': (Pow(x, Real(3)))*Real(1),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": "(x^3)*100"        
+                        "formula": "(x^3)*1"        
                 },
                 "gubpi": {
-                        "formula": "(x*x*x)*100"        
+                        "formula": "(x*x*x)*1"        
                 }
         },
         # #########################################################
@@ -162,18 +161,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": "(x**3 + x**2 + x + 1)*100"          
+                        "w": "(x**3 + x**2 + x + 1)*1"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-                        'w': Plus(Pow(x, Real(3)), Pow(x, Real(2)), x, Real(1))*Real(100),
+                        'w': Plus(Pow(x, Real(3)), Pow(x, Real(2)), x, Real(1))*Real(1),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": "(x^3  + x^2 + x + 1)*100"        
+                        "formula": "(x^3  + x^2 + x + 1)*1"        
                 },
                 "gubpi": {
-                        "formula": "(x*x*x + x*x + x + 1)*100"        
+                        "formula": "(x*x*x + x*x + x + 1)*1"        
                 }
         },
                 
@@ -183,18 +182,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": "(x**4 + x**3 + x**2 + x**1 + 1)*100"          
+                        "w": "(x**4 + x**3 + x**2 + x**1 + 1)*1"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-                        'w': (Plus(Pow(x, Real(4)), Pow(x, Real(3)), Pow(x,Real(2)), Pow(x,Real(1)), Real(1)))*Real(100),
+                        'w': (Plus(Pow(x, Real(4)), Pow(x, Real(3)), Pow(x,Real(2)), Pow(x,Real(1)), Real(1)))*Real(1),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": "(x^4 + x^3 + x^2 + x + 1)*100"        
+                        "formula": "(x^4 + x^3 + x^2 + x + 1)*1"        
                 },
                 "gubpi": {
-                        "formula": "((x*x*x*x) + (x*x*x) + (x*x) + (x) + 1)*100"        
+                        "formula": "((x*x*x*x) + (x*x*x) + (x*x) + (x) + 1)*1"        
                 }
         },
         
@@ -204,18 +203,18 @@ selected_benchmark = [
                         "chi": [[0.01, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": "(100/x)"          
+                        "w": "(1/x)"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0.01)),LE(x, Real(1))),
-                        'w': Div(Real(100), x),
+                        'w': Div(Real(1), x),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": "(100/x)"        
+                        "formula": "(1/x)"        
                 },
                 "gubpi": {
-                        "formula": "(div(100,x))"        
+                        "formula": "(div(1,x))"        
                 }
         },
         
@@ -225,18 +224,18 @@ selected_benchmark = [
                         "chi": [[0.01, 1], [0, 1]],
                         "phi": True,
                         "variables": ["x", "y"],
-                        "w": f"(100/(x+y))"          
+                        "w": f"(1/(x+y))"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0)),LE(y, Real(1))),
-                        'w':   Div(Real(100), x+y),
+                        'w':   Div(Real(1), x+y),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": f"(100/(x+y))",        
+                        "formula": f"(1/(x+y))",        
                 },
                 "gubpi": {
-                        "formula": "div(100,(x+y))"        
+                        "formula": "div(1,(x+y))"        
                 }
                 
         },
@@ -247,18 +246,18 @@ selected_benchmark = [
                         "chi": [[0.01, 1], [0, 1]],
                         "phi": True,
                         "variables": ["x", "y"],
-                        "w": f"(100/(x+y+(x*y)))"          
+                        "w": f"(1/(x+y+(x*y)))"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0)),LE(y, Real(1))),
-                        'w':   Div(Real(100), x+y+(x*y)),
+                        'w':   Div(Real(1), x+y+(x*y)),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": f"(100 / ( x + y + (x*y) ) )",        
+                        "formula": f"(1 / ( x + y + (x*y) ) )",        
                 },
                 "gubpi": {
-                        "formula": "(div(100,(x+y + x*y)))"        
+                        "formula": "(div(1,(x+y + x*y)))"        
                 }
         },
         
@@ -268,18 +267,18 @@ selected_benchmark = [
                         "chi": [[0.01, 1], [0, 1], [0, 1]],
                         "phi": True,
                         "variables": ["x", "y", "z"],
-                        "w": f"(100/(x+y+z))"          
+                        "w": f"(1/(x+y+z))"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0)),LE(y, Real(1)), GE(z, Real(0)),LE(z, Real(1))),
-                        'w':   Div(Real(100), x+y+z),
+                        'w':   Div(Real(1), x+y+z),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": f"(100/(x+y+z))",        
+                        "formula": f"(1/(x+y+z))",        
                 },
                 "gubpi": {
-                        "formula": "(div(100,(x+y+z)))"        
+                        "formula": "(div(1,(x+y+z)))"        
                 }
         },
         
@@ -289,18 +288,18 @@ selected_benchmark = [
                         "chi": [[1.01, 2]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": "(100/(x**2 -1))"          
+                        "w": "(1/(x**2 -1))"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(1.01)),LE(x, Real(2))),
-                        'w': Div(Real(100), Pow(x, Real(2)) - Real(1)),
+                        'w': Div(Real(1), Pow(x, Real(2)) - Real(1)),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": "(100/(x^2 -1))"        
+                        "formula": "(1/(x^2 -1))"        
                 },
                 "gubpi": {
-                        "formula": "(div(100,(x*x - 1)))"        
+                        "formula": "(div(1,(x*x - 1)))"        
                 }
         },
 
@@ -310,18 +309,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": "((x**2+x+1)*100)/(x**3+1)"          
+                        "w": "((x**2+x+1)*1)/(x**3+1)"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-                        'w': Div(Plus(Pow(x, Real(2)), x, Real(1))*Real(100), Pow(x, Real(3)) + Real(1)),
+                        'w': Div(Plus(Pow(x, Real(2)), x, Real(1))*Real(1), Pow(x, Real(3)) + Real(1)),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": "((x^2+x+1)*100/(x^3+1))"     
+                        "formula": "((x^2+x+1)*1/(x^3+1))"     
                 },
                 "gubpi": {
-                        "formula": "(div((x*x + x + 1)*100,(x*x*x + 1)))"        
+                        "formula": "(div((x*x + x + 1)*1,(x*x*x + 1)))"        
                 }
         },
     
@@ -331,18 +330,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"(x*100/( {a} + x**2))"          
+                        "w": f"(x*1/( {a} + x**2))"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-                        'w': Div(x*Real(100), a+ Pow(x, Real(2)))    ,
+                        'w': Div(x*Real(1), a+ Pow(x, Real(2)))    ,
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": f"(x*100/( {a} + x^2))"        
+                        "formula": f"(x*1/( {a} + x^2))"        
                 },
                 "gubpi": {
-                        "formula": f"(div(x*100,({a} + x*x)))"        
+                        "formula": f"(div(x*1,({a} + x*x)))"        
                 }
         },
 
@@ -352,18 +351,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"((x**3)*100/({a}+x**2))"          
+                        "w": f"((x**3)*1/({a}+x**2))"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-                        'w':  Div(Pow(x, Real(3))*Real(100), a + Pow(x, Real(2))),
+                        'w':  Div(Pow(x, Real(3))*Real(1), a + Pow(x, Real(2))),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": f"((x^3)*100/({a}+x^2))",        
+                        "formula": f"((x^3)*1/({a}+x^2))",        
                 },
                 "gubpi": {
-                        "formula": f"(div(x*x*x*100,({a} + x*x)))"        
+                        "formula": f"(div(x*x*x*1,({a} + x*x)))"        
                 }
                 
         },
@@ -374,18 +373,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"(100/({a}*x**2 + {b}*x + {c}))"          
+                        "w": f"(1/({a}*x**2 + {b}*x + {c}))"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-                        'w':   Div(Real(1), a*Pow(x, Real(2)) + b*x + c)*Real(100)  ,
+                        'w':   Div(Real(1), a*Pow(x, Real(2)) + b*x + c)*Real(1)  ,
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": f"(100/({a}*(x^2) + {b}*x + {c}))",        
+                        "formula": f"(1/({a}*(x^2) + {b}*x + {c}))",        
                 },
                 "gubpi": {
-                        "formula": f"(div(100,({a}*x*x) + ({b}*x) + {c}))"        
+                        "formula": f"(div(1,({a}*x*x) + ({b}*x) + {c}))"        
                 }
         },
         
@@ -395,18 +394,18 @@ selected_benchmark = [
                         "chi": [[0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"(100/( ({a}+x) * (x+{b}) ))"          
+                        "w": f"(1/( ({a}+x) * (x+{b}) ))"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1))),
-                        'w':   Div(Real(1), Times(x+a, x+b) )*Real(100),
+                        'w':   Div(Real(1), Times(x+a, x+b) )*Real(1),
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": f"(100/( ({a}+x) * (x+{b}) ))",        
+                        "formula": f"(1/( ({a}+x) * (x+{b}) ))",        
                 },
                 "gubpi": {
-                        "formula": f"(div(100,({a} + x) * ({b} + x)))"        
+                        "formula": f"(div(1,({a} + x) * ({b} + x)))"        
                 }
         },
     
@@ -417,7 +416,7 @@ selected_benchmark = [
                         "chi": [[0.01, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"((10000/x)**(1/2))"          
+                        "w": f"((1/x)**(1/2))"          
                 },
                 "wmipa":{
                         "chi": None,
@@ -425,10 +424,10 @@ selected_benchmark = [
                         "phi": None        
                 },
                 "psi": {
-                        "formula": f"((10000/x)^(1/2))",        
+                        "formula": f"((1/x)^(1/2))",        
                 },
                 "gubpi": {
-                        "formula": "(sqrt(div(10000,x)))"        
+                        "formula": "(sqrt(div(1,x)))"        
                 }
         },
         {
@@ -436,7 +435,7 @@ selected_benchmark = [
                         "chi": [[0.01, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"((1000000/x)**(1/3))"          
+                        "w": f"((1/x)**(1/3))"          
                 },
                 "wmipa":{
                         "chi": None,
@@ -444,7 +443,7 @@ selected_benchmark = [
                         "phi": None        
                 },
                 "psi": {
-                        "formula": f"((1000000/x)^(1/3))",        
+                        "formula": f"((1/x)^(1/3))",        
                 },
                 "gubpi": {
                         "formula": None        
@@ -455,7 +454,7 @@ selected_benchmark = [
                         "chi": [[0.01, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"((10000/(x+1))**(1/2))"          
+                        "w": f"((1/(x+1))**(1/2))"          
                 },
                 "wmipa":{
                         "chi": None,
@@ -463,10 +462,10 @@ selected_benchmark = [
                         "phi": None        
                 },
                 "psi": {
-                        "formula": f"(10000/(x+1))^(1/2)",        
+                        "formula": f"(1/(x+1))^(1/2)",        
                 },
                 "gubpi": {
-                        "formula": "sqrt(div(10000,x+1))"        
+                        "formula": "sqrt(div(1,x+1))"        
                 }
         },
         {
@@ -474,7 +473,7 @@ selected_benchmark = [
                         "chi": [[1.01, 2]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"(10000/(x**2-1))**(1/2)"          
+                        "w": f"(1/(x**2-1))**(1/2)"          
                 },
                 "wmipa":{
                         "chi": None,
@@ -482,11 +481,11 @@ selected_benchmark = [
                         "phi": None        
                 },
                 "psi": {
-                        "formula": f"(10000/(x^2-1))^(1/2)",        
+                        "formula": f"(1/(x^2-1))^(1/2)",        
                 }
                 ,
                 "gubpi": {
-                        "formula": "sqrt(div(10000,x*x - 1))"        
+                        "formula": "sqrt(div(1,x*x - 1))"        
                 }
         },
         {
@@ -494,7 +493,7 @@ selected_benchmark = [
                         "chi": [[0.01, 1], [0, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"(10000/(x+y))**(1/2)"          
+                        "w": f"(1/(x+y))**(1/2)"          
                 },
                 "wmipa":{
                         "chi": None,
@@ -502,10 +501,10 @@ selected_benchmark = [
                         "phi": None        
                 },
                 "psi": {
-                        "formula": f"(10000/(x+y))^(1/2)",        
+                        "formula": f"(1/(x+y))^(1/2)",        
                 },
                 "gubpi": {
-                        "formula": "sqrt(div(10000,x+y))"        
+                        "formula": "sqrt(div(1,x+y))"        
                 }
         },
         
@@ -515,7 +514,7 @@ selected_benchmark = [
                         "chi": [[0, 1], [0, 1]],
                         "phi": True,
                         "variables": ["x", "y"],
-                        "w": "((x**2 + 2*y**2 + 3*y*x + x + 1)*100/(2*y**2 + y*x + y + 2))"          
+                        "w": "((x**2 + 2*y**2 + 3*y*x + x + 1)*1/(2*y**2 + y*x + y + 2))"          
                 },
                 "wmipa":{
                         "chi": And(GE(x, Real(0)),LE(x, Real(1)), GE(y, Real(0)),LE(y, Real(1))),
@@ -526,7 +525,7 @@ selected_benchmark = [
                                         Real(3)*y*x,
                                         x,
                                         Real(1)
-                                )*Real(100),
+                                )*Real(1),
                                 Plus(
                                         Real(2)*Pow(y, Real(2)),
                                         y*x,
@@ -537,10 +536,10 @@ selected_benchmark = [
                         "phi": Bool(True)        
                 },
                 "psi": {
-                        "formula": "((x^2 + 2*(y^2) + 3*y*x + x + 1)*100/(2*(y^2) + y*x + y + 2))"     
+                        "formula": "((x^2 + 2*(y^2) + 3*y*x + x + 1)*1/(2*(y^2) + y*x + y + 2))"     
                 },
                 "gubpi": {
-                        "formula": "(div((x*x + 2*(y*y) + 3*y*x + x + 1)*100,(2*(y*y) + y*x + y + 2)))"    
+                        "formula": "(div((x*x + 2*(y*y) + 3*y*x + x + 1)*1,(2*(y*y) + y*x + y + 2)))"    
                 }
         },
         
