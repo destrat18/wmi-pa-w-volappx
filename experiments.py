@@ -226,6 +226,7 @@ def evaluate_faza(
                                     'n_integrations': 1,
                                     'mode': mode,
                                     'output': output,
+                                    "logs": integrator.logs
                         }
                     })
                 
