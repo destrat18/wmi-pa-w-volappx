@@ -609,12 +609,13 @@ def load_rational_benchmarks(benchmak_path, bounds=[[0.01, 1]]):
         with open(benchmak_path, 'r') as f:
                 benchmak_coefficients = json.load(f)
         
-        for c in benchmak_coefficients:
+        for bench_i, c in enumerate(benchmak_coefficients):
                 a_i = c['a_i']
                 b_i = c['b_i']
                 
                 benchmaks.append(
                         {
+                                "index": bench_i,
                                 "faza":{
                                         "chi": bounds,
                                         "phi": True,
