@@ -124,3 +124,6 @@ bash -c "cd /project/t3_sfarokhnia/wmi-pa-w-volappx && GRB_LICENSE_FILE=/project
 
 python experiments.py --benchmark rational --benchmark-path experimental_results/random_rational_bench.json --faza --
 repeat 10 --epsilon 0.1 --max-workers 2
+
+
+bash -c "cd /project/t3_sfarokhnia/wmi-pa-w-volappx && GRB_LICENSE_FILE=/project/t3_sfarokhnia/wmi-pa-w-volappx/gurobi1.lic python3 experiments.py --benchmark sqrt --benchmark-path experimental_results/random_benchmarks_sqrt.json --latte --volesti --faza --repeat 10 --epsilon 0.1 --max-workers 16"

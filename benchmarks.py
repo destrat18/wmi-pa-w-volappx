@@ -695,10 +695,10 @@ def load_sqrt_benchmarks(benchmak_path, bounds=[[0, 1]]):
                                         "phi": None,
                                 },
                                 "psi": {
-                                        "formula": "(" + "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + "^(1/2)",        
+                                        "formula": "(" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + "^(1/2)",        
                                 },
                                 "gubpi": {
-                                        "formula": "sqrt(" + "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")"
+                                        "formula": "sqrt(" + "+".join([f"{a}*{'*'.join(['x']*(len(a_i)-i-1)+['1'])}" for i, a in enumerate(a_i)]) + ")"
                                 }
                         }
                 )
