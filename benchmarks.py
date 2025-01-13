@@ -103,7 +103,7 @@ selected_benchmark = [
                         "w": "(x)*1"          
                 },
                 "wmipa":{
-                        "chi": And(GE(x, Real(0.01)),LE(x, Real(1))),
+                        "chi": And(GE(x, Real(0.1)),LE(x, Real(1))),
                         'w': (x)*Real(1),
                         "phi": Bool(True)        
                 },
@@ -206,13 +206,13 @@ selected_benchmark = [
         {
                 "index": 5,
                 "faza":{
-                        "chi": [[0.01, 1]],
+                        "chi": [[0.1, 1]],
                         "phi": True,
                         "variables": ["x"],
                         "w": "(1/x)"          
                 },
                 "wmipa":{
-                        "chi": And(GE(x, Real(0.01)),LE(x, Real(1))),
+                        "chi": And(GE(x, Real(0.1)),LE(x, Real(1))),
                         'w': Div(Real(1), x),
                         "phi": Bool(True)        
                 },
@@ -362,7 +362,7 @@ selected_benchmark = [
         {
                 "index": 15,
                 "faza":{
-                        "chi": [[0.01, 1]],
+                        "chi": [[0.1, 1]],
                         "phi": True,
                         "variables": ["x"],
                         "w": f"((1/x)**(1/2))"          
@@ -382,7 +382,7 @@ selected_benchmark = [
         {
                 "index": 16,
                 "faza":{
-                        "chi": [[0.01, 1]],
+                        "chi": [[0.1, 1]],
                         "phi": True,
                         "variables": ["x"],
                         "w": f"((1/x)**(1/3))"          
@@ -402,7 +402,7 @@ selected_benchmark = [
         {
                 "index": 17,
                 "faza":{
-                        "chi": [[0.01, 1]],
+                        "chi": [[0.1, 1]],
                         "phi": True,
                         "variables": ["x"],
                         "w": f"((1/(x+1))**(1/2))"          
@@ -444,13 +444,13 @@ selected_benchmark = [
         {
                 "index": 6,
                 "faza":{
-                        "chi": [[0.01, 1], [0.01, 1]],
+                        "chi": [[0.1, 1], [0.1, 1]],
                         "phi": True,
                         "variables": ["x", "y"],
                         "w": f"(1/(x+y))"          
                 },
                 "wmipa":{
-                        "chi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0.01)),LE(y, Real(1))),
+                        "chi": And(GE(x, Real(0.1)),LE(x, Real(1)), GE(y, Real(0.1)),LE(y, Real(1))),
                         'w':   Div(Real(1), x+y),
                         "phi": Bool(True)        
                 },
@@ -467,13 +467,13 @@ selected_benchmark = [
         {
                 "index": 7,
                 "faza":{
-                        "chi": [[0.01, 1], [0.01, 1]],
+                        "chi": [[0.1, 1], [0.1, 1]],
                         "phi": True,
                         "variables": ["x", "y"],
                         "w": f"(1/(x+y+(x*y)))"          
                 },
                 "wmipa":{
-                        "chi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0.01)),LE(y, Real(1))),
+                        "chi": And(GE(x, Real(0.1)),LE(x, Real(1)), GE(y, Real(0.1)),LE(y, Real(1))),
                         'w':   Div(Real(1), x+y+(x*y)),
                         "phi": Bool(True)        
                 },
@@ -489,13 +489,13 @@ selected_benchmark = [
         {
                 "index": 8,
                 "faza":{
-                        "chi": [[0.01, 1], [0.01, 1], [0.01, 1]],
+                        "chi": [[0.1, 1], [0.1, 1], [0.1, 1]],
                         "phi": True,
                         "variables": ["x", "y", "z"],
                         "w": f"(1/(x+y+z))"          
                 },
                 "wmipa":{
-                        "chi": And(GE(x, Real(0.01)),LE(x, Real(1)), GE(y, Real(0.01)),LE(y, Real(1)), GE(z, Real(0.01)),LE(z, Real(1))),
+                        "chi": And(GE(x, Real(0.1)),LE(x, Real(1)), GE(y, Real(0.1)),LE(y, Real(1)), GE(z, Real(0.1)),LE(z, Real(1))),
                         'w':   Div(Real(1), x+y+z),
                         "phi": Bool(True)        
                 },
@@ -509,7 +509,7 @@ selected_benchmark = [
         {
                 "index": 19,
                 "faza":{
-                        "chi": [[0.01, 1], [0.01, 1]],
+                        "chi": [[0.1, 1], [0.1, 1]],
                         "phi": True,
                         "variables": ["x"],
                         "w": f"(1/(x+y))**(1/2)"          
@@ -602,7 +602,7 @@ def generate_rational_bechmarks(number_of_benchmarks, max_den_deg, max_nom_deg, 
                 json.dump(benchmarks, f)
 
 
-def load_rational_benchmarks(benchmak_path, bounds=[[0.01, 1]]):
+def load_rational_benchmarks(benchmak_path, bounds=[[0.1, 1]]):
         
         benchmaks = []
         
@@ -679,7 +679,7 @@ def generate_rational_2_bechmarks(number_of_benchmarks, max_den_deg, max_nom_deg
                 json.dump(benchmarks, f)
 
 
-def load_rational_2_benchmarks(benchmak_path, bounds=[[0.01, 1], [0.01, 1]]):
+def load_rational_2_benchmarks(benchmak_path, bounds=[[0.1, 1], [0.1, 1]]):
         
         benchmaks = []
         
@@ -832,7 +832,7 @@ def generate_rational_sqrt_bechmarks(number_of_benchmarks, max_den_deg, max_nom_
                 json.dump(benchmarks, f)
 
 
-def load_rational_sqrt_benchmarks(benchmak_path, bounds=[[0.01, 1]]):
+def load_rational_sqrt_benchmarks(benchmak_path, bounds=[[0.1, 1]]):
         
         benchmaks = []
         

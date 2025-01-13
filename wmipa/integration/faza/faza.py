@@ -241,9 +241,9 @@ class Checker(mp.Process):
 
                         # Optimization porblem
                         subs_dict = {}
-                        for i in range(len(cur_bounds)):
-                            subs_dict[bound_vars[i][0]] = cur_bounds[i][0] 
-                            subs_dict[bound_vars[i][1]] = cur_bounds[i][1]
+                        for cur_dim in range(len(cur_bounds)):
+                            subs_dict[bound_vars[cur_dim][0]] = cur_bounds[cur_dim][0] 
+                            subs_dict[bound_vars[cur_dim][1]] = cur_bounds[cur_dim][1]
 
                         cur_inside_equations_ = [
                             sym.Poly(a.subs(subs_dict)) for a in inside_equations
@@ -286,26 +286,50 @@ class Checker(mp.Process):
                         )
                     )
                 else:
+                    split_step=64
+                    
                     self.checked_queue.put(
                         (
                             2, # means it must be splitted
                             cur_volume, # volume of hyper-rect
                             cur_bounds,
+                            split_step,
                             stats
                         )
                     )
                     
+                    
+                    
+                    # cur_dim = cur_depth%len(self.variables)
+                    
+                    # # # Find the largest dimension
+                    # # largest_dim = 0
+                    # # largest_dim_size = cur_bounds[0][1]-cur_bounds[0][0]
+                    # # for dim in range(1, len(cur_bounds)):
+                    # #     if cur_bounds[dim][1]-cur_bounds[dim][0] > largest_dim_size:
+                    # #         largest_dim_size =  cur_bounds[dim][1]-cur_bounds[dim][0]
+                    # #         largest_dim = dim
+                            
+                    # splited_ranges = list(np.linspace(cur_bounds[cur_dim][0], cur_bounds[cur_dim][1], split_step+1))
+                    
+                    # for j in range(len(splited_ranges)-1):
+                    
+                    #     new_bounds = copy.deepcopy(cur_bounds)
+                    #     new_bounds[cur_dim]=[splited_ranges[j], splited_ranges[j+1]]
+                    #     self.to_check_queue.put((cur_depth+1, new_bounds, cur_volume/split_step, bound_vars, is_inside_list))
+                        
                     # create two smaller hyper-rects
                     i = cur_depth%len(self.variables)
-                    s_bounds = cur_bounds[i]
-                    s_bound_middle = (s_bounds[0]+s_bounds[1])/2
+                    i_bounds = cur_bounds[i]
+                    
+                    s_bound_middle = (i_bounds[0]+i_bounds[1])/2
                     
                     left_bounds = copy.deepcopy(cur_bounds)
-                    left_bounds[i]=[s_bounds[0], s_bound_middle]
+                    left_bounds[i]=[i_bounds[0], s_bound_middle]
                     self.to_check_queue.put((cur_depth+1, left_bounds, cur_volume/2, bound_vars, is_inside_list))
                     
                     right_bounds = copy.deepcopy(cur_bounds)
-                    right_bounds[i]=[s_bound_middle, s_bounds[1]]
+                    right_bounds[i]=[s_bound_middle, i_bounds[1]]
                     self.to_check_queue.put((cur_depth+1, right_bounds, cur_volume/2, bound_vars, is_inside_list))
             
             except Exception as e:
@@ -392,9 +416,11 @@ def calculate_approximate_volume(
     total_solver_time = 0
     total_subs_time = 0
     
+    current_split_step = 2 
+    
     while error > threshold:
         res = checked_queue.get()
-        
+
         total_hrect_checked += 1
         total_solver_time += res[-1]["solver_time"]
         total_subs_time += res[-1]["subs_time"]
@@ -404,12 +430,14 @@ def calculate_approximate_volume(
             volume += res[1]
         elif res[0]==1:
             error -= res[1]
+        elif res[0] ==2:
+            current_split_step = max(current_split_step, res[-2])
         
         
         if total_hrect_checked%250 == 0:
             logging.info(f"#Checked: {total_hrect_checked}, Error: {error:.6f}, Volume: ({volume:.6f},{volume+error:.6f}), Total time: {(time.time()-start_time)/60:.2f}m({(time.time()-start_time):.2f}s)")
                      
-            logging.info(f"Avg subs time: {(total_subs_time)/(total_hrect_checked*2):.6f}s, Avg solver time: {total_solver_time/(total_hrect_checked*2):.6f}s")
+            logging.info(f"Avg subs time: {(total_subs_time)/(total_hrect_checked*2):.6f}s, Avg solver time: {total_solver_time/(total_hrect_checked*2):.6f}s, Split step: {current_split_step}")
 
 
     # Must stop the thread
@@ -867,9 +895,15 @@ if __name__ == "__main__":
     bench = {
         "faza":{
             'chi': True,
-            "w": "(1/x)**(1/2)",
-            "chi": [[0.01,1]],
-            "variables": ['x']
+            "w": "1/x",
+            "chi": [
+                [0.01,1], 
+                # [0.01, 1]
+                ],
+            "variables": [
+                'x', 
+                # 'y'
+            ]
         }
     }
     
@@ -877,7 +911,7 @@ if __name__ == "__main__":
         calculate_approximate_wmi(
             phi=True,
             chi=bench['faza']['chi'],
-            max_workers=4,
+            max_workers=1,
             threshold=0.1,
             w=bench['faza']['w'],
             variables=[sym.symbols(v) for v in bench['faza']['variables']]
