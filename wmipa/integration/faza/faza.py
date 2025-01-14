@@ -375,6 +375,7 @@ def calculate_approximate_volume(
     to_check_queue = mp.Queue()
     checked_queue = mp.Queue()
 
+    logging.info(f'Run {max_workers} solvers!')
     checker_list = []
     for _ in range(max_workers):
         checker = Checker(

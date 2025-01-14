@@ -245,6 +245,7 @@ def evaluate_faza(
                 results.append({
                     "bechmark": benchmark_name,
                     "formula": bench['faza']['w'],
+                    "bounds": bench['faza']['chi'],
                     "index": bench_i,
                     "output": None,
                     'error': str(e),
