@@ -511,7 +511,7 @@ selected_benchmark = [
                 "faza":{
                         "chi": [[0.1, 1], [0.1, 1]],
                         "phi": True,
-                        "variables": ["x"],
+                        "variables": ["x", 'y'],
                         "w": f"(1/(x+y))**(1/2)"          
                 },
                 "wmipa":{

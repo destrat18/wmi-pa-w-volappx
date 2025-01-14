@@ -123,6 +123,36 @@ def is_feasible(equations, temp_vars):
             return not(m.status==gp.GRB.INFEASIBLE), m.runtime
     
 
+def is_feasible_test(equations, temp_vars):
+    
+    coeff_matrix = []
+    for a in equations:
+        coeff = []
+        for v in [1]+temp_vars:
+            try:
+                coeff.append(sym.Poly(a.coeff_monomial(v)))
+            except:
+                coeff.append(0)
+        coeff_matrix.append(coeff)
+
+    M = np.array(coeff_matrix)
+    RHS = (M[:,:1]*-1).flatten()
+    M = M[:,1:]
+    
+    with gp.Env(empty=True) as env:
+        env.setParam('OutputFlag', 0)
+        env.start()
+        with gp.Model(env=env) as m:
+            m.setObjective(True, gp.GRB.MAXIMIZE)
+            
+            lp_l = m.addMVar(shape=len(temp_vars), name="l", ub=float('inf'), lb=0)            
+            m.addConstr( M @ lp_l == RHS, name="c")
+
+            m.optimize()
+    
+            return not(m.status==gp.GRB.INFEASIBLE), m.runtime
+    
+
 def read_input(input_path, bounds_path):
     
     inputs = []
@@ -239,6 +269,7 @@ class Checker(mp.Process):
                         is_outside_list.append(False)
                     else:
 
+                        is_feasible_test(inside_equations, temp_vars=temp_vars)
                         # Optimization porblem
                         subs_dict = {}
                         for cur_dim in range(len(cur_bounds)):

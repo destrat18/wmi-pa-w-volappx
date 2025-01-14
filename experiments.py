@@ -61,6 +61,7 @@ def evaluate_volesi(
                 results.append({
                         "bechmark": benchmark_name,
                         "formula": bench['faza']['w'],
+                        "bounds": bench['faza']['chi'],
                         "index": bench_i,
                         'output': (min([d['output'] for d in details]), max([d['output'] for d in details])),
                         'error': None,
@@ -119,6 +120,7 @@ def evaluate_latte(
                 results.append({
                         "bechmark": benchmark_name,
                         "formula": bench['faza']['w'],
+                        "bounds": bench['faza']['chi'],
                         "index": bench_i,
                         'output': volume,
                         'error': None,
@@ -138,6 +140,7 @@ def evaluate_latte(
             results.append({
                 "bechmark": benchmark_name,
                 "formula": bench['faza']['w'],
+                "bounds": bench['faza']['chi'],
                 "index": bench_i,
                 "output": None,
                 'error': str(e),
@@ -193,6 +196,7 @@ def evaluate_faza(
                     results.append({
                             "bechmark": benchmark_name,
                             "formula": bench['faza']['w'],
+                            "bounds": bench['faza']['chi'],
                             "index": bench_i,
                             'output': (output[0], output[1]),
                             'error': None,
@@ -218,6 +222,7 @@ def evaluate_faza(
                     results.append({
                             "bechmark": benchmark_name,
                             "formula": bench['faza']['w'],
+                            "bounds": bench['faza']['chi'],
                             "index": bench_i,
                             'output': output,
                             'error': None,
