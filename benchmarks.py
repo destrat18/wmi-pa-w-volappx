@@ -562,6 +562,122 @@ selected_benchmark = [
                 }
         },
         
+        ###################### multiplied by 10 ################################### 
+        {
+                "index": 21,
+                "faza":{
+                        "chi": [[0.1, 1]],
+                        "phi": True,
+                        "variables": ["x"],
+                        "w": f"((100/x)**(1/2))"          
+                },
+                "wmipa":{
+                        "chi": None,
+                        'w':   None,
+                        "phi": None        
+                },
+                "psi": {
+                        "formula": f"((100/x)^(1/2))",        
+                },
+                "gubpi": {
+                        "formula": "(sqrt(div(100,x)))"        
+                }
+        },
+        {
+                "index": 22,
+                "faza":{
+                        "chi": [[0.1, 1]],
+                        "phi": True,
+                        "variables": ["x"],
+                        "w": f"((1000/x)**(1/3))"          
+                },
+                "wmipa":{
+                        "chi": None,
+                        'w':   None,
+                        "phi": None        
+                },
+                "psi": {
+                        "formula": f"((1000/x)^(1/3))",        
+                },
+                "gubpi": {
+                        "formula": None        
+                }
+        },
+        {
+                "index": 23,
+                "faza":{
+                        "chi": [[0.1, 1]],
+                        "phi": True,
+                        "variables": ["x"],
+                        "w": f"((100/(x+1))**(1/2))"          
+                },
+                "wmipa":{
+                        "chi": None,
+                        'w':   None,
+                        "phi": None        
+                },
+                "psi": {
+                        "formula": f"(100/(x+1))^(1/2)",        
+                },
+                "gubpi": {
+                        "formula": "sqrt(div(100,x+1))"        
+                }
+        },
+        {
+                "index": 24,
+                "faza":{
+                        "chi": [[1.01, 2]],
+                        "phi": True,
+                        "variables": ["x"],
+                        "w": f"(100/(x**2-1))**(1/2)"          
+                },
+                "wmipa":{
+                        "chi": None,
+                        'w':   None,
+                        "phi": None        
+                },
+                "psi": {
+                        "formula": f"(100/(x^2-1))^(1/2)",        
+                }
+                ,
+                "gubpi": {
+                        "formula": "sqrt(div(100,x*x - 1))"        
+                }
+        },
+        {
+                "index": 25,
+                "faza":{
+                        "chi": [[0, 1], [0, 1]],
+                        "phi": True,
+                        "variables": ["x", "y"],
+                        "w": "((x**2 + 2*y**2 + 3*y*x + x + 1)*10/(2*y**2 + y*x + y + 2))"          
+                },
+                "wmipa":{
+                        "chi": And(GE(x, Real(0)),LE(x, Real(1)), GE(y, Real(0)),LE(y, Real(1))),
+                        'w': Div(
+                                Plus(
+                                        Pow(x, Real(2)), 
+                                        Real(2)*Pow(y, Real(2)),
+                                        Real(3)*y*x,
+                                        x,
+                                        Real(1)
+                                )*Real(10),
+                                Plus(
+                                        Real(2)*Pow(y, Real(2)),
+                                        y*x,
+                                        y,
+                                        Real(2)
+                                )
+                                ),
+                        "phi": Bool(True)        
+                },
+                "psi": {
+                        "formula": "((x^2 + 2*(y^2) + 3*y*x + x + 1)*10/(2*(y^2) + y*x + y + 2))"     
+                },
+                "gubpi": {
+                        "formula": "(div((x*x + 2*(y*y) + 3*y*x + x + 1)*10,(2*(y*y) + y*x + y + 2)))"    
+                }
+        },
 ]
 
 
