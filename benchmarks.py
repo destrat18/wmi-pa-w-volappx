@@ -718,7 +718,7 @@ def generate_rational_bechmarks(number_of_benchmarks, max_den_deg, max_nom_deg, 
                 json.dump(benchmarks, f)
 
 
-def load_rational_benchmarks(benchmak_path, bounds=[[0.1, 1]]):
+def load_rational_benchmarks(benchmak_path, bounds=[[0.1, 1]], constant=10):
         
         benchmaks = []
         
@@ -736,18 +736,18 @@ def load_rational_benchmarks(benchmak_path, bounds=[[0.1, 1]]):
                                         "chi": bounds,
                                         "phi": True,
                                         "variables": ["x"],
-                                        "w": "(" + "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x**{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")"          
+                                        "w": f"{constant}*"+ "((" + "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x**{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + "))"          
                                 },
                                 "wmipa":{
                                         "chi": And(GE(x, Real(bounds[0][0])),LE(x, Real(bounds[0][1]))),        
-                                        'w':   Div(Plus([Times(Real(a), Pow(x, Real(len(a_i)-i-1))) for i, a in enumerate(a_i)]), Plus([Times(Real(b), Pow(x, Real(len(b_i)-i-1))) for i, b in enumerate(b_i)])),
+                                        'w':   Div(Real(constant)*Plus([Times(Real(a), Pow(x, Real(len(a_i)-i-1))) for i, a in enumerate(a_i)]), Plus([Times(Real(b), Pow(x, Real(len(b_i)-i-1))) for i, b in enumerate(b_i)])),
                                         "phi": Bool(True),
                                 },
                                 "psi": {
-                                        "formula": "(" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x^{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")" ,        
+                                        "formula": f"{constant}*"+"((" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x^{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + "))" ,        
                                 },
                                 "gubpi": {
-                                        "formula": "div((" + "+".join([f"{a}*{'*'.join(['x']*(len(a_i)-i-1)+['1'])}" for i, a in enumerate(a_i)]) + ")" + " , " + "(" + " + ".join([f"{b}*{'*'.join(['x']*(len(b_i)-i-1)+['1'])}" for i, b in enumerate(b_i)]) + "))"        
+                                        "formula": f"{constant}*"+"(div((" + "+".join([f"{a}*{'*'.join(['x']*(len(a_i)-i-1)+['1'])}" for i, a in enumerate(a_i)]) + ")" + " , " + "(" + " + ".join([f"{b}*{'*'.join(['x']*(len(b_i)-i-1)+['1'])}" for i, b in enumerate(b_i)]) + ")))"        
                                 }
                         }
                 )
