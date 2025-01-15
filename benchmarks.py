@@ -589,7 +589,7 @@ selected_benchmark = [
                         "chi": [[0.1, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"((100/(x+1))**(1/2))"          
+                        "w": f"((10/(x+1))**(1/2))"          
                 },
                 "wmipa":{
                         "chi": None,
@@ -597,10 +597,10 @@ selected_benchmark = [
                         "phi": None        
                 },
                 "psi": {
-                        "formula": f"(100/(x+1))^(1/2)",        
+                        "formula": f"(10/(x+1))^(1/2)",        
                 },
                 "gubpi": {
-                        "formula": "sqrt(div(100,x+1))"        
+                        "formula": "sqrt(div(10,x+1))"        
                 }
         },
         {
@@ -609,7 +609,7 @@ selected_benchmark = [
                         "chi": [[1.01, 2]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"(100/(x**2-1))**(1/2)"          
+                        "w": f"(10/(x**2-1))**(1/2)"          
                 },
                 "wmipa":{
                         "chi": None,
@@ -617,11 +617,11 @@ selected_benchmark = [
                         "phi": None        
                 },
                 "psi": {
-                        "formula": f"(100/(x^2-1))^(1/2)",        
+                        "formula": f"(10/(x^2-1))^(1/2)",        
                 }
                 ,
                 "gubpi": {
-                        "formula": "sqrt(div(100,x*x - 1))"        
+                        "formula": "sqrt(div(10,x*x - 1))"        
                 }
         },
         {
@@ -664,7 +664,7 @@ selected_benchmark = [
                         "chi": [[0.1, 1]],
                         "phi": True,
                         "variables": ["x"],
-                        "w": f"((1000/x)**(1/3))"          
+                        "w": f"((10/x)**(1/3))"          
                 },
                 "wmipa":{
                         "chi": None,
@@ -672,7 +672,7 @@ selected_benchmark = [
                         "phi": None        
                 },
                 "psi": {
-                        "formula": f"((1000/x)^(1/3))",        
+                        "formula": f"((10/x)^(1/3))",        
                 },
                 "gubpi": {
                         "formula": None        
