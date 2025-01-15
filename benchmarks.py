@@ -563,46 +563,26 @@ selected_benchmark = [
         # },
         
         ###################### multiplied by 10 ################################### 
-        {
-                "index": 21,
-                "faza":{
-                        "chi": [[0.1, 1]],
-                        "phi": True,
-                        "variables": ["x"],
-                        "w": f"((100/x)**(1/2))"          
-                },
-                "wmipa":{
-                        "chi": None,
-                        'w':   None,
-                        "phi": None        
-                },
-                "psi": {
-                        "formula": f"((100/x)^(1/2))",        
-                },
-                "gubpi": {
-                        "formula": "(sqrt(div(100,x)))"        
-                }
-        },
-        {
-                "index": 22,
-                "faza":{
-                        "chi": [[0.1, 1]],
-                        "phi": True,
-                        "variables": ["x"],
-                        "w": f"((1000/x)**(1/3))"          
-                },
-                "wmipa":{
-                        "chi": None,
-                        'w':   None,
-                        "phi": None        
-                },
-                "psi": {
-                        "formula": f"((1000/x)^(1/3))",        
-                },
-                "gubpi": {
-                        "formula": None        
-                }
-        },
+        # {
+        #         "index": 21,
+        #         "faza":{
+        #                 "chi": [[0.1, 1]],
+        #                 "phi": True,
+        #                 "variables": ["x"],
+        #                 "w": f"((100/x)**(1/2))"          
+        #         },
+        #         "wmipa":{
+        #                 "chi": None,
+        #                 'w':   None,
+        #                 "phi": None        
+        #         },
+        #         "psi": {
+        #                 "formula": f"((100/x)^(1/2))",        
+        #         },
+        #         "gubpi": {
+        #                 "formula": "(sqrt(div(100,x)))"        
+        #         }
+        # },
         {
                 "index": 23,
                 "faza":{
@@ -676,6 +656,26 @@ selected_benchmark = [
                 },
                 "gubpi": {
                         "formula": "(div((x*x + 2*(y*y) + 3*y*x + x + 1)*10,(2*(y*y) + y*x + y + 2)))"    
+                }
+        },
+        {
+                "index": 22,
+                "faza":{
+                        "chi": [[0.1, 1]],
+                        "phi": True,
+                        "variables": ["x"],
+                        "w": f"((1000/x)**(1/3))"          
+                },
+                "wmipa":{
+                        "chi": None,
+                        'w':   None,
+                        "phi": None        
+                },
+                "psi": {
+                        "formula": f"((1000/x)^(1/3))",        
+                },
+                "gubpi": {
+                        "formula": None        
                 }
         },
 ]
