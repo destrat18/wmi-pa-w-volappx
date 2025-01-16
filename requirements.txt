@@ -7,3 +7,4 @@ pandas==2.0.3
 matplotlib==3.7.5
 seaborn==0.13.2
 psutil==6.1.1
+pysmt==0.9.6
