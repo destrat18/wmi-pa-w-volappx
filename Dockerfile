@@ -24,6 +24,28 @@ RUN chmod -R 775 /home/des
 USER des
 WORKDIR /home/des/app
 
+
+# Install Psi Solver
+RUN sudo apt -qq update && apt -qq install -y wget unzip xz-utils  git libxml2-dev curl
+RUN sudo apt-get update && sudo apt-get install -y libssl-dev software-properties-common git sqlite3 zip curl rsync sagemath wget git gcc build-essential gnuplot
+
+# Install dlang
+RUN curl -fsS https://dlang.org/install.sh | bash -s dmd
+RUN echo "source ~/dlang/dmd-2.109.1/activate" >> /root/.bashrc
+
+
+WORKDIR /app
+
+RUN git clone https://github.com/eth-sri/psi.git \
+&& cd ./psi \
+ && ./dependencies-release.sh \
+ && ./build-release.sh \
+ && mkdir bin \
+ && mv psi ./bin
+
+RUN echo "export PATH=$PATH:/home/des/app/psi/bin" >> /root/.bashrc
+
+
 RUN sudo apt install python3.8-venv -y
 RUN python3 -m venv /home/des/venv
 ENV PATH="/home/des/venv/bin:$PATH"

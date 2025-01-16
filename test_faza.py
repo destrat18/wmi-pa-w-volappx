@@ -220,6 +220,8 @@ def generate_f_list(vars):
         bound_vars.append([l, u])
     return f_list, bound_vars 
 
+def apply(inp):
+    return sym.Poly(inp[0].subs(inp[1]))
 
 class Checker(mp.Process):
     
@@ -255,8 +257,6 @@ class Checker(mp.Process):
                 
                 cur_depth, cur_bounds, cur_volume, bound_vars, cur_memoization = hrect
                 
-                # timing
-                start_time = time.time()
 
                 is_inside_list = []
                 is_outside_list = []
@@ -269,13 +269,24 @@ class Checker(mp.Process):
                         is_outside_list.append(False)
                     else:
 
-                        is_feasible_test(inside_equations, temp_vars=temp_vars)
+                        # timing
+                        start_time = time.time()
+                        # is_feasible_test(inside_equations, temp_vars=temp_vars)
                         # Optimization porblem
                         subs_dict = {}
                         for cur_dim in range(len(cur_bounds)):
                             subs_dict[bound_vars[cur_dim][0]] = cur_bounds[cur_dim][0] 
                             subs_dict[bound_vars[cur_dim][1]] = cur_bounds[cur_dim][1]
 
+
+
+                        
+                        # with mp.Pool(16) as p:
+                        #     cur_inside_equations_ = p.map(apply, [(a, subs_dict) for a in inside_equations])
+                    
+                        # with mp.Pool(16) as p:
+                        #     cur_outside_equations_ = p.map(apply, [(a, subs_dict) for a in outside_equations])
+                        
                         cur_inside_equations_ = [
                             sym.Poly(a.subs(subs_dict)) for a in inside_equations
                             ]
@@ -919,14 +930,14 @@ if __name__ == "__main__":
     bench = {
         "faza":{
             'chi': True,
-            "w": "1/x",
+            "w": "1/(x+y+x*y)",
             "chi": [
                 [0.01,1], 
-                # [0.01, 1]
+                [0.01, 1]
                 ],
             "variables": [
                 'x', 
-                # 'y'
+                'y'
             ]
         }
     }
