@@ -12,6 +12,11 @@ import benchmarks as FazaBenchmarks
 from subprocess import check_output
 import tempfile
 import pandas as pd
+import signal
+
+
+def OutOfTimeHandler(signum, frame):
+    raise Exception('Timeout')
 
 
 def evaluate_volesi(
@@ -157,7 +162,8 @@ def evaluate_faza(
         result_dir,
         epsilon,
         max_workers,
-        benchmark_name         
+        benchmark_name,
+        timeout    
         
 ):
 
@@ -173,13 +179,14 @@ def evaluate_faza(
 
             bench_i = bench['index']
             try:
-                    
+                
                 if "faza" not in  bench:
                     raise Exception('Missing input formula')
                 if bench['faza']['w'] is None:
                     raise Exception('N\S')
                 
                 start_time = time.time()
+                signal.alarm(timeout)
 
                 # If the format is not supported by WMI-PA input format
                 if bench['wmipa']['w'] is None:
@@ -259,12 +266,15 @@ def evaluate_faza(
 if __name__ == "__main__":
         
         logging.basicConfig(level=logging.INFO)
+        signal.signal(signal.SIGALRM, OutOfTimeHandler)
+        
         
         parser = argparse.ArgumentParser(
                 prog='Faza Integrator',
                 description='I am experimenting!'
                 )
         
+        parser.add_argument("--timeout", type=float, default=10)        
         parser.add_argument("--epsilon", help="Number of workers", type=float, default=50)        
         parser.add_argument("--max-workers", help="Number of workers", type=int, default=1)
         parser.add_argument("--repeat", help="Number of trials", type=int, default=10)
@@ -279,8 +289,7 @@ if __name__ == "__main__":
         parser.add_argument('--result-dir', type=str, default="experimental_results")
         
         args = parser.parse_args()
-        
-        
+
         os.makedirs(args.result_dir, exist_ok=True)
 
 
@@ -329,5 +338,6 @@ if __name__ == "__main__":
                     epsilon=args.epsilon,
                     max_workers=args.max_workers,
                     benchmark_name=args.benchmark,
+                    timeout=args.timeout
                 )
                 
