@@ -24,26 +24,6 @@ RUN chmod -R 775 /home/des
 USER des
 WORKDIR /home/des/app
 
-
-# Install Psi Solver
-RUN sudo apt -qq update && sudo apt -qq install -y wget unzip xz-utils  git libxml2-dev curl
-RUN sudo apt-get update && sudo apt-get install -y build-essential
-# RUN sudo apt-get update && sudo apt-get install -y gnuplot
-
-# Install dlang
-RUN curl -fsS https://dlang.org/install.sh | bash -s dmd
-RUN echo "source ~/dlang/dmd-2.109.1/activate" >> /home/des/.bashrc
-
-RUN git clone https://github.com/eth-sri/psi.git \
-&& cd ./psi \
- && ./dependencies-release.sh \
- && ./build-release.sh \
- && mkdir bin \
- && mv psi ./bin
-
-ENV PATH="/home/des/app/psi/bin:$PATH"
-
-
 RUN sudo apt install python3.8-venv -y
 RUN python3 -m venv /home/des/venv
 ENV PATH="/home/des/venv/bin:$PATH"
@@ -77,24 +57,44 @@ RUN pip3 install pysmt && \
  pysmt-install --msat --confirm-agreement
 RUN wmipa-install --nra
 
-#  # Install Latte
-#  RUN sudo apt-get update \
-#  && sudo apt-get install -y  build-essential m4 cmake g++ make 
+ # Install Latte
+ RUN sudo apt-get update \
+ && sudo apt-get install -y  build-essential m4 cmake g++ make 
 
-# RUN wget -c "https://github.com/latte-int/latte/releases/download/version_1_7_5/latte-integrale-1.7.5.tar.gz" \
-#  && tar xvf latte-integrale-1.7.5.tar.gz \
-#  && cd latte-integrale-1.7.5\
-#  && ./configure --prefix=/home/des/app/latte --with-default=/home/des/app/latte \
-#  && make -j 8 \
-#  && make install
+RUN wget -c "https://github.com/latte-int/latte/releases/download/version_1_7_5/latte-integrale-1.7.5.tar.gz" \
+ && tar xvf latte-integrale-1.7.5.tar.gz \
+ && cd latte-integrale-1.7.5\
+ && ./configure --prefix=/home/des/app/latte --with-default=/home/des/app/latte \
+ && make -j 8 \
+ && make install
 
-# ENV PATH="$PATH:/home/des/app/latte/bin"
+ENV PATH="$PATH:/home/des/app/latte/bin"
+ENV PATH="$PATH:/home/des/app/latte/bin"
 
 
 # # Install Volesti
-# RUN sudo apt-get install -y lp-solve \
-# && wmipa-install --volesti -yf
-# ENV PATH="/home/des/.wmipa/approximate-integration/bin:$PATH"
+RUN sudo apt-get install -y lp-solve libboost-all-dev \
+&& wmipa-install --volesti -yf
+ENV PATH="/home/des/.wmipa/approximate-integration/bin:$PATH"
+
+# Install Psi Solver
+RUN sudo apt -qq update && sudo apt -qq install -y wget unzip xz-utils  git libxml2-dev curl
+RUN sudo apt-get update && sudo apt-get install -y build-essential
+# RUN sudo apt-get update && sudo apt-get install -y gnuplot
+
+# Install dlang
+RUN curl -fsS https://dlang.org/install.sh | bash -s dmd
+RUN echo "source ~/dlang/dmd-2.109.1/activate" >> /home/des/.bashrc
+
+RUN git clone https://github.com/eth-sri/psi.git \
+&& cd ./psi \
+ && ./dependencies-release.sh \
+ && ./build-release.sh \
+ && mkdir bin \
+ && mv psi ./bin
+
+ENV PATH="/home/des/app/psi/bin:$PATH"
+
 
 COPY ./ ./wmi-pa-w-volappx
 WORKDIR /home/des/app/wmi-pa-w-volappx
