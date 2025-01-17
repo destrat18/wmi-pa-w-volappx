@@ -261,6 +261,7 @@ def evaluate_faza(
         for _, bench in enumerate(benchmarks):
 
             bench_i = bench['index']
+            integrator = FazaIntegrator(threshold=epsilon, max_workers=max_workers) 
             try:
                 
                 if "faza" not in  bench:
@@ -300,7 +301,6 @@ def evaluate_faza(
 
                 else:
                     
-                    integrator = FazaIntegrator(threshold=epsilon, max_workers=max_workers) 
                     wmi = WMI(bench['wmipa']['chi'], bench['wmipa']['w'], integrator=integrator)
                     volume, n_integrations = wmi.computeWMI(bench['wmipa']['phi'], mode=mode)
 
@@ -332,12 +332,18 @@ def evaluate_faza(
                 
             except Exception as e:
                 logging.info(f"Bench {bench_i} ({bench['faza']['w']}) is failed: {e}")
+        
+                if len(integrator.logs)==1:
+                    output = integrator.logs[0]['volume']
+                else:
+                    output = None
+                    
                 results.append({
                     "bechmark": benchmark_name,
                     "formula": bench['faza']['w'],
                     "bounds": bench['faza']['chi'],
                     "index": bench_i,
-                    "output": None,
+                    "output": output,
                     'error': str(e),
                     "time": time.time()-start_time,
                     'details': []
