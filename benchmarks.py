@@ -978,7 +978,7 @@ def load_rational_sqrt_benchmarks(benchmak_path, constant=None, bounds=[[0.1, 1]
                                         "phi": None,
                                 },
                                 "psi": {
-                                        "formula": "(" +  f"{const}*("+"(" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x^{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")" +")" +") ^(1/2)",        
+                                        "formula": "(" +  f"{const}*("+"(" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x^{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")" +")" +")^(1/2)",        
                                 },
                                 "gubpi": {
                                         "formula": "sqrt("+ f"{const}*(" +"div((" + "+".join([f"{a}*{'*'.join(['x']*(len(a_i)-i-1)+['1'])}" for i, a in enumerate(a_i)]) + ")" + " , " + "(" + " + ".join([f"{b}*{'*'.join(['x']*(len(b_i)-i-1)+['1'])}" for i, b in enumerate(b_i)]) + "))))"        
