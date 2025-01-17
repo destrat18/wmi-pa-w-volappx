@@ -269,7 +269,7 @@ def evaluate_faza(
                     raise Exception('N\S')
                 
                 start_time = time.time()
-                signal.alarm(timeout)
+                signal.alarm(int(timeout))
 
                 # If the format is not supported by WMI-PA input format
                 if bench['wmipa']['w'] is None:
@@ -342,6 +342,7 @@ def evaluate_faza(
                     "time": time.time()-start_time,
                     'details': []
                 })
+                logging.exception(e)
                 
             pd.DataFrame(results).sort_values('index').to_csv(result_path, index=False) 
                         

@@ -79,6 +79,3 @@ COPY ./ ./wmi-pa-w-volappx
 WORKDIR /home/des/app/wmi-pa-w-volappx
 
 RUN pip install -r requirements.txt
-
-WORKDIR /home/des/app/
-ENTRYPOINT ["/bin/bash"]
