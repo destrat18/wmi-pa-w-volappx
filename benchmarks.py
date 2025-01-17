@@ -836,7 +836,7 @@ def load_rational_2_benchmarks(benchmak_path, constant=None, bounds=[[0.1, 1], [
                                         "chi": bounds,
                                         "phi": True,
                                         "variables": variables,
-                                        "w": f"{const}*("+ "(" + " + ".join([ f"{a}*{mons[i]}" for i, a in reversed(list(enumerate(a_i)))]) + ")" + " / " + "(" + " + ".join([ f"{b}*{mons[i]}" for i, b in reversed(list(enumerate(b_i)))]) + ")" + ")"         
+                                        "w":  "(" + f"{const}*(" + " + ".join([ f"{a}*{mons[i]}" for i, a in reversed(list(enumerate(a_i)))]) + ")" + ")" + " / " + "(" + " + ".join([ f"{b}*{mons[i]}" for i, b in reversed(list(enumerate(b_i)))]) + ")"          
                                 },
                                 "wmipa":{
                                         "chi": And(GE(x, Real(bounds[0][0])),LE(x, Real(bounds[0][1])),
