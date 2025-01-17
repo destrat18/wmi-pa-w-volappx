@@ -28,25 +28,6 @@ RUN sudo apt install python3.8-venv -y
 RUN python3 -m venv /home/des/venv
 ENV PATH="/home/des/venv/bin:$PATH"
 
-
-
-# # Configure sudo for des
-# # Configure sudo and permissions for des
-# # RUN mkdir -p /home/des/app/node_modules
-
-# # RUN mkdir -p /home/des/.npm
-# # RUN mkdir -p /home/des/.config
-# # RUN mkdir -p /home/des/.cache
-# # RUN mkdir -p /home/des/.local
-# # RUN mkdir -p /home/des/app/logs
-# # RUN touch /home/des/app/emoe.log
-# # RUN chown -R des:des /home/des/.npm
-# # RUN chown -R des:des /home/des/.config
-# # RUN chown -R des:des /home/des/.cache
-# # RUN chown -R des:des /home/des/.local
-# # RUN chown -R des:des /home/des/app
-
-
 RUN pip3 install wheel
 RUN git clone https://github.com/unitn-sml/wmi-pa.git \
  && cd wmi-pa \
@@ -69,8 +50,6 @@ RUN wget -c "https://github.com/latte-int/latte/releases/download/version_1_7_5/
  && make install
 
 ENV PATH="$PATH:/home/des/app/latte/bin"
-ENV PATH="$PATH:/home/des/app/latte/bin"
-
 
 # # Install Volesti
 RUN sudo apt-get install -y lp-solve libboost-all-dev \

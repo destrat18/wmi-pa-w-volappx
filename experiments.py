@@ -356,7 +356,8 @@ if __name__ == "__main__":
             prog='Faza Integrator',
             description='I am experimenting!'
             )
-    
+
+    parser.add_argument("--constant", type=float, default=None)            
     parser.add_argument("--timeout", type=float, default=10)        
     parser.add_argument("--epsilon", help="Number of workers", type=float, default=50)        
     parser.add_argument("--max-workers", help="Number of workers", type=int, default=1)
@@ -368,8 +369,7 @@ if __name__ == "__main__":
     parser.add_argument('--benchmark', choices=['manual', 'rational', 'sqrt', "rational_sqrt", "rational_2"], default="manual")
     parser.add_argument('--benchmark-path', type=str, help="Path to the benchmark")
     
-    
-    
+
     parser.add_argument('--result-dir', type=str, default="experimental_results")
     
     args = parser.parse_args()
@@ -382,19 +382,23 @@ if __name__ == "__main__":
         args.benchmark = "manual"
     elif args.benchmark == "rational":
         benchmarks = FazaBenchmarks.load_rational_benchmarks(
-            args.benchmark_path
+            benchmak_path=args.benchmark_path,
+            constant=args.constant
         )
     elif args.benchmark == "sqrt":
         benchmarks = FazaBenchmarks.load_sqrt_benchmarks(
-            args.benchmark_path
+            benchmak_path=args.benchmark_path,
+            constant=args.constant
         )
     elif args.benchmark == "rational_sqrt":
         benchmarks = FazaBenchmarks.load_rational_sqrt_benchmarks(
-            args.benchmark_path
+            benchmak_path=args.benchmark_path,
+            constant=args.constant
         )
     elif args.benchmark == "rational_2":
         benchmarks = FazaBenchmarks.load_rational_2_benchmarks(
-            args.benchmark_path
+            benchmak_path=args.benchmark_path,
+            constant=args.constant
         )
     else:
         raise NotImplementedError()

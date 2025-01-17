@@ -718,7 +718,7 @@ def generate_rational_bechmarks(number_of_benchmarks, max_den_deg, max_nom_deg, 
                 json.dump(benchmarks, f)
 
 
-def load_rational_benchmarks(benchmak_path, bounds=[[0.1, 1]], constant=10):
+def load_rational_benchmarks(benchmak_path, constant=None, bounds=[[0.1, 1]]):
         
         benchmaks = []
         
@@ -728,6 +728,7 @@ def load_rational_benchmarks(benchmak_path, bounds=[[0.1, 1]], constant=10):
         for bench_i, c in enumerate(benchmak_coefficients):
                 a_i = c['a_i']
                 b_i = c['b_i']
+                const = c['constant'] if constant is None else constant
                 
                 benchmaks.append(
                         {
@@ -736,18 +737,18 @@ def load_rational_benchmarks(benchmak_path, bounds=[[0.1, 1]], constant=10):
                                         "chi": bounds,
                                         "phi": True,
                                         "variables": ["x"],
-                                        "w": f"{constant}*"+ "((" + "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x**{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + "))"          
+                                        "w": f"{const}*("+ "(" + "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x**{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")" + ")"          
                                 },
                                 "wmipa":{
                                         "chi": And(GE(x, Real(bounds[0][0])),LE(x, Real(bounds[0][1]))),        
-                                        'w':   Div(Real(constant)*Plus([Times(Real(a), Pow(x, Real(len(a_i)-i-1))) for i, a in enumerate(a_i)]), Plus([Times(Real(b), Pow(x, Real(len(b_i)-i-1))) for i, b in enumerate(b_i)])),
+                                        'w':   Div(Real(const)*Plus([Times(Real(a), Pow(x, Real(len(a_i)-i-1))) for i, a in enumerate(a_i)]), Plus([Times(Real(b), Pow(x, Real(len(b_i)-i-1))) for i, b in enumerate(b_i)])),
                                         "phi": Bool(True),
                                 },
                                 "psi": {
-                                        "formula": f"{constant}*"+"((" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x^{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + "))" ,        
+                                        "formula": f"{const}*"+"((" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x^{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + "))" ,        
                                 },
                                 "gubpi": {
-                                        "formula": f"{constant}*"+"(div((" + "+".join([f"{a}*{'*'.join(['x']*(len(a_i)-i-1)+['1'])}" for i, a in enumerate(a_i)]) + ")" + " , " + "(" + " + ".join([f"{b}*{'*'.join(['x']*(len(b_i)-i-1)+['1'])}" for i, b in enumerate(b_i)]) + ")))"        
+                                        "formula": f"{const}*"+"(div((" + "+".join([f"{a}*{'*'.join(['x']*(len(a_i)-i-1)+['1'])}" for i, a in enumerate(a_i)]) + ")" + " , " + "(" + " + ".join([f"{b}*{'*'.join(['x']*(len(b_i)-i-1)+['1'])}" for i, b in enumerate(b_i)]) + ")))"        
                                 }
                         }
                 )
@@ -795,7 +796,7 @@ def generate_rational_2_bechmarks(number_of_benchmarks, max_den_deg, max_nom_deg
                 json.dump(benchmarks, f)
 
 
-def load_rational_2_benchmarks(benchmak_path, bounds=[[0.1, 1], [0.1, 1]]):
+def load_rational_2_benchmarks(benchmak_path, constant=None, bounds=[[0.1, 1], [0.1, 1]]):
         
         benchmaks = []
         
@@ -805,7 +806,8 @@ def load_rational_2_benchmarks(benchmak_path, bounds=[[0.1, 1], [0.1, 1]]):
         for bench_i, c in enumerate(benchmak_coefficients):
                 a_i = c['a_i']
                 b_i = c['b_i']
-                
+                const = c['constant'] if constant is None else constant
+
                 variables = ["x", 'y']
                 
                 # Do this nicer
@@ -834,19 +836,19 @@ def load_rational_2_benchmarks(benchmak_path, bounds=[[0.1, 1], [0.1, 1]]):
                                         "chi": bounds,
                                         "phi": True,
                                         "variables": variables,
-                                        "w": "(" + " + ".join([ f"{a}*{mons[i]}" for i, a in reversed(list(enumerate(a_i)))]) + ")" + " / " + "(" + " + ".join([ f"{b}*{mons[i]}" for i, b in reversed(list(enumerate(b_i)))]) + ")"          
+                                        "w": f"{const}*("+ "(" + " + ".join([ f"{a}*{mons[i]}" for i, a in reversed(list(enumerate(a_i)))]) + ")" + " / " + "(" + " + ".join([ f"{b}*{mons[i]}" for i, b in reversed(list(enumerate(b_i)))]) + ")" + ")"         
                                 },
                                 "wmipa":{
                                         "chi": And(GE(x, Real(bounds[0][0])),LE(x, Real(bounds[0][1])),
                                                    GE(y, Real(bounds[1][0])),LE(y, Real(bounds[1][1]))),        
-                                        'w':   Div( Plus([ Real(a)*wmipa_mons[i] for i, a in reversed(list(enumerate(a_i)))]), Plus([ Real(b)*wmipa_mons[i] for i, b in reversed(list(enumerate(b_i)))])),
+                                        'w':   Div( Real(const)*Plus([ Real(a)*wmipa_mons[i] for i, a in reversed(list(enumerate(a_i)))]), Plus([ Real(b)*wmipa_mons[i] for i, b in reversed(list(enumerate(b_i)))])),
                                         "phi": Bool(True),
                                 },
                                 "psi": {
-                                        "formula": "(" + " + ".join([ f"{a}*{mons[i]}" for i, a in reversed(list(enumerate(a_i)))]) + ")" + " / " + "(" + " + ".join([ f"{b}*{mons[i]}" for i, b in reversed(list(enumerate(b_i)))]) + ")" ,        
+                                        "formula": f"{const}*("+ "(" + " + ".join([ f"{a}*{mons[i]}" for i, a in reversed(list(enumerate(a_i)))]) + ")" + " / " + "(" + " + ".join([ f"{b}*{mons[i]}" for i, b in reversed(list(enumerate(b_i)))]) + ")"+ ")" ,        
                                 },
                                 "gubpi": {
-                                        "formula": "div((" + " + ".join([ f"{a}*{mons[i]}" for i, a in reversed(list(enumerate(a_i)))]) + ")" + " , " + "(" + " + ".join([ f"{b}*{mons[i]}" for i, b in reversed(list(enumerate(b_i)))]) + "))"        
+                                        "formula": f"{const}*("+ "div((" + " + ".join([ f"{a}*{mons[i]}" for i, a in reversed(list(enumerate(a_i)))]) + ")" + " , " + "(" + " + ".join([ f"{b}*{mons[i]}" for i, b in reversed(list(enumerate(b_i)))]) + "))"+")"        
                                 }
                         }
                 )
@@ -883,7 +885,7 @@ def generate_sqrt_bechmarks(number_of_benchmarks, max_deg, output_path):
                 json.dump(benchmarks, f)
 
 
-def load_sqrt_benchmarks(benchmak_path, bounds=[[0, 1]]):
+def load_sqrt_benchmarks(benchmak_path, constant=None, bounds=[[0, 1]]):
         
         benchmaks = []
         
@@ -892,6 +894,7 @@ def load_sqrt_benchmarks(benchmak_path, bounds=[[0, 1]]):
         
         for bench_i, c in enumerate(benchmak_coefficients):
                 a_i = c['a_i']
+                const = c['constant'] if constant is None else constant
                 
                 benchmaks.append(
                         {
@@ -900,7 +903,7 @@ def load_sqrt_benchmarks(benchmak_path, bounds=[[0, 1]]):
                                         "chi": bounds,
                                         "phi": True,
                                         "variables": ["x"],
-                                        "w": "(" + "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + "**(1/2)"          
+                                        "w": "(" + f"{const}*("+  "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + ")" +"**(1/2)"          
                                 },
                                 "wmipa":{
                                         "chi": None,        
@@ -908,10 +911,10 @@ def load_sqrt_benchmarks(benchmak_path, bounds=[[0, 1]]):
                                         "phi": None,
                                 },
                                 "psi": {
-                                        "formula": "(" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + "^(1/2)",        
+                                        "formula": "("+f"{const}*("+ "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" +")"+ "^(1/2)",        
                                 },
                                 "gubpi": {
-                                        "formula": "sqrt(" + "+".join([f"{a}*{'*'.join(['x']*(len(a_i)-i-1)+['1'])}" for i, a in enumerate(a_i)]) + ")"
+                                        "formula": "sqrt(" +f"{const}*"+"("+ "+".join([f"{a}*{'*'.join(['x']*(len(a_i)-i-1)+['1'])}" for i, a in enumerate(a_i)]) + ")"+")"
                                 }
                         }
                 )
@@ -948,7 +951,7 @@ def generate_rational_sqrt_bechmarks(number_of_benchmarks, max_den_deg, max_nom_
                 json.dump(benchmarks, f)
 
 
-def load_rational_sqrt_benchmarks(benchmak_path, bounds=[[0.1, 1]]):
+def load_rational_sqrt_benchmarks(benchmak_path, constant=None, bounds=[[0.1, 1]]):
         
         benchmaks = []
         
@@ -958,7 +961,8 @@ def load_rational_sqrt_benchmarks(benchmak_path, bounds=[[0.1, 1]]):
         for bench_i, c in enumerate(benchmak_coefficients):
                 a_i = c['a_i']
                 b_i = c['b_i']
-                
+                const = c['constant'] if constant is None else constant
+
                 benchmaks.append(
                         {
                                 "index": bench_i,
@@ -966,7 +970,7 @@ def load_rational_sqrt_benchmarks(benchmak_path, bounds=[[0.1, 1]]):
                                         "chi": bounds,
                                         "phi": True,
                                         "variables": ["x"],
-                                        "w": "(" + "(" + "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x**{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")"+" )**(1/2)"          
+                                        "w": "(" + f"{const}*("+"(" + "+".join([ f"{a}*x**{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x**{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")"+ ")" +" )**(1/2)"          
                                 },
                                 "wmipa":{
                                         "chi": None,        
@@ -974,10 +978,10 @@ def load_rational_sqrt_benchmarks(benchmak_path, bounds=[[0.1, 1]]):
                                         "phi": None,
                                 },
                                 "psi": {
-                                        "formula": "(" + "(" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x^{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")" +") ^(1/2)",        
+                                        "formula": "(" +  f"{const}*("+"(" + "+".join([ f"{a}*x^{len(a_i)-i-1}" for i, a in enumerate(a_i)]) + ")" + " / " + "(" + " + ".join([ f"{b}*x^{len(b_i)-i-1}" for i, b in enumerate(b_i)]) + ")" +")" +") ^(1/2)",        
                                 },
                                 "gubpi": {
-                                        "formula": "sqrt(div((" + "+".join([f"{a}*{'*'.join(['x']*(len(a_i)-i-1)+['1'])}" for i, a in enumerate(a_i)]) + ")" + " , " + "(" + " + ".join([f"{b}*{'*'.join(['x']*(len(b_i)-i-1)+['1'])}" for i, b in enumerate(b_i)]) + ")))"        
+                                        "formula": "sqrt("+ f"{const}*(" +"div((" + "+".join([f"{a}*{'*'.join(['x']*(len(a_i)-i-1)+['1'])}" for i, a in enumerate(a_i)]) + ")" + " , " + "(" + " + ".join([f"{b}*{'*'.join(['x']*(len(b_i)-i-1)+['1'])}" for i, b in enumerate(b_i)]) + "))))"        
                                 }
                         }
                 )
