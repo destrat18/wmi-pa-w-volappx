@@ -306,8 +306,8 @@ class Checker(mp.Process):
     def __init__(self, equations, equations_g, variables, to_check_queue, checked_queue):
         mp.Process.__init__(self)
         self.check_next = True
-        self.equations = equations
-        self.equations_g = equations_g
+        # self.equations = equations
+        self.equations = self.equations_g = equations_g
         self.variables = variables
         self.to_check_queue = to_check_queue
         self.checked_queue = checked_queue
@@ -485,15 +485,15 @@ def calculate_approximate_volume(
 
         # we apply handelman here to generate eqations based on l_is.
         # l_0 + l_1(f_1) + l_2(f_2) + ... + l_n(f_n) = g
-        equations.append(
+        # equations.append(
             # Generate inside_equations, outside_equations, temp_vars
-            generate_handelman_equations(
-            degree=degree_list[i],
-            f_list=f_list,
-            g = g_i,
-            variables=variables
-            )
-        )
+            # generate_handelman_equations(
+            # degree=degree_list[i],
+            # f_list=f_list,
+            # g = g_i,
+            # variables=variables
+            # )
+        # )
         
         equations_g.append(generate_handelman_equations_2(
             degree=degree_list[i],
@@ -513,7 +513,7 @@ def calculate_approximate_volume(
     checker_list = []
     for _ in range(max_workers):
         checker = Checker(
-            equations=equations,
+            equations=None,
             equations_g=equations_g,
             variables=variables,
             to_check_queue=to_check_queue,
