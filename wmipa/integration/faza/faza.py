@@ -464,7 +464,7 @@ def calculate_approximate_volume(
         threshold,
     ):
 
-    start_time = time.time()
+    global_start_time = time.time()
 
 
     # We apply Handelman below
@@ -547,7 +547,7 @@ def calculate_approximate_volume(
     
     current_split_step = 2 
     
-    while error > threshold:
+    while error > threshold and time.time()-global_start_time < 3600:
         res = checked_queue.get()
 
         total_hrect_checked += 1

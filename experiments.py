@@ -73,7 +73,7 @@ def evaluate_psi(
                                 )
                             )
                 output = check_output([
-                    "timeout", str(timeout),
+                    "timeout", str(int(timeout)),
                     'psi', program_path, '--expectation', '--mathematica']).decode("utf-8").strip().replace('\n', '\t')
                 results.append({
                     "bechmark": benchmark_name,
@@ -270,7 +270,7 @@ def evaluate_faza(
                     raise Exception('N\S')
                 
                 start_time = time.time()
-                signal.alarm(int(timeout))
+                # signal.alarm(int(timeout))
 
                 # If the format is not supported by WMI-PA input format
                 # if bench['wmipa']['w'] is None:
@@ -375,6 +375,8 @@ if __name__ == "__main__":
     parser.add_argument('--psi', action='store_true', default=False)
     parser.add_argument('--benchmark', choices=['manual', 'rational', 'sqrt', "rational_sqrt", "rational_2"], default="manual")
     parser.add_argument('--benchmark-path', type=str, help="Path to the benchmark")
+    parser.add_argument('--benchmark-index', type=int, help="specefic benchmark index")
+    
     
 
     parser.add_argument('--result-dir', type=str, default="experimental_results")
@@ -411,6 +413,9 @@ if __name__ == "__main__":
         raise NotImplementedError()
 
 
+    if args.benchmark_index != None:
+        benchmarks = [b for b in benchmarks if b['index']==args.benchmark_index]
+    
     if args.volesti:
             evaluate_volesi(
                 benchmarks=benchmarks,
