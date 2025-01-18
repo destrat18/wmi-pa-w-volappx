@@ -1,0 +1,5 @@
+benchmark,faza,gubpi,latte,psi,volesti
+rational/plain,1.0,1.0,1.0,1.0,1.0
+rational_2/plain,1.0,1.0,1.0,,1.0
+rational_sqrt/plain,1.0,1.0,1.0,1.0,1.0
+sqrt/plain,1.0,1.0,1.0,1.0,1.0
