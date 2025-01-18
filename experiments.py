@@ -273,57 +273,57 @@ def evaluate_faza(
                 signal.alarm(int(timeout))
 
                 # If the format is not supported by WMI-PA input format
-                if bench['wmipa']['w'] is None:
+                # if bench['wmipa']['w'] is None:
                 
-                    output = faza.calculate_approximate_wmi(
-                            phi=bench['faza']['phi'],
-                            chi=bench['faza']['chi'],
-                            max_workers=max_workers,
-                            threshold=epsilon,
-                            w=bench['faza']['w'],
-                            variables=[sym.symbols(v) for v in bench['faza']['variables']]
-                    )
-                    
-                    results.append({
-                            "bechmark": benchmark_name,
-                            "formula": bench['faza']['w'],
-                            "bounds": bench['faza']['chi'],
-                            "index": bench_i,
-                            'output': (output[0], output[1]),
-                            'error': None,
-                            "time": time.time()-start_time,
-                            'details': {
-                                    'n_integrations': 1,
-                                    'mode': mode,
-                                    'output': output,
-                        }
-                    })
+                output = faza.calculate_approximate_wmi(
+                        phi=bench['faza']['phi'],
+                        chi=bench['faza']['chi'],
+                        max_workers=max_workers,
+                        threshold=epsilon,
+                        w=bench['faza']['w'],
+                        variables=[sym.symbols(v) for v in bench['faza']['variables']]
+                )
+                
+                results.append({
+                        "bechmark": benchmark_name,
+                        "formula": bench['faza']['w'],
+                        "bounds": bench['faza']['chi'],
+                        "index": bench_i,
+                        'output': (output[0], output[1]),
+                        'error': None,
+                        "time": time.time()-start_time,
+                        'details': {
+                                'n_integrations': 1,
+                                'mode': mode,
+                                'output': output,
+                    }
+                })
 
-                else:
+                # else:
                     
-                    wmi = WMI(bench['wmipa']['chi'], bench['wmipa']['w'], integrator=integrator)
-                    volume, n_integrations = wmi.computeWMI(bench['wmipa']['phi'], mode=mode)
+                #     wmi = WMI(bench['wmipa']['chi'], bench['wmipa']['w'], integrator=integrator)
+                #     volume, n_integrations = wmi.computeWMI(bench['wmipa']['phi'], mode=mode)
 
-                    if len(integrator.logs)==1:
-                        output = integrator.logs[0]['volume']
-                    else:
-                        output = (None, volume)
+                #     if len(integrator.logs)==1:
+                #         output = integrator.logs[0]['volume']
+                #     else:
+                #         output = (None, volume)
                     
-                    results.append({
-                            "bechmark": benchmark_name,
-                            "formula": bench['faza']['w'],
-                            "bounds": bench['faza']['chi'],
-                            "index": bench_i,
-                            'output': output,
-                            'error': None,
-                            "time": time.time()-start_time,
-                            'details': {
-                                    'n_integrations': 1,
-                                    'mode': mode,
-                                    'output': output,
-                                    "logs": integrator.logs
-                        }
-                    })
+                #     results.append({
+                #             "bechmark": benchmark_name,
+                #             "formula": bench['faza']['w'],
+                #             "bounds": bench['faza']['chi'],
+                #             "index": bench_i,
+                #             'output': output,
+                #             'error': None,
+                #             "time": time.time()-start_time,
+                #             'details': {
+                #                     'n_integrations': 1,
+                #                     'mode': mode,
+                #                     'output': output,
+                #                     "logs": integrator.logs
+                #         }
+                #     })
                 
                 
                 

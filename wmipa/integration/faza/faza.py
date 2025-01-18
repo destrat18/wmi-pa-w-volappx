@@ -93,6 +93,73 @@ def generate_handelman_equations(degree, f_list, g, variables):
     return pos_equations, neq_equations, temp_vars
 
 
+def generate_handelman_equations_2(degree, f_list, g, variables):
+    
+    start_time = time.time()
+    # Generate all possible monoids
+    monoids = generate_monoids_up_to_degree(f_list, degree)
+    logging.info(f"Monoids generation time: {time.time()-start_time:.2f}s")
+    
+    # create temp variable for each monoind
+    temp_vars = []
+    for i in range(len(monoids)):
+        l = sym.symbols(f"l_{i}")
+        monoids[i] = monoids[i]*l
+        temp_vars.append(l)
+    
+    a_pos = sym.simplify(sym.expand(sum(monoids)))
+
+    pos_equations = []
+    for d in range(degree, 0, -1):
+        for mn in generate_monoids(variables, d):
+            new_assert = a_pos.coeff(mn)
+            pos_equations.append(new_assert)
+            a_pos = sym.simplify(a_pos - (new_assert)*mn)
+    pos_equations.append(a_pos)
+
+    g_equations = []
+    for d in range(degree, 0, -1):
+        for mn in generate_monoids(variables, d):
+            new_assert = g.coeff(mn)
+            g_equations.append(new_assert)
+            g = sym.simplify(g - (new_assert)*mn)
+    g_equations.append(g)
+
+    
+    return pos_equations, g_equations, temp_vars
+
+
+def is_feasible_g(equations, g_constants, temp_vars):
+    
+    coeff_matrix = []
+    for a in equations:
+        coeff = []
+        for v in [1]+temp_vars:
+            try:
+                coeff.append(float(a.coeff_monomial(v)))
+            except:
+                coeff.append(0)
+        coeff_matrix.append(coeff)
+
+    M = np.array(coeff_matrix)
+    RHS = (M[:,:1]*-1).flatten()
+    M = M[:,1:]
+    
+    RHS = RHS + g_constants
+    
+    with gp.Env(empty=True) as env:
+        env.setParam('OutputFlag', 0)
+        env.start()
+        with gp.Model(env=env) as m:
+            m.setObjective(True, gp.GRB.MAXIMIZE)
+            
+            lp_l = m.addMVar(shape=len(temp_vars), name="l", ub=float('inf'), lb=0)            
+            m.addConstr( M @ lp_l == RHS, name="c")
+
+            m.optimize()
+    
+            return not(m.status==gp.GRB.INFEASIBLE), m.runtime
+        
 def is_feasible(equations, temp_vars):
     
     coeff_matrix = []
@@ -101,6 +168,36 @@ def is_feasible(equations, temp_vars):
         for v in [1]+temp_vars:
             try:
                 coeff.append(float(a.coeff_monomial(v)))
+            except:
+                coeff.append(0)
+        coeff_matrix.append(coeff)
+
+    M = np.array(coeff_matrix)
+    RHS = (M[:,:1]*-1).flatten()
+    M = M[:,1:]
+    
+    with gp.Env(empty=True) as env:
+        env.setParam('OutputFlag', 0)
+        env.start()
+        with gp.Model(env=env) as m:
+            m.setObjective(True, gp.GRB.MAXIMIZE)
+            
+            lp_l = m.addMVar(shape=len(temp_vars), name="l", ub=float('inf'), lb=0)            
+            m.addConstr( M @ lp_l == RHS, name="c")
+
+            m.optimize()
+    
+            return not(m.status==gp.GRB.INFEASIBLE), m.runtime
+    
+
+def is_feasible_test(equations, temp_vars):
+    
+    coeff_matrix = []
+    for a in equations:
+        coeff = []
+        for v in [1]+temp_vars:
+            try:
+                coeff.append(sym.Poly(a.coeff_monomial(v)))
             except:
                 coeff.append(0)
         coeff_matrix.append(coeff)
@@ -190,6 +287,8 @@ def generate_f_list(vars):
         bound_vars.append([l, u])
     return f_list, bound_vars 
 
+def apply(inp):
+    return sym.Poly(inp[0].subs(inp[1]))
 
 class Checker(mp.Process):
     
@@ -204,10 +303,11 @@ class Checker(mp.Process):
         pass
     daemon = property(_get_daemon, _set_daemon)
     
-    def __init__(self, equations, variables, to_check_queue, checked_queue):
+    def __init__(self, equations, equations_g, variables, to_check_queue, checked_queue):
         mp.Process.__init__(self)
         self.check_next = True
         self.equations = equations
+        self.equations_g = equations_g
         self.variables = variables
         self.to_check_queue = to_check_queue
         self.checked_queue = checked_queue
@@ -225,8 +325,6 @@ class Checker(mp.Process):
                 
                 cur_depth, cur_bounds, cur_volume, bound_vars, cur_memoization = hrect
                 
-                # timing
-                start_time = time.time()
 
                 is_inside_list = []
                 is_outside_list = []
@@ -239,25 +337,52 @@ class Checker(mp.Process):
                         is_outside_list.append(False)
                     else:
 
+                        # timing
+                        start_time = time.time()
+                        # is_feasible_test(inside_equations, temp_vars=temp_vars)
                         # Optimization porblem
                         subs_dict = {}
                         for cur_dim in range(len(cur_bounds)):
                             subs_dict[bound_vars[cur_dim][0]] = cur_bounds[cur_dim][0] 
                             subs_dict[bound_vars[cur_dim][1]] = cur_bounds[cur_dim][1]
 
-                        cur_inside_equations_ = [
-                            sym.Poly(a.subs(subs_dict)) for a in inside_equations
-                            ]
-                        cur_outside_equations_ = [
-                            sym.Poly(a.subs(subs_dict)) for a in outside_equations
-                            ]
 
+
+                        
+                        # with mp.Pool(16) as p:
+                        #     cur_inside_equations_ = p.map(apply, [(a, subs_dict) for a in inside_equations])
+                    
+                        # with mp.Pool(16) as p:
+                        #     cur_outside_equations_ = p.map(apply, [(a, subs_dict) for a in outside_equations])
+                        
+                        # cur_inside_equations_ = [
+                        #     sym.Poly(a.subs(subs_dict)) for a in inside_equations
+                        #     ]
+                    
+                        # cur_outside_equations_ = [
+                        #     sym.Poly(a.subs(subs_dict)) for a in outside_equations
+                        #     ]
+                        
+                        
+                        cur_equations, cur_g_constants  = self.equations_g[equation_i][0], self.equations_g[equation_i][1]
+                        cur_g_constants = np.asarray(cur_g_constants)
+                        cur_equations_ = [
+                            sym.Poly(a.subs(subs_dict)) for a in cur_equations
+                            ]
+                        
                         subs_time = time.time()-start_time
 
+
                         start_time = time.time()
-                        is_inside, inside_runtime = is_feasible(cur_inside_equations_, temp_vars)
-                        is_outside, outside_runtime = is_feasible(cur_outside_equations_, temp_vars)
+                        # is_inside, inside_runtime = is_feasible(cur_inside_equations_, temp_vars)
+                        is_inside, inside_runtime = is_feasible_g(cur_equations_, cur_g_constants, temp_vars)
+                        # assert(is_inside==is_inside_g)
+                        
+                        is_outside, outside_runtime = is_feasible_g(cur_equations_, cur_g_constants*-1, temp_vars)
+                        # is_outside, outside_runtime = is_feasible(cur_outside_equations_, temp_vars)
+                        # assert(is_outside==is_outside_g)
                         solver_time = time.time()-start_time
+                        
                         
                         stats = {
                             "solver_time": solver_time,
@@ -347,8 +472,9 @@ def calculate_approximate_volume(
 
     logging.info(f"Integral {inputs} over {bounds} with degrees {degree_list}")
     
-    
+    start_time = time.time()    
     equations = []
+    equations_g = []
     # for each clause in RHS, we must apply handelmans
     for i, g_i in enumerate(inputs):
 
@@ -368,18 +494,27 @@ def calculate_approximate_volume(
             variables=variables
             )
         )
+        
+        equations_g.append(generate_handelman_equations_2(
+            degree=degree_list[i],
+            f_list=f_list,
+            g = g_i,
+            variables=variables
+            ))
     
+    logging.info(f"Handelman equations generation time: {time.time()-start_time:.2f}s")
+
     
     # We run n instance of hardhats which listion on a queue and execute blocks
     # Create two queues
     to_check_queue = mp.Queue()
     checked_queue = mp.Queue()
 
-    logging.info(f'Run {max_workers} solvers!')
     checker_list = []
     for _ in range(max_workers):
         checker = Checker(
             equations=equations,
+            equations_g=equations_g,
             variables=variables,
             to_check_queue=to_check_queue,
             checked_queue=checked_queue
@@ -822,59 +957,6 @@ def calculate_approximate_wmi(
         "total_subs_time": 0        
         }
     
-    # ###### for psi- ######    
-    # # We need to calculate this for psi-
-    
-    # has_lower_bound, lower_bound, runtime = find_lower_bound(
-    #     f_list=f_list,
-    #     g=w,
-    #     bound_vars=bound_vars,m.status
-    #     bounds=chi,
-    #     vars=variables
-    # )
-    
-    # # We introduce a new variable
-    # y = sym.Symbol(f"y_{str(uuid.uuid4()).split('-')[0]}")
-
-
-    # # TODO: add proof rules
-    # if sym.denom(w)!=1:
-    #     n, d = sym.fraction(w)
-    #     new_integrand = d*y - n 
-    # else:
-    #     new_integrand = y - w
-        
-    # new_bounds = chi+[[lower_bound, 0]]
-    # new_vars = variables+[y]
-    # inputs = [new_integrand]
-    
-    # # we convert the inputs to the form g_i>0 or g_i >=0
-    # for exp in phi:
-    #     if isinstance(exp, sym.core.relational.Lt) or isinstance(exp, sym.core.relational.Le):
-    #         inputs.append(exp.rhs - exp.lhs)
-    #     elif isinstance(exp, sym.core.relational.Gt) or isinstance(exp, sym.core.relational.Ge):
-    #         inputs.append(exp.lhs-exp.rhs)
-    
-    # inputs = [sym.expand(i) for i in inputs]
-    # logging.info(f"Psi- bounds: [{lower_bound}, {0}]")
-    
-    # if lower_bound != 0:
-    #     psi_minus, psi_minus_stats = calculate_approximate_volume(
-    #         degree=[sym.total_degree(i) for i in inputs],
-    #         max_workers=max_workers,
-    #         inputs=inputs,
-    #         bounds=new_bounds,
-    #         variables=new_vars,
-    #         threshold=threshold
-    #     )
-    # else:
-    #     psi_minus = 0
-    #     psi_minus_stats = {
-    #     "hrect_checked_num": 0,
-    #     "total_solver_time": 0,
-    #     "total_subs_time": 0        
-    #     }
-    
     logging.info(f"Inputs: {inputs}, Volume: ({lower_psi_plus},{upper_psi_plus})")
     
     return lower_psi_plus, upper_psi_plus, {
@@ -889,10 +971,11 @@ if __name__ == "__main__":
     bench = {
         "faza":{
             'chi': True,
-            "w": "1/x",
+            # "w": "(((10/(x+1))**(1/2)))",
+            "w": "x",
             "chi": [
-                [0.01,1], 
-                # [0.01, 1]
+                [0.1,1], 
+                # [0.1, 1]
                 ],
             "variables": [
                 'x', 
@@ -912,14 +995,3 @@ if __name__ == "__main__":
         )
     )
     
-    
-    # print(
-    #     calculate_approximate_volume(
-    #         degree_list=[3],
-    #         max_workers=1,
-    #         inputs=[sym.parse_expr("-1*(x)*(y**2) + 1")],
-    #         bounds=[[0.01, 1], [0, 10]],
-    #         variables=[sym.symbols(v) for v in ['x', 'y']],
-    #         threshold=0.01
-    #     )
-    # )
