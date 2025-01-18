@@ -700,7 +700,7 @@ def generate_rational_bechmarks(number_of_benchmarks, max_den_deg, max_nom_deg, 
                 
                 # select degree of numinator and denuminator randomly 
                 n = random.randint(0, max_nom_deg)
-                m = random.randint(0, max_den_deg)
+                m = random.randint(1, max_den_deg)
                 
                 # generate coefficents randomly
                 a_coefficients = [round(random.uniform(0, 10),2) for i in range(n+1)]
@@ -708,6 +708,7 @@ def generate_rational_bechmarks(number_of_benchmarks, max_den_deg, max_nom_deg, 
                 
                 benchmarks.append(
                         {
+                               "constant": round(random.uniform(0, 10),2),
                                "a_i": a_coefficients,
                                "b_i": b_coefficients 
                         }
@@ -786,8 +787,9 @@ def generate_rational_2_bechmarks(number_of_benchmarks, max_den_deg, max_nom_deg
                 
                 benchmarks.append(
                         {
-                               "a_i": a_coefficients,
-                               "b_i": b_coefficients 
+                                "constant": round(random.uniform(0, 10),2),
+                                "a_i": a_coefficients,
+                                "b_i": b_coefficients 
                         }
                 )
         
@@ -876,6 +878,7 @@ def generate_sqrt_bechmarks(number_of_benchmarks, max_deg, output_path):
                 
                 benchmarks.append(
                         {
+                                "constant": round(random.uniform(0, 10),2),
                                "a_i": a_i 
                         }
                 )
@@ -933,7 +936,7 @@ def generate_rational_sqrt_bechmarks(number_of_benchmarks, max_den_deg, max_nom_
                 
                 # select degree of numinator and denuminator randomly 
                 n = random.randint(0, max_nom_deg)
-                m = random.randint(0, max_den_deg)
+                m = random.randint(1, max_den_deg)
                 
                 # generate coefficents randomly
                 a_coefficients = [round(random.uniform(0, 10),2) for i in range(n+1)]
@@ -941,8 +944,9 @@ def generate_rational_sqrt_bechmarks(number_of_benchmarks, max_den_deg, max_nom_
                 
                 benchmarks.append(
                         {
-                               "a_i": a_coefficients,
-                               "b_i": b_coefficients 
+                                "constant": round(random.uniform(0, 10),2),
+                                "a_i": a_coefficients,
+                                "b_i": b_coefficients 
                         }
                 )
         
@@ -999,8 +1003,8 @@ if __name__ == "__main__":
         
 
         parser.add_argument('--output', type=str, default="experimental_results/test.json")
-        parser.add_argument('--max-den-deg', type=int, default=2)
-        parser.add_argument('--max-deg', type=int, default=2)
+        parser.add_argument('--max-den-deg', type=int, default=3)
+        parser.add_argument('--max-deg', type=int, default=3)
         parser.add_argument('--num-benchmarks', type=int, default=30)
 
         parser.add_argument('--type', choices=['rational', 'sqrt', 'rational_sqrt', 'rational_2'], default=False)
